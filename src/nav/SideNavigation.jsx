@@ -1,5 +1,6 @@
 import {useState, useEffect, useRef} from 'react';
 import styles from '../styles/Navigation.module.css';
+import useNavigations from "../components/Navigation/Navigations.jsx";
 
 const SideNavigation = () => {
   const [selectedIndex, setSelectedIndex] = useState({group: 'top', index: 0});
@@ -10,17 +11,33 @@ const SideNavigation = () => {
 
   const topContainerRef = useRef(null);
   const bottomContainerRef = useRef(null);
+  const navigateTo = useNavigations();
+
+  const handleNavigation = (page) => {
+    navigateTo(page); // 페이지 이동 실행
+  };
 
   const topItems = [
-    {id: 0, label: '대시보드', icon: '/images/home_img.png'},
-    {id: 1, label: '열선 도로 추천', icon: '/images/road_img.png'},
-    {id: 2, label: '정보 게시판', icon: '/images/board_img.png'},
+    {id: 0, label: '대시보드', page: 'Home', icon: '/images/home_img.png'},
+    {
+      id: 1,
+      label: '열선 도로 추천',
+      page: 'RoadsSearch',
+      icon: '/images/road_img.png'
+    },
+    {id: 2, label: '정보 게시판', page: 'BoardMain', icon: '/images/board_img.png'},
+    {
+      id: 3,
+      label: '파일 요청 승인',
+      page: 'AdminPage',
+      icon: '/images/admin_img.png'
+    }, // 추가된 항목
   ];
 
   const bottomItems = [
-    {id: 3, label: '마이페이지', icon: '/images/login_img.png'},
-    {id: 4, label: '로그아웃', icon: '/images/sign-out_img.png'},
-    {id: 5, label: '문의하기', icon: '/images/help_img.png'},
+    {id: 4, label: '마이페이지', page: 'Mypage', icon: '/images/login_img.png'},
+    {id: 5, label: '로그아웃', page: 'Login', icon: '/images/sign-out_img.png'},
+    {id: 6, label: '문의하기', page: 'Inquire', icon: '/images/help_img.png'},
   ];
 
   useEffect(() => {
@@ -77,7 +94,10 @@ const SideNavigation = () => {
                           ? styles.active
                           : ''
                   }`}
-                  onClick={() => setSelectedIndex({group: 'top', index})}
+                  onClick={() => {
+                    setSelectedIndex({group: 'top', index});
+                    handleNavigation(item.page); // 네비게이션 실행
+                  }}
               >
                 <img src={item.icon} alt={item.label}/>
                 <b>{item.label}</b>
@@ -96,7 +116,10 @@ const SideNavigation = () => {
                           ? styles.active
                           : ''
                   }`}
-                  onClick={() => setSelectedIndex({group: 'bottom', index})}
+                  onClick={() => {
+                    setSelectedIndex({group: 'bottom', index});
+                    handleNavigation(item.page); // 네비게이션 실행
+                  }}
               >
                 <img src={item.icon} alt={item.label}/>
                 <b>{item.label}</b>

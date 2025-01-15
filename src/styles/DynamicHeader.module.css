@@ -1,0 +1,113 @@
+/* 컨테이너 스타일 */
+.head {
+  position: relative;
+  top: 126px;
+  left: 365px;
+  width: calc(100% - 365px); /* 화면 크기에 따라 동적 계산 */
+  height: auto; /* 높이를 텍스트 길이에 따라 자동 조정 */
+  padding: 10px 0; /* 상하 여백 추가 */
+  z-index: 999;
+  display: flex; /* Flexbox를 사용하여 정렬 */
+  align-items: center; /* 아이템 수직 중앙 정렬 */
+}
+
+/* 아이콘 스타일 */
+.headIcon {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  opacity: 0.71;
+  z-index: 3;
+  margin-right: 20px; /* 텍스트와의 간격 */
+  background: url('/public/images/head_icon.png');
+}
+
+/* 텍스트 스타일 */
+.headTxt {
+  font-size: 50px;
+  font-family: Inter, sans-serif;
+  color: #000;
+  text-align: left;
+  opacity: 0.71;
+  white-space: nowrap; /* 텍스트를 한 줄로 유지 */
+  overflow: hidden; /* 텍스트가 넘칠 경우 숨김 */
+  text-overflow: ellipsis; /* 넘친 텍스트를 ...로 표시 */
+}
+
+/* 라인 스타일 */
+.headLine {
+  position: absolute;
+  top: 85.5px;
+  left: 0;
+  border-top: 1px solid #000;
+  box-sizing: border-box;
+  width: 100%;
+  opacity: 0.71;
+}
+
+/* 반응형 스타일 */
+/* 큰 화면 (기본 값) */
+@media (min-width: 1200px) {
+  .head {
+    left: 365px;
+    width: calc(100% - 365px);
+  }
+
+  .headTxt {
+    font-size: 50px;
+  }
+
+  .headIcon {
+    width: 45px;
+    height: 45px;
+  }
+}
+
+/* 중간 화면 (태블릿) */
+@media (max-width: 1199px) and (min-width: 768px) {
+  .head {
+    top: 100px;
+    left: 0;
+    width: 100%;
+    padding: 10px 20px;
+  }
+
+  .headTxt {
+    font-size: 40px;
+    white-space: normal; /* 여러 줄 텍스트 허용 */
+  }
+
+  .headIcon {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* 작은 화면 (모바일) */
+@media (max-width: 767px) {
+  .head {
+    top: 80px;
+    left: 0;
+    width: 100%;
+    height: auto; /* 높이를 텍스트 길이에 따라 자동 조정 */
+    padding: 10px;
+  }
+
+  .headTxt {
+    font-size: 30px;
+    white-space: normal; /* 여러 줄 텍스트 허용 */
+  }
+
+  .headIcon {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px; /* 간격 조정 */
+  }
+
+  .headLine {
+    top: auto;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+  }
+}

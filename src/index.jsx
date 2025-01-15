@@ -4,6 +4,9 @@ import Router from "./Router/Router.jsx";
 import reportWebVitals from "./reportWebVitals";
 import {BrowserRouter} from "react-router-dom";
 import "./global.css";
+import TopNavigation from "./nav/TopNavigation.jsx";
+import SideNavigation from "./nav/SideNavigation.jsx";
+import DynamicHeader from "./nav/DynamicHeader.jsx";
 
 const container = document.getElementById("root");
 const root = createRoot(container);
