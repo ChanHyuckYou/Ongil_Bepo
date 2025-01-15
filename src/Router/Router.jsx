@@ -8,10 +8,10 @@ import {
 import Login from "../screens/Login.jsx";
 import Signup from "../screens/Signup.jsx";
 import Home from "../screens/Home.jsx";
-import AdminPage from "./screens/Admin_page.jsx";
+import AdminPage from "../screens/Adminpage.jsx";
 import Board_detail from "../screens/BoardDetail.jsx";
 import Board_create from "../screens/BoardCreate.jsx";
-import Board_main from "./screens/BoardMain.jsx";
+import Board_main from "../screens/Board.jsx";
 import Inquire from "../screens/Inquire.jsx";
 import Roads_recommend from "../screens/RoadsRecommend.jsx";
 import Roads_search from "../screens/RoadsSearch.jsx";
