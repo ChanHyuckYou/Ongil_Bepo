@@ -1,127 +1,127 @@
-.responseMessage {
-  	position: absolute;
-  	top: 698px;
-  	left: 511px;
-  	font-weight: 600;
-}
-.confrimForm {
-  	position: absolute;
-  	top: 0px;
-  	left: 0px;
-  	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  	border-radius: 2px;
-  	background-color: #909090;
-  	border-bottom: 1px solid #a7a6a6;
-  	box-sizing: border-box;
-  	width: 341px;
-  	height: 50px;
-}
-.confrimTxt {
-  	position: absolute;
-  	top: 13px;
-  	left: 132px;
-  	font-weight: 600;
-}
-.submitBtn {
-  	position: absolute;
-  	top: 578px;
-  	left: 546px;
-  	width: 341px;
-  	height: 50px;
-  	color: #fff;
-}
-.keyForm {
-  	position: absolute;
-  	top: 0px;
-  	left: 0px;
-  	background-color: #909090;
-  	width: 130px;
-  	height: 49px;
-}
-.keyTxt {
-  	position: absolute;
-  	top: 11px;
-  	left: 7px;
-  	font-weight: 600;
-}
-.keyBtn {
-  	position: absolute;
-  	top: 410px;
-  	left: 928px;
-  	width: 130px;
-  	height: 49px;
-  	color: #fff;
-}
-.emailTxt {
-  	position: absolute;
-  	top: 0px;
-  	left: 0px;
-  	font-weight: 600;
-}
-.numTxt {
-  	position: absolute;
-  	top: 94px;
-  	left: 0px;
-  	font-weight: 600;
-}
-.emailInput {
-  	position: absolute;
-  	top: 0px;
-  	left: 0px;
-  	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  	border-radius: 2px;
-  	background-color: #fff;
-  	border-bottom: 1px solid #a7a6a6;
-  	box-sizing: border-box;
-  	width: 341px;
-  	height: 50px;
-}
-.emailTxt1 {
-  	position: absolute;
-  	top: 6px;
-  	left: 6px;
-}
-.emailForm {
-  	position: absolute;
-  	top: 35px;
-  	left: 0px;
-  	width: 341px;
-  	height: 50px;
-  	font-size: 32px;
-  	color: #848484;
-}
-.authKeyForm {
-  	position: absolute;
-  	top: 120px;
-  	left: 0px;
-  	width: 341px;
-  	height: 50px;
-  	font-size: 32px;
-  	color: #868686;
-}
-.findPwdForm {
-  	position: absolute;
-  	top: 374px;
-  	left: 546px;
-  	width: 341px;
-  	height: 170px;
-}
-.title {
-  	position: absolute;
-  	top: 301px;
-  	left: 545px;
-  	font-size: 30px;
-  	font-weight: 900;
-}
-.findPwd {
-  	width: 100%;
-  	position: relative;
-  	background-color: #fff;
-  	height: 1024px;
-  	overflow: hidden;
-  	text-align: left;
-  	font-size: 20px;
-  	color: #000;
-  	font-family: Inter;
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    height: 100%;
+    overflow: auto; /* Prevent body overflow */
+    white-space: nowrap; /* 텍스트나 콘텐츠가 한 줄로 나가도록 설정 */
+    background: url("/images/Login_background.png");
+    background-repeat: no-repeat; /* 이미지 반복 방지 */
+    background-size: cover; /* 배경 이미지를 전체 영역에 맞춤 */
+    background-position: center; /* 이미지 중앙 정렬 */
 }
 
+.FindPwdForm {
+    position: absolute;
+    margin: 50px auto;
+    width: 500px;
+    height: 400px;
+    overflow: hidden;
+    position: absolute;
+    top: 50%;
+    left: 53%;
+    transform: translate(-50%, -50%);
+}
+
+.emailInput {
+    position: relative;
+    width: 70%;
+    /* 모양 */
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 7px;
+    border : none;
+    background-color: #fff;
+    border-bottom: 1px solid #a7a6a6;
+    box-sizing: border-box;
+    /* 위치 */
+    height: 50px;
+    top: 30px;
+}
+
+.numInput {
+    position: relative;
+    width: 70%;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 7px;
+    border : none;
+    background-color: #fff;
+    border-bottom: 1px solid #a7a6a6;
+    box-sizing: border-box;
+    height: 50px;
+    top: 60px;
+}
+
+.title{
+/*    text-align: center; *//* 가운데 정렬 */
+    margin-left : 80px;
+    font-size: 30px;
+    font-weight: 600;
+}
+.emailTxt {
+    position: relative;
+    color : #828282;
+    top: 25px;
+    font-weight: 600;
+}
+
+.numTxt {
+    position: relative;
+    color : #828282;
+    top: 55px;
+    font-weight: 600;
+}
+
+.form {
+    width:100%;
+    display: flex;
+    align-items: center;
+}
+
+.keyBtn {
+    /* 위치 */
+    position: relative;
+    top: 30px;
+    margin-left: 20px;
+    /* 모양 */
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    background-color: #000;
+    border-radius: 7px;
+    border-bottom: 1px solid #a7a6a6;
+    box-sizing: border-box;
+    width: 130px;
+    height: 50px;
+    /* 글씨 가운데 정렬 */
+    color : #fff;
+    display: flex;
+    justify-content : center;
+    align-items : center;
+    /* 커서 */
+    cursor: pointer;
+}
+
+.submitBtn {
+    /* 위치 */
+    position: relative;
+    top: 100px;
+    /* 모양 */
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    background-color: #000;
+    border-radius: 7px;
+    border-bottom: 1px solid #a7a6a6;
+    box-sizing: border-box;
+    width: 70%;
+    height: 50px;
+    /* 글씨 가운데 정렬 */
+    color : #fff;
+    display: flex;
+    justify-content : center;
+    align-items : center;
+    /* 커서 */
+    cursor: pointer;
+}
+
+.responseMessage {
+  	position: relative;
+  	top: 130px;
+  	font-weight: 600;
+}
