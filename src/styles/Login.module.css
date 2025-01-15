@@ -21,26 +21,142 @@ body, html {
   align-items: center; /* 세로 중앙 정렬 */
 }
 
-/*.loginBackgroundIcon {
-  	position: absolute;
-  	top: 0px;
-  	left: 0px;
-  	width: 1440px;
-  	height: 1024px;
-  	object-fit: cover;
-  	opacity: 0.5;
-}*/
 .signInBg {
-    top: 144px; /* 위치 조정 */
-    left: 720px;
-    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25);
+    position: relative;
+  	box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.25);
     border-radius: 20px 0px 0px 20px;
     background-image: url('/images/sign_in_background.png'); /* 배경 이미지 설정 */
     width: 444px;
     height: 636px;
  }
 
+
+.loginBg {
+    position: relative;
+  	box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.25);
+  	border-radius: 0px 20px 20px 0px;
+  	background-color: #eaeaea;
+   	width: 444px;
+   	height: 636px;
+  	opacity: 0.9;
+}
+
+.logo {
+  	position: absolute;
+  	top: 20%;
+    left: 40%;
+  	font-size: 50px;
+  	font-family: Stylish;
+  	display: inline-block;
+  	width: 100px;
+  	height: 65px;
+  	text-shadow: 8px 8px 4px rgba(0, 0, 0, 0.25);
+    margin: auto;
+}
 .signInBtn {
+    position: absolute;
+    top: 50%;
+    left: 30%;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 103px;
+    background-color: #000;
+    border-bottom: 1px solid #a7a6a6;
+    box-sizing: border-box;
+    width: 191px;
+    height: 50px;
+    /* 글씨 가운데 정렬 */
+    color : #fff;
+    display: flex;
+    justify-content : center;
+    align-items : center;
+}
+
+.loginBtn {
+    position: absolute;
+    top: 67%;
+    left: 30%;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 103px;
+    background-color: #000;
+    border-bottom: 1px solid #a7a6a6;
+    box-sizing: border-box;
+    width: 191px;
+    height: 50px;
+    /* 글씨 가운데 정렬 */
+    color : #fff;
+    display: flex;
+    justify-content : center;
+    align-items : center;
+}
+
+.loginForm {
+    position: relative;
+    top: 30%;
+    left: 13%;
+  	width: 75%;
+  	height: 35%;
+}
+
+.id {
+    position: relative;
+    color : #828282;
+    top: 27px;
+    font-weight: 600;
+}
+.idInput {
+  	position: relative;
+  	top: 30px;
+  	left: 0px;
+  	border-radius: 2px;
+  	background-color: #fff;
+  	border-bottom: 1px solid #a7a6a6;
+  	box-sizing: border-box;
+  	width: 100%;
+  	height: 25%;
+}
+.pwd{
+    position: relative;
+    color : #828282;
+    top: 37px;
+    font-weight: 600;
+}
+.pwdInput{
+  	position: relative;
+  	top: 40px;
+  	left: 0px;
+  	border-radius: 2px;
+  	background-color: #fff;
+  	border-bottom: 1px solid #a7a6a6;
+  	box-sizing: border-box;
+  	width: 100%;
+  	height: 25%;
+}
+.findPwdBtn{
+    position: relative;
+    top: 50px;
+}
+/*
+.signBtn {
+  	width: 50%;
+  	position: absolute;
+  	font-size: 20px;
+  	color: #fff;
+}
+
+.signIn {
+    margin-top: 70%;
+    margin-left: 25%;
+  	position: absolute;
+  	top: 13px;
+  	left: 73px;
+  	font-weight: 600;
+}
+.signInBtn {
+    margin-top: 70%;
+    margin-left: 25%;
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
   	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   	border-radius: 33px;
   	background-color: #000;
@@ -49,22 +165,11 @@ body, html {
   	width: 211px;
   	height: 50px;
 }
-
-
-.loginBg {
-  	top: 144px;
-  	left: 720px;
-  	box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.25);
-  	border-radius: 0px 20px 20px 0px;
-  	background-color: #eaeaea;
-   	width: 444px;
-   	height: 636px;
-  	opacity: 0.9;
-}
 .logo {
   	position: absolute;
-  	top: 279px;
-  	left: 957px;
+    margin-top: -35%;
+    margin-left: 47%;
+
   	font-size: 50px;
   	font-family: Stylish;
   	display: inline-block;
@@ -133,11 +238,7 @@ body, html {
   	font-weight: 600;
 }
 .loginBtn {
-  	position: absolute;
-  	top: 574px;
-  	left: 891px;
-  	width: 191px;
-  	height: 50px;
+    width : 100%;
 }
 .findPwdBtn {
   	position: absolute;
@@ -147,28 +248,7 @@ body, html {
   	font-weight: 500;
   	color: #4e4e4e;
 }
-/*.signInBackgroundIcon {
-  	position: absolute;
-  	top: 144px;
-  	left: 176px;
-  	border-radius: 20px 0px 0px 20px;
-  	width: 544px;
-  	height: 736px;
-  	object-fit: cover;
-}*/
-.signIn {
-  	position: absolute;
-  	top: 13px;
-  	left: 73px;
-  	font-weight: 600;
-}
-.signBtn {
-  	position: absolute;
-  	top: 472px;
-  	left: 345px;
-  	width: 211px;
-  	height: 50px;
-}
+*/
 
 
 
