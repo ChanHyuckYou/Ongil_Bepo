@@ -1,0 +1,361 @@
+.inquireDetail {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  	border-radius: 9px;
+  	background-color: #fff;
+  	border: 1px solid rgba(0, 0, 0, 0.36);
+  	box-sizing: border-box;
+  	width: 1457px;
+  	height: 732px;
+}
+.inquireCreateBtn {
+  	position: absolute;
+  	top: 26px;
+  	left: 672px;
+  	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  	border-radius: 10px;
+  	background-color: #fff;
+  	border: 1px solid #000;
+  	box-sizing: border-box;
+  	width: 117px;
+  	height: 53px;
+}
+.inquireCreate {
+  	position: absolute;
+  	top: 41px;
+  	left: 700px;
+}
+.bodyLine {
+  	position: absolute;
+  	top: 95.5px;
+  	left: -0.5px;
+  	border-top: 1px solid #aeaeae;
+  	box-sizing: border-box;
+  	width: 1458px;
+  	height: 1px;
+}
+.plusIcon {
+  	position: absolute;
+  	top: 43px;
+  	left: 742px;
+  	width: 20px;
+  	height: 20px;
+  	object-fit: cover;
+}
+.inquireListChild {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  	border-radius: 9px;
+  	background-color: #fff;
+  	border: 1px solid rgba(0, 0, 0, 0.36);
+  	box-sizing: border-box;
+  	width: 1322px;
+  	height: 575px;
+}
+.b {
+  	position: absolute;
+  	top: 54px;
+  	left: 30px;
+  	display: inline-block;
+  	width: 393px;
+  	height: 18.9px;
+}
+.b1 {
+  	position: absolute;
+  	top: 53.42px;
+  	left: 790px;
+  	display: inline-block;
+  	width: 118px;
+  	height: 18.9px;
+}
+.id {
+  	position: absolute;
+  	top: 11px;
+  	left: 1090px;
+  	display: inline-block;
+  	width: 56px;
+  	height: 18.9px;
+}
+.updateDay {
+  	position: absolute;
+  	top: 11px;
+  	left: 821px;
+  	display: inline-block;
+  	width: 56px;
+  	height: 18.9px;
+}
+.postTxt {
+  	position: absolute;
+  	top: 11px;
+  	left: 390px;
+  	display: inline-block;
+  	width: 37px;
+  	height: 18.9px;
+}
+.commentBoolTxt {
+  	position: absolute;
+  	top: 11px;
+  	left: 1251px;
+  	display: inline-block;
+  	width: 56px;
+  	height: 18.9px;
+}
+.userIdTxt {
+  	position: absolute;
+  	top: 53.42px;
+  	left: 1021px;
+  	display: inline-block;
+  	width: 157px;
+  	height: 18.9px;
+}
+.y {
+  	position: absolute;
+  	top: 53px;
+  	left: 1265px;
+  	display: inline-block;
+  	width: 40px;
+  	height: 18.9px;
+}
+.inquireListItem {
+  	position: absolute;
+  	top: 81.69px;
+  	left: 0px;
+  	filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  	border-top: 2px solid rgba(0, 0, 0, 0.49);
+  	box-sizing: border-box;
+  	width: 1324px;
+  	height: 2px;
+}
+.inquireListInner {
+  	position: absolute;
+  	top: 44.77px;
+  	left: 0px;
+  	filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+  	border-top: 3px solid #000;
+  	box-sizing: border-box;
+  	width: 1325px;
+  	height: 3px;
+}
+.inquireList {
+  	position: absolute;
+  	top: 129px;
+  	left: 65px;
+  	width: 1322px;
+  	height: 575px;
+}
+.inquireView {
+  	position: absolute;
+  	top: 255px;
+  	left: 377px;
+  	width: 1457px;
+  	height: 732px;
+}
+.headIcon {
+  	position: absolute;
+  	top: 8px;
+  	left: 327px;
+  	width: 45px;
+  	height: 45px;
+  	object-fit: cover;
+  	opacity: 0.71;
+}
+.head1 {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	opacity: 0.71;
+}
+.headline {
+  	position: absolute;
+  	top: 79.5px;
+  	left: -0.5px;
+  	border-top: 1px solid #000;
+  	box-sizing: border-box;
+  	width: 1463px;
+  	height: 1px;
+  	opacity: 0.71;
+}
+.head {
+  	position: absolute;
+  	top: 130px;
+  	left: 372px;
+  	width: 1462px;
+  	height: 80px;
+  	font-size: 50px;
+}
+.leftNavi1 {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	background: linear-gradient(180deg, rgba(66, 83, 96, 0.8), rgba(114, 115, 118, 0.8));
+  	width: 310px;
+  	height: 987px;
+}
+.logOutButton {
+  	position: absolute;
+  	top: 834px;
+  	left: 134px;
+}
+.helpBtn {
+  	position: absolute;
+  	top: 897px;
+  	left: 134px;
+}
+.mypageBtn {
+  	position: absolute;
+  	top: 776px;
+  	left: 134px;
+}
+.roadsSearchBtn {
+  	position: absolute;
+  	top: 140px;
+  	left: 112px;
+}
+.boardBtn {
+  	position: absolute;
+  	top: 237px;
+  	left: 104px;
+}
+.homeBtn {
+  	position: absolute;
+  	top: 33px;
+  	left: 110px;
+}
+.signOutImgIcon {
+  	position: absolute;
+  	top: 835px;
+  	left: 65px;
+  	width: 28px;
+  	height: 28px;
+  	object-fit: cover;
+}
+.loginImgIcon {
+  	position: absolute;
+  	top: 774px;
+  	left: 65px;
+  	width: 26px;
+  	height: 26px;
+  	object-fit: cover;
+}
+.roadImgIcon {
+  	position: absolute;
+  	top: 126px;
+  	left: 45px;
+  	width: 45px;
+  	height: 45px;
+  	object-fit: cover;
+}
+.boardImgIcon {
+  	position: absolute;
+  	top: 226px;
+  	left: 45px;
+  	width: 43px;
+  	height: 43px;
+  	object-fit: cover;
+}
+.helpImgIcon {
+  	position: absolute;
+  	top: 897px;
+  	left: 65px;
+  	width: 25px;
+  	height: 25px;
+  	object-fit: cover;
+}
+.homeImgIcon {
+  	position: absolute;
+  	top: 26px;
+  	left: 44px;
+  	width: 45px;
+  	height: 45px;
+  	object-fit: cover;
+}
+.selector1Icon {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	width: 309px;
+  	height: 59.7px;
+}
+.selector2 {
+  	position: absolute;
+  	top: 0.35px;
+  	left: 298px;
+  	background-color: rgba(221, 221, 221, 0.81);
+  	width: 10px;
+  	height: 59.7px;
+}
+.pageSelector {
+  	position: absolute;
+  	top: 879px;
+  	left: 1px;
+  	width: 309px;
+  	height: 60px;
+}
+.leftNavi {
+  	position: absolute;
+  	top: 93px;
+  	left: 0px;
+  	width: 310px;
+  	height: 987px;
+  	color: #fff;
+}
+.topNaviBg {
+  	position: absolute;
+  	top: 0px;
+  	left: 1920px;
+  	background: linear-gradient(180deg, rgba(66, 83, 96, 0.8));
+  	width: 93px;
+  	height: 1920px;
+  	transform:  rotate(90deg);
+  	transform-origin: 0 0;
+}
+.logoImgIcon {
+  	position: absolute;
+  	top: 0px;
+  	left: 49px;
+  	width: 47.3px;
+  	height: 47.3px;
+  	object-fit: contain;
+  	opacity: 0.7;
+}
+.logoTxt {
+  	position: absolute;
+  	top: 15.83px;
+  	left: 0px;
+  	display: inline-block;
+  	width: 86px;
+  	height: 51.6px;
+  	text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
+}
+.logo {
+  	position: absolute;
+  	top: 6px;
+  	left: 1802px;
+  	width: 96.3px;
+  	height: 67.4px;
+}
+.topNavi {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	width: 1920px;
+  	height: 93px;
+  	font-size: 48px;
+  	font-family: Stylish;
+}
+.inquire {
+  	width: 100%;
+  	position: relative;
+  	background-color: #fff;
+  	height: 1080px;
+  	overflow: hidden;
+  	text-align: left;
+  	font-size: 20px;
+  	color: #000;
+  	font-family: Inter;
+}
+

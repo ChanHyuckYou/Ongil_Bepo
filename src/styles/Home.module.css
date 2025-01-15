@@ -1,0 +1,213 @@
+.dashbodeImgIcon {
+  	position: absolute;
+  	top: 344px;
+  	left: 549px;
+  	width: 1094px;
+  	height: 676px;
+  	object-fit: cover;
+}
+.headIcon {
+  	position: absolute;
+  	top: 9px;
+  	left: 258px;
+  	width: 45px;
+  	height: 45px;
+  	object-fit: cover;
+  	opacity: 0.71;
+}
+.headTxt {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	opacity: 0.71;
+}
+.headLine {
+  	position: absolute;
+  	top: 79.5px;
+  	left: -0.5px;
+  	border-top: 1px solid #000;
+  	box-sizing: border-box;
+  	width: 1463px;
+  	height: 1px;
+  	opacity: 0.71;
+}
+.head {
+  	position: absolute;
+  	top: 126px;
+  	left: 365px;
+  	width: 1462px;
+  	height: 80px;
+}
+.leftNavi1 {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	background: linear-gradient(180deg, rgba(66, 83, 96, 0.8), rgba(114, 115, 118, 0.8));
+  	width: 310px;
+  	height: 987px;
+}
+.selector1Icon {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	width: 309px;
+  	height: 86px;
+}
+.selector2 {
+  	position: absolute;
+  	top: 0.5px;
+  	left: 298px;
+  	background-color: rgba(221, 221, 221, 0.81);
+  	width: 10px;
+  	height: 86px;
+}
+.pageSelector {
+  	position: absolute;
+  	top: 0px;
+  	left: 1px;
+  	width: 309px;
+  	height: 86.5px;
+}
+.logOutButton {
+  	position: absolute;
+  	top: 834px;
+  	left: 134px;
+}
+.helpBtn {
+  	position: absolute;
+  	top: 897px;
+  	left: 134px;
+}
+.mypageBtn {
+  	position: absolute;
+  	top: 776px;
+  	left: 134px;
+}
+.roadsSearchBtn {
+  	position: absolute;
+  	top: 140px;
+  	left: 112px;
+}
+.boardBtn {
+  	position: absolute;
+  	top: 237px;
+  	left: 104px;
+}
+.homeBtn {
+  	position: absolute;
+  	top: 33px;
+  	left: 110px;
+}
+.signOutImgIcon {
+  	position: absolute;
+  	top: 835px;
+  	left: 65px;
+  	width: 28px;
+  	height: 28px;
+  	object-fit: cover;
+}
+.loginImgIcon {
+  	position: absolute;
+  	top: 774px;
+  	left: 65px;
+  	width: 26px;
+  	height: 26px;
+  	object-fit: cover;
+}
+.roadImgIcon {
+  	position: absolute;
+  	top: 126px;
+  	left: 45px;
+  	width: 45px;
+  	height: 45px;
+  	object-fit: cover;
+}
+.boardImgIcon {
+  	position: absolute;
+  	top: 226px;
+  	left: 45px;
+  	width: 43px;
+  	height: 43px;
+  	object-fit: cover;
+}
+.helpImgIcon {
+  	position: absolute;
+  	top: 897px;
+  	left: 65px;
+  	width: 25px;
+  	height: 25px;
+  	object-fit: cover;
+}
+.homeImgIcon {
+  	position: absolute;
+  	top: 26px;
+  	left: 44px;
+  	width: 45px;
+  	height: 45px;
+  	object-fit: cover;
+}
+.leftNavi {
+  	position: absolute;
+  	top: 93px;
+  	left: 0px;
+  	width: 310px;
+  	height: 987px;
+  	font-size: 20px;
+  	color: #fff;
+}
+.topNaviBg {
+  	position: absolute;
+  	top: 0px;
+  	left: 1920px;
+  	background: linear-gradient(180deg, rgba(66, 83, 96, 0.8));
+  	width: 93px;
+  	height: 1920px;
+  	transform:  rotate(90deg);
+  	transform-origin: 0 0;
+}
+.logoImgIcon {
+  	position: absolute;
+  	top: 0px;
+  	left: 62px;
+  	width: 47.3px;
+  	height: 47.3px;
+  	object-fit: contain;
+  	opacity: 0.7;
+}
+.logoTxt {
+  	position: absolute;
+  	top: 9px;
+  	left: 0px;
+  	font-weight: 300;
+  	display: inline-block;
+  	width: 118px;
+  	height: 51px;
+  	text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
+}
+.logo {
+  	position: absolute;
+  	top: 6px;
+  	left: 1789px;
+  	width: 118px;
+  	height: 60px;
+}
+.topNavi {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	width: 1920px;
+  	height: 93px;
+  	font-size: 48px;
+  	font-family: Sunflower;
+}
+.home {
+  	width: 100%;
+  	position: relative;
+  	background-color: #fff;
+  	height: 1080px;
+  	overflow: hidden;
+  	text-align: left;
+  	font-size: 50px;
+  	color: #000;
+  	font-family: Inter;
+}

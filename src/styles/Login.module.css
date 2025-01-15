@@ -1,0 +1,194 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', sans-serif;
+    height: 100%;
+    overflow: auto; /* Prevent body overflow */
+    overflow-x: hidden; /* Prevent horizontal overflow */
+}
+
+.login {
+  background: url("/images/Login_background.png");
+  background-repeat: no-repeat; /* 이미지 반복 방지 */
+  background-size: cover; /* 배경 이미지를 전체 영역에 맞춤 */
+  background-position: center; /* 이미지 중앙 정렬 */
+  display: flex;
+  background-color: #a2b3b1;
+  height: 100vh; /* 화면 전체 높이 */
+  overflow: hidden;
+  text-align: left;
+  justify-content: center; /* 가로 중앙 정렬 */
+  align-items: center; /* 세로 중앙 정렬 */
+}
+
+/*.loginBackgroundIcon {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	width: 1440px;
+  	height: 1024px;
+  	object-fit: cover;
+  	opacity: 0.5;
+}*/
+.signInBg {
+    top: 144px; /* 위치 조정 */
+    left: 720px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.25);
+    border-radius: 20px 0px 0px 20px;
+    background-image: url('/images/sign_in_background.png'); /* 배경 이미지 설정 */
+    width: 444px;
+    height: 636px;
+ }
+
+.signInBtn {
+  	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  	border-radius: 33px;
+  	background-color: #000;
+  	border-bottom: 1px solid #a7a6a6;
+  	box-sizing: border-box;
+  	width: 211px;
+  	height: 50px;
+}
+
+
+.loginBg {
+  	top: 144px;
+  	left: 720px;
+  	box-shadow: 10px 10px 10px rgba(0, 0, 0, 0.25);
+  	border-radius: 0px 20px 20px 0px;
+  	background-color: #eaeaea;
+   	width: 444px;
+   	height: 636px;
+  	opacity: 0.9;
+}
+.logo {
+  	position: absolute;
+  	top: 279px;
+  	left: 957px;
+  	font-size: 50px;
+  	font-family: Stylish;
+  	display: inline-block;
+  	width: 100px;
+  	height: 65px;
+  	text-shadow: 8px 8px 4px rgba(0, 0, 0, 0.25);
+}
+.idInput {
+  	position: absolute;
+  	top: 27px;
+  	left: 0px;
+  	border-radius: 2px;
+  	background-color: #fff;
+  	border-bottom: 1px solid #a7a6a6;
+  	box-sizing: border-box;
+  	width: 341px;
+  	height: 50px;
+}
+.pwdInput {
+  	position: absolute;
+  	top: 125px;
+  	left: 0px;
+  	border-radius: 2px;
+  	background-color: #fff;
+  	border-bottom: 1px solid #a7a6a6;
+  	box-sizing: border-box;
+  	width: 341px;
+  	height: 50px;
+}
+.id {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	font-weight: 600;
+}
+.password {
+  	position: absolute;
+  	top: 99px;
+  	left: 0px;
+  	font-weight: 600;
+}
+.loginForm {
+  	position: absolute;
+  	top: 359px;
+  	left: 823px;
+  	width: 341px;
+  	height: 175px;
+  	color: #000;
+}
+.loginSubmitBg {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  	border-radius: 33px;
+  	background-color: #000;
+  	border-bottom: 1px solid #a7a6a6;
+  	box-sizing: border-box;
+  	width: 191px;
+  	height: 50px;
+}
+.logIn {
+  	position: absolute;
+  	top: 13px;
+  	left: 66px;
+  	font-weight: 600;
+}
+.loginBtn {
+  	position: absolute;
+  	top: 574px;
+  	left: 891px;
+  	width: 191px;
+  	height: 50px;
+}
+.findPwdBtn {
+  	position: absolute;
+  	top: 538px;
+  	left: 821px;
+  	font-size: 13px;
+  	font-weight: 500;
+  	color: #4e4e4e;
+}
+/*.signInBackgroundIcon {
+  	position: absolute;
+  	top: 144px;
+  	left: 176px;
+  	border-radius: 20px 0px 0px 20px;
+  	width: 544px;
+  	height: 736px;
+  	object-fit: cover;
+}*/
+.signIn {
+  	position: absolute;
+  	top: 13px;
+  	left: 73px;
+  	font-weight: 600;
+}
+.signBtn {
+  	position: absolute;
+  	top: 472px;
+  	left: 345px;
+  	width: 211px;
+  	height: 50px;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,127 @@
+.responseMessage {
+  	position: absolute;
+  	top: 698px;
+  	left: 511px;
+  	font-weight: 600;
+}
+.confrimForm {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  	border-radius: 2px;
+  	background-color: #909090;
+  	border-bottom: 1px solid #a7a6a6;
+  	box-sizing: border-box;
+  	width: 341px;
+  	height: 50px;
+}
+.confrimTxt {
+  	position: absolute;
+  	top: 13px;
+  	left: 132px;
+  	font-weight: 600;
+}
+.submitBtn {
+  	position: absolute;
+  	top: 578px;
+  	left: 546px;
+  	width: 341px;
+  	height: 50px;
+  	color: #fff;
+}
+.keyForm {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	background-color: #909090;
+  	width: 130px;
+  	height: 49px;
+}
+.keyTxt {
+  	position: absolute;
+  	top: 11px;
+  	left: 7px;
+  	font-weight: 600;
+}
+.keyBtn {
+  	position: absolute;
+  	top: 410px;
+  	left: 928px;
+  	width: 130px;
+  	height: 49px;
+  	color: #fff;
+}
+.emailTxt {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	font-weight: 600;
+}
+.numTxt {
+  	position: absolute;
+  	top: 94px;
+  	left: 0px;
+  	font-weight: 600;
+}
+.emailInput {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  	border-radius: 2px;
+  	background-color: #fff;
+  	border-bottom: 1px solid #a7a6a6;
+  	box-sizing: border-box;
+  	width: 341px;
+  	height: 50px;
+}
+.emailTxt1 {
+  	position: absolute;
+  	top: 6px;
+  	left: 6px;
+}
+.emailForm {
+  	position: absolute;
+  	top: 35px;
+  	left: 0px;
+  	width: 341px;
+  	height: 50px;
+  	font-size: 32px;
+  	color: #848484;
+}
+.authKeyForm {
+  	position: absolute;
+  	top: 120px;
+  	left: 0px;
+  	width: 341px;
+  	height: 50px;
+  	font-size: 32px;
+  	color: #868686;
+}
+.findPwdForm {
+  	position: absolute;
+  	top: 374px;
+  	left: 546px;
+  	width: 341px;
+  	height: 170px;
+}
+.title {
+  	position: absolute;
+  	top: 301px;
+  	left: 545px;
+  	font-size: 30px;
+  	font-weight: 900;
+}
+.findPwd {
+  	width: 100%;
+  	position: relative;
+  	background-color: #fff;
+  	height: 1024px;
+  	overflow: hidden;
+  	text-align: left;
+  	font-size: 20px;
+  	color: #000;
+  	font-family: Inter;
+}
+

@@ -1,0 +1,329 @@
+.headTxt {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	opacity: 0.71;
+}
+.headLine {
+  	position: absolute;
+  	top: 84.5px;
+  	left: -0.5px;
+  	border-top: 1px solid #000;
+  	box-sizing: border-box;
+  	width: 1463px;
+  	height: 1px;
+  	opacity: 0.71;
+}
+.head {
+  	position: absolute;
+  	top: 160px;
+  	left: 402px;
+  	width: 1462px;
+  	height: 85px;
+  	font-size: 50px;
+}
+.board {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  	border-radius: 9px;
+  	background-color: #fff;
+  	border: 1px solid rgba(0, 0, 0, 0.36);
+  	box-sizing: border-box;
+  	width: 1462px;
+  	height: 732px;
+}
+.emailTxt {
+  	position: absolute;
+  	top: 96px;
+  	left: 560px;
+  	font-weight: 600;
+}
+.pwdTxt {
+  	position: absolute;
+  	top: 192px;
+  	left: 560px;
+  	font-weight: 600;
+}
+.jurisdictionTxt {
+  	position: absolute;
+  	top: 294px;
+  	left: 560px;
+  	font-weight: 600;
+}
+.departmentTxt {
+  	position: absolute;
+  	top: 396px;
+  	left: 560px;
+  	font-weight: 600;
+}
+.submitForm {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  	border-radius: 2px;
+  	background-color: #909090;
+  	border-bottom: 1px solid #a7a6a6;
+  	box-sizing: border-box;
+  	width: 341px;
+  	height: 50px;
+}
+.confrim {
+  	position: absolute;
+  	top: 13px;
+  	left: 132px;
+  	font-weight: 600;
+}
+.submitBtn {
+  	position: absolute;
+  	top: 518px;
+  	left: 560px;
+  	width: 341px;
+  	height: 50px;
+  	color: #fff;
+}
+.inputForm {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  	border-radius: 2px;
+  	background-color: #fff;
+  	border-bottom: 1px solid #a7a6a6;
+  	box-sizing: border-box;
+  	width: 341px;
+  	height: 50px;
+}
+.setEmail {
+  	position: absolute;
+  	top: 6px;
+  	left: 6px;
+}
+.emailInput {
+  	position: absolute;
+  	top: 131px;
+  	left: 560px;
+  	width: 341px;
+  	height: 50px;
+  	font-size: 32px;
+}
+.departmentBtn {
+  	position: absolute;
+  	top: 431px;
+  	left: 560px;
+  	width: 341px;
+  	height: 50px;
+  	font-size: 32px;
+}
+.setPwd {
+  	position: absolute;
+  	top: 5px;
+  	left: 6px;
+}
+.pwdInput {
+  	position: absolute;
+  	top: 230px;
+  	left: 560px;
+  	width: 341px;
+  	height: 50px;
+  	font-size: 32px;
+}
+.jurisdictionBtn {
+  	position: absolute;
+  	top: 332px;
+  	left: 560px;
+  	width: 341px;
+  	height: 50px;
+  	font-size: 32px;
+}
+.withdrawBtn {
+  	position: absolute;
+  	top: 594px;
+  	left: 838px;
+  	font-size: 16px;
+  	display: inline-block;
+  	color: #ff8a8a;
+  	width: 132px;
+  	height: 41px;
+}
+.mypageForm {
+  	position: absolute;
+  	top: 277px;
+  	left: 402px;
+  	width: 1462px;
+  	height: 732px;
+}
+.leftNavi1 {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	background: linear-gradient(180deg, rgba(66, 83, 96, 0.8), rgba(114, 115, 118, 0.8));
+  	width: 310px;
+  	height: 987px;
+}
+.logOutButton {
+  	position: absolute;
+  	top: 834px;
+  	left: 134px;
+}
+.helpBtn {
+  	position: absolute;
+  	top: 897px;
+  	left: 134px;
+}
+.mypageBtn {
+  	position: absolute;
+  	top: 776px;
+  	left: 134px;
+}
+.roadsSearchBtn {
+  	position: absolute;
+  	top: 140px;
+  	left: 112px;
+}
+.boardBtn {
+  	position: absolute;
+  	top: 237px;
+  	left: 104px;
+}
+.homeBtn {
+  	position: absolute;
+  	top: 33px;
+  	left: 110px;
+}
+.signOutImgIcon {
+  	position: absolute;
+  	top: 835px;
+  	left: 65px;
+  	width: 28px;
+  	height: 28px;
+  	object-fit: cover;
+}
+.loginImgIcon {
+  	position: absolute;
+  	top: 774px;
+  	left: 65px;
+  	width: 26px;
+  	height: 26px;
+  	object-fit: cover;
+}
+.roadImgIcon {
+  	position: absolute;
+  	top: 126px;
+  	left: 45px;
+  	width: 45px;
+  	height: 45px;
+  	object-fit: cover;
+}
+.boardImgIcon {
+  	position: absolute;
+  	top: 226px;
+  	left: 45px;
+  	width: 43px;
+  	height: 43px;
+  	object-fit: cover;
+}
+.helpImgIcon {
+  	position: absolute;
+  	top: 897px;
+  	left: 65px;
+  	width: 25px;
+  	height: 25px;
+  	object-fit: cover;
+}
+.homeImgIcon {
+  	position: absolute;
+  	top: 26px;
+  	left: 44px;
+  	width: 45px;
+  	height: 45px;
+  	object-fit: cover;
+}
+.selector1Icon {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	width: 309px;
+  	height: 59.7px;
+}
+.selector2 {
+  	position: absolute;
+  	top: 0.35px;
+  	left: 298px;
+  	background-color: rgba(221, 221, 221, 0.81);
+  	width: 10px;
+  	height: 59.7px;
+}
+.pageSelector {
+  	position: absolute;
+  	top: 757px;
+  	left: 1px;
+  	width: 309px;
+  	height: 60px;
+}
+.leftNavi {
+  	position: absolute;
+  	top: 93px;
+  	left: 0px;
+  	width: 310px;
+  	height: 987px;
+  	color: #fff;
+}
+.topNaviBg {
+  	position: absolute;
+  	top: 0px;
+  	left: 1920px;
+  	background: linear-gradient(180deg, rgba(66, 83, 96, 0.8));
+  	width: 93px;
+  	height: 1920px;
+  	transform:  rotate(90deg);
+  	transform-origin: 0 0;
+}
+.logoImgIcon {
+  	position: absolute;
+  	top: 0px;
+  	left: 49px;
+  	width: 47.3px;
+  	height: 47.3px;
+  	object-fit: contain;
+  	opacity: 0.7;
+}
+.logoTxt {
+  	position: absolute;
+  	top: 15.83px;
+  	left: 0px;
+  	display: inline-block;
+  	width: 86px;
+  	height: 51.6px;
+  	text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.25);
+}
+.logo {
+  	position: absolute;
+  	top: 6px;
+  	left: 1802px;
+  	width: 96.3px;
+  	height: 67.4px;
+}
+.topNavi {
+  	position: absolute;
+  	top: 0px;
+  	left: 0px;
+  	width: 1920px;
+  	height: 93px;
+  	font-size: 48px;
+  	font-family: Stylish;
+}
+.mypage {
+  	width: 100%;
+  	position: relative;
+  	background-color: #fff;
+  	height: 1080px;
+  	overflow: hidden;
+  	text-align: left;
+  	font-size: 20px;
+  	color: #000;
+  	font-family: Inter;
+}
+
