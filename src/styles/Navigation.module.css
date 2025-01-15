@@ -1,0 +1,210 @@
+/* 기본 사이드바 스타일 */
+.leftNavi {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 310px;
+  height: 100%;
+  font-size: 20px;
+  color: #fff;
+  background: linear-gradient(180deg, rgba(66, 83, 96, 0.8), rgba(114, 115, 118, 0.8));
+  display: flex;
+  flex-direction: column;
+  padding: 20px 0;
+  overflow-y: auto;
+  margin-top: 93px;
+}
+
+.navItemTop {
+  display: flex;
+  justify-content: center;
+  margin: 15px 20px;
+}
+
+.navItemTop img {
+  width: 28px;
+  height: 28px;
+  margin-right: 15px;
+  object-fit: contain;
+}
+
+.navItemTop b {
+  font-size: 16px;
+  color: #fff;
+  font-weight: normal;
+}
+
+/* 공통 버튼 스타일 */
+.navItem {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 15px 20px;
+  cursor: pointer;
+}
+
+.navItem img {
+  width: 28px;
+  height: 28px;
+  margin-right: 15px;
+  object-fit: contain;
+}
+
+.navItem b {
+  font-size: 16px;
+  color: #fff;
+  font-weight: normal;
+}
+
+/* 상단 연결 버튼 스타일 */
+.topNavItem {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2); /* 아래쪽 경계선 */
+  padding-bottom: 10px;
+  margin-bottom: 20px;
+}
+
+/* 하단 버튼 스타일 */
+.bottomNavItem {
+  margin-top: 400px; /* 아래쪽으로 밀기 */
+}
+
+.bottomNavItem img {
+  opacity: 0.8; /* 약간 흐리게 */
+}
+
+.bottomNavItem b {
+  font-size: 14px; /* 텍스트 크기 줄이기 */
+  color: #d3d3d3; /* 흐린 색상 */
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .leftNavi {
+    width: 240px;
+  }
+
+  .navItem img {
+    width: 24px;
+    height: 24px;
+  }
+
+  .navItem b {
+    font-size: 14px;
+  }
+
+  .bottomNavItem b {
+    font-size: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .leftNavi {
+    width: 200px;
+  }
+
+  .navItem img {
+    width: 20px;
+    height: 20px;
+  }
+
+  .navItem b {
+    font-size: 12px;
+  }
+
+  .bottomNavItem b {
+    font-size: 10px;
+  }
+}
+
+/* Top Navigation Styles */
+.topNavi {
+  position: fixed; /* 스크롤 시 상단 고정 */
+  top: 0;
+  left: 0;
+  width: 100%; /* 전체 너비 */
+  height: 93px;
+  display: flex; /* 요소를 가로로 배치 */
+  align-items: center; /* 세로 중앙 정렬 */
+  justify-content: flex-start; /* 왼쪽 정렬 */
+  background: rgba(66, 83, 96, 0.8);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* 고정된 헤더의 그림자 추가 */
+  z-index: 1000; /* 다른 요소보다 위에 표시 */
+  padding: 0 20px; /* 좌우 여백 */
+}
+
+.topNaviBg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 93px;
+  background: rgba(66, 83, 96, 0.8);
+  z-index: -1; /* 배경이 뒤로 가도록 */
+
+}
+
+/* 로고 컨테이너 */
+.Toplogo {
+  position: relative; /* 자식 요소 배치를 위한 부모 컨테이너 설정 */
+  width: 100%;
+  height: 80px; /* 로고 높이 */
+  display: flex;
+  margin-right: 60px;
+  justify-content: right;
+  align-items: center; /* 중앙 정렬 */
+}
+
+/* 텍스트 이미지 */
+.logoTxt {
+  position: relative;
+  width: 100px; /* 텍스트 이미지 크기 */
+  height: auto;
+  z-index: 2; /* 텍스트 이미지가 아이콘 위에 표시되도록 */
+}
+
+/* 오른쪽 상단 아이콘 */
+.logoImgIcon {
+  position: absolute; /* 텍스트와 겹쳐지도록 설정 */
+  top: 0; /* 컨테이너의 상단에 정렬 */
+  right: 0; /* 컨테이너의 오른쪽 끝에 정렬 */
+  width: 40px; /* 아이콘 크기 */
+  height: 40px;
+  margin-right: -20px;
+  object-fit: contain; /* 이미지 왜곡 방지 */
+  z-index: 1; /* 텍스트 뒤로 가도록 설정 */
+}
+
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .Toplogo {
+    width: 100px;
+    height: 70px;
+  }
+
+  .logoTxt {
+    width: 80px; /* 텍스트 이미지 크기 축소 */
+  }
+
+  .logoImgIcon {
+    width: 32px; /* 아이콘 크기 축소 */
+    height: 32px;
+  }
+}
+
+@media (max-width: 480px) {
+  .Toplogo {
+    width: 80px;
+    height: 60px;
+  }
+
+  .logoTxt {
+    width: 60px; /* 텍스트 이미지 크기 축소 */
+  }
+
+  .logoImgIcon {
+    width: 28px; /* 아이콘 크기 축소 */
+    height: 28px;
+  }
+}
+
+
