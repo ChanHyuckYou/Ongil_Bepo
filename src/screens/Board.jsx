@@ -2,8 +2,11 @@ import {useState, useEffect} from "react";
 import {io} from "socket.io-client";
 import styles from "../styles/Board.module.css";
 import useNavigations from "../components/Navigation/Navigations.jsx";
+
+const webSocketUrl = "https://ongil-front.onrender.com";
 // WebSocket 연결
-const socket = io("http://13.228.225.19:3000");
+// eslint-disable-next-line no-undef
+const socket = io(webSocketUrl);
 
 const Board = () => {
   const navigateTo = useNavigations();

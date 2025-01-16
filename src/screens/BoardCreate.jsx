@@ -3,8 +3,8 @@ import {io} from "socket.io-client";
 import styles from "../styles/BoardCreate.module.css";
 import useNavigations from "../components/Navigation/Navigations.jsx";
 
-// WebSocket 연결
-const socket = io("http://13.228.225.19:3000");
+const webSocketUrl = "https://ongil-front.onrender.com";
+const socket = io(webSocketUrl);
 
 const BoardCreate = () => {
   const [title, setTitle] = useState("");
