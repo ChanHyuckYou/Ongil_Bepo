@@ -23,7 +23,7 @@ function Router() {
   const pathname = location.pathname;
 
   // 경로에 따른 레이아웃 숨기기 설정
-  const hideLayoutForPaths = ["/", "/signup", "/find-pwd"]; // 레이아웃 숨길 경로
+  const hideLayoutForPaths = ["/", "/find-pwd"]; // 레이아웃 숨길 경로
   const isLayoutHidden = hideLayoutForPaths.includes(pathname);
 
   useEffect(() => {
@@ -36,7 +36,6 @@ function Router() {
     // 경로와 타이틀/메타 데이터를 매핑
     const metaData = {
       "/": {title: "Login", description: "Login to access your account"},
-      "/signup": {title: "Signup", description: "Sign up for a new account"},
       "/home": {title: "Welcome Page", description: "Welcome to our website!"},
       "/admin-page": {
         title: "Admin Dashboard",
@@ -109,7 +108,6 @@ function Router() {
           <Route path="/find-pwd" element={<Findpwd/>}/>
           <Route path="/home" element={<Home/>}/>
           <Route path="/admin-page" element={<AdminPage/>}/>
-          <Route path="/signup" element={<Signup/>}/>
           <Route path="/roads-recommend" element={<RoadsRecommend/>}/>
           <Route path="/board-main" element={<BoardMain/>}/>
           <Route path="/board-detail" element={<BoardDetail/>}/>
