@@ -135,7 +135,7 @@
 
 /* Top Navigation Styles */
 .topNavi {
-  position: relative; /* 스크롤 시 상단 고정 */
+  position: fixed; /* 스크롤 시 상단 고정 */
   top: 0;
   left: 0;
   width: 100%; /* 전체 너비 */
