@@ -27,6 +27,15 @@ io.on("connection", (socket) => {
     // 모든 클라이언트에게 새 게시글 데이터 브로드캐스팅
     io.emit("newPost", data);
   });
+  // 특정 게시글 데이터 요청 처리
+  socket.on("getPostDetail", (postId, callback) => {
+    const post = posts.find((item) => item.id === postId);
+    if (post) {
+      callback({success: true, data: post});
+    } else {
+      callback({success: false, message: "Post not found"});
+    }
+  });
 
   // 3) 연결 해제
   socket.on("disconnect", () => {

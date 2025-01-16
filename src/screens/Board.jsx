@@ -35,7 +35,11 @@ const Board = () => {
   }, []);
 
   const handleNavigation = (page) => {
-    navigateTo(page); // 예: 작성 페이지로 이동
+    navigateTo(page); // 작성 페이지로 이동
+  };
+
+  const handleDetailNavigation = (postId) => {
+    navigateTo(`/board-detail/${postId}`); // 상세 페이지로 이동
   };
 
   return (
@@ -73,8 +77,14 @@ const Board = () => {
             </div>
 
             <div className={styles.boardListItems}>
-              {boardItems.map((item, index) => (
-                  <div key={index} className={styles.boardListItem}>
+              {boardItems.map((item) => (
+                  <div
+                      key={item.id}
+                      className={styles.boardListItem}
+                      onClick={() => handleDetailNavigation(
+                          item.id)} // 클릭 시 상세 페이지로 이동
+                      style={{cursor: "pointer"}} // 클릭 가능 커서 추가
+                  >
                     <span className={styles.boardTitle}>{item.title}</span>
                     <span className={styles.boardAuthor}>{item.author}</span>
                     <span className={styles.boardViews}>{item.views}</span>

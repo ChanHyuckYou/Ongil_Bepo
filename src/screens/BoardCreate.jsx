@@ -1,6 +1,7 @@
 import {useState} from "react";
 import {io} from "socket.io-client";
 import styles from "../styles/BoardCreate.module.css";
+import useNavigations from "../components/Navigation/Navigations.jsx";
 
 // WebSocket 연결
 const socket = io("http://localhost:3000");
@@ -8,8 +9,13 @@ const socket = io("http://localhost:3000");
 const BoardCreate = () => {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
+  const navigateTo = useNavigations();
 
+  const handleNavigation = (page) => {
+    navigateTo(page); // 예: 작성 페이지로 이동
+  };
   const handleCreate = () => {
+    handleNavigation('BoardMain')
     if (!title || !content) {
       alert("제목과 내용을 입력해주세요.");
       return;
