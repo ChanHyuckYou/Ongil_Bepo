@@ -3,8 +3,7 @@ import {io} from "socket.io-client";
 import styles from "../styles/Board.module.css";
 import useNavigations from "../components/Navigation/Navigations.jsx";
 
-const webSocketUrl = import.meta.env.VITE_WEB_SOCKET_URL
-    || "http://localhost:3000";
+const webSocketUrl = "https://ongil-front.onrender.com";
 // WebSocket 연결
 // eslint-disable-next-line no-undef
 const socket = io(webSocketUrl);

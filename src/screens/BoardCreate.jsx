@@ -3,8 +3,7 @@ import {io} from "socket.io-client";
 import styles from "../styles/BoardCreate.module.css";
 import useNavigations from "../components/Navigation/Navigations.jsx";
 
-const webSocketUrl = import.meta.env.VITE_WEB_SOCKET_URL
-    || "http://localhost:3000";
+const webSocketUrl = "https://ongil-front.onrender.com";
 const socket = io(webSocketUrl);
 
 const BoardCreate = () => {

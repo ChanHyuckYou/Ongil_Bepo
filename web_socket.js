@@ -3,8 +3,7 @@ import express from "express";
 import * as http from "http";
 import ViteExpress from "vite-express"; // ViteExpress를 사용하는 경우(옵션)
 
-const webSocketUrl = import.meta.env.VITE_WEB_SOCKET_URL
-    || "http://localhost:3000";
+const webSocketUrl = "https://ongil-front.onrender.com";
 
 console.log("WebSocket URL:", webSocketUrl);
 

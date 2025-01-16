@@ -3,8 +3,7 @@ import {useParams} from "react-router-dom"; // 게시글 ID를 URL에서 추출
 import {io} from "socket.io-client"; // WebSocket 클라이언트
 import styles from "../styles/BoardDetail.module.css";
 
-const webSocketUrl = import.meta.env.VITE_WEB_SOCKET_URL
-    || "http://localhost:3000";
+const webSocketUrl = "https://ongil-front.onrender.com";
 const socket = io(webSocketUrl);
 
 const BoardDetail = () => {
