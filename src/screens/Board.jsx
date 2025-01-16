@@ -4,7 +4,7 @@ import styles from "../styles/Board.module.css";
 import useNavigations from "../components/Navigation/Navigations.jsx";
 // WebSocket 연결
 // eslint-disable-next-line no-undef
-const socket = io(process.env.EB_SOCKET_URL);
+const socket = io(import.meta.env.EB_SOCKET_URL);
 
 const Board = () => {
   const navigateTo = useNavigations();

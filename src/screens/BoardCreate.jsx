@@ -4,7 +4,7 @@ import styles from "../styles/BoardCreate.module.css";
 import useNavigations from "../components/Navigation/Navigations.jsx";
 
 // eslint-disable-next-line no-undef
-const socket = io(process.env.EB_SOCKET_URL);
+const socket = io(import.meta.env.EB_SOCKET_URL);
 
 const BoardCreate = () => {
   const [title, setTitle] = useState("");

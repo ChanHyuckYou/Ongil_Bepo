@@ -4,7 +4,7 @@ import {io} from "socket.io-client"; // WebSocket 클라이언트
 import styles from "../styles/BoardDetail.module.css";
 
 // eslint-disable-next-line no-undef
-const socket = io(process.env.EB_SOCKET_URL);
+const socket = io(import.meta.env.EB_SOCKET_URL);
 
 const BoardDetail = () => {
   const {postId} = useParams(); // URL에서 게시글 ID 가져오기
