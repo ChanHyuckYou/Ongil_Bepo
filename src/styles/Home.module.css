@@ -1,20 +1,40 @@
+/* 홈 페이지 컨테이너 */
+.home {
+  width: calc(100% - 250px); /* 네비게이션 바 공간 제외 */
+  position: relative;
+  margin-left: 250px; /* 네비게이션 바 공간 확보 */
+  top: 200px;
+  padding: 20px; /* 내부 여백 */
+}
+
+/* 홈 이미지 */
 .dashbodeImgIcon {
-  position: absolute;
-  top: 344px;
-  left: 549px;
-  width: 1094px;
-  height: 676px;
+  display: block; /* 이미지가 단독 블록 요소로 표시 */
+  margin: 0 auto; /* 가운데 정렬 */
+  max-width: 100%;
+  height: auto; /* 반응형으로 높이 조정 */
   object-fit: cover;
 }
 
-.home {
-  width: 100%;
-  position: relative;
-  background-color: #fff;
-  height: 1080px;
-  overflow: hidden;
-  text-align: left;
-  font-size: 50px;
-  color: #000;
-  font-family: Inter;
+/* 반응형 스타일 */
+@media (max-width: 768px) {
+  .home {
+    margin-left: 240px; /* 축소된 네비게이션 바 크기에 맞춤 */
+    font-size: 40px;
+  }
+
+  .dashbodeImgIcon {
+    width: 90%;
+  }
+}
+
+@media (max-width: 480px) {
+  .home {
+    margin-left: 200px; /* 더 작은 네비게이션 바 크기에 맞춤 */
+    font-size: 30px;
+  }
+
+  .dashbodeImgIcon {
+    width: 85%;
+  }
 }

@@ -34,11 +34,7 @@ const BoardDetail = () => {
           <div className={styles.commentUser}>작성자</div>
           <div className={styles.comment}>댓글</div>
         </div>
-        <div className={styles.head}>
-          <img className={styles.headIcon} alt="" src="head_icon.png"/>
-          <b className={styles.headTxt}>정보 게시판</b>
-          <div className={styles.headLine}/>
-        </div>
+
       </div>);
 };
 

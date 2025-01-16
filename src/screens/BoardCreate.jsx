@@ -1,26 +1,67 @@
-import styles from '../styles/BoardCreate.module.css';
+import {useState} from "react";
+import {io} from "socket.io-client";
+import styles from "../styles/BoardCreate.module.css";
+
+// WebSocket 연결
+const socket = io("http://localhost:3000");
 
 const BoardCreate = () => {
+  const [title, setTitle] = useState("");
+  const [content, setContent] = useState("");
+
+  const handleCreate = () => {
+    if (!title || !content) {
+      alert("제목과 내용을 입력해주세요.");
+      return;
+    }
+
+    // 서버로 게시글 데이터 전송
+    const newPost = {
+      title,
+      content,
+      author: "사용자", // 예시
+      views: 0,
+      date: new Date().toISOString().split("T")[0], // YYYY-MM-DD 형식
+    };
+
+    socket.emit("createPost", newPost);
+    alert("게시글이 작성되었습니다!");
+
+    // 입력 필드 초기화
+    setTitle("");
+    setContent("");
+  };
+
   return (
       <div className={styles.boardcreate}>
+        <div className={styles.boardForm}>
+          <div className={styles.postForm}>
+            <input
+                type="text"
+                placeholder="제목을 입력하세요"
+                value={title}
+                onChange={(e) => setTitle(e.target.value)}
+                className={styles.inputField}
+            />
+          </div>
 
-        <div className={styles.boardSelection}>
-          <div className={styles.boardForm}/>
-          <div className={styles.contentForm}/>
-          <div className={styles.postForm}/>
-          <b className={styles.postTxt}>제목</b>
-          <b className={styles.contentTxt}>게시판 글</b>
-          <div className={styles.createBtn}>
-            <div className={styles.createForm}/>
-            <b className={styles.createTxt}>작성</b>
+          <div className={styles.contentForm}>
+          <textarea
+              placeholder="내용을 입력하세요"
+              value={content}
+              onChange={(e) => setContent(e.target.value)}
+              className={styles.textArea}
+          ></textarea>
+          </div>
+
+          <div className={styles.createBtnWrapper}>
+            <button className={styles.createBtn} onClick={handleCreate}>
+              작성
+            </button>
           </div>
         </div>
-        <div className={styles.head}>
-          <img className={styles.headIcon} alt="" src="head_icon.png"/>
-          <b className={styles.headTxt}>정보 게시판</b>
-          <div className={styles.headLine}/>
-        </div>
-      </div>);
+      </div>
+  );
 };
 
 export default BoardCreate;

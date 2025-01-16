@@ -13,9 +13,9 @@ import RoadsSearch from "../screens/RoadsSearch.jsx";
 import Mypage from "../screens/Mypage.jsx";
 import Findpwd from "../screens/Findpwd.jsx";
 import MypageInput from "../screens/MypageInput.jsx";
-import TopNavigation from "../nav/TopNavigation.jsx";
-import SideNavigation from "../nav/SideNavigation.jsx";
-import DynamicHeader from "../nav/DynamicHeader.jsx";
+import TopNavigation from "../components/nav/TopNavigation.jsx";
+import SideNavigation from "../components/nav/SideNavigation.jsx";
+import DynamicHeader from "../components/nav/DynamicHeader.jsx";
 
 function Router() {
   const action = useNavigationType();

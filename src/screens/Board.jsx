@@ -1,40 +1,91 @@
-import styles from '../styles/Board.module.css';
+import {useState, useEffect} from "react";
+import {io} from "socket.io-client";
+import styles from "../styles/Board.module.css";
+import useNavigations from "../components/Navigation/Navigations.jsx";
+
+// WebSocket 연결
+const socket = io("http://localhost:3000");
 
 const Board = () => {
+  const navigateTo = useNavigations();
+  const [boardItems, setBoardItems] = useState([]);
+
+  useEffect(() => {
+    // (1) 서버에서 초기 게시글 데이터를 받아옴
+    const handleInitPosts = (posts) => {
+      console.log("Initial posts:", posts);
+      setBoardItems(posts);
+    };
+
+    // (2) 서버에서 새 게시글이 생성되었다고 브로드캐스트가 오면 받음
+    const handleNewPost = (newPost) => {
+      console.log("New post received:", newPost);
+      setBoardItems((prevItems) => [...prevItems, newPost]);
+    };
+
+    // (3) WebSocket 이벤트 리스너 등록
+    socket.on("initPosts", handleInitPosts);
+    socket.on("newPost", handleNewPost);
+
+    // (4) 컴포넌트 언마운트 시 이벤트 리스너 해제
+    return () => {
+      socket.off("initPosts", handleInitPosts);
+      socket.off("newPost", handleNewPost);
+    };
+  }, []);
+
+  const handleNavigation = (page) => {
+    navigateTo(page); // 예: 작성 페이지로 이동
+  };
+
   return (
-      <div className={styles.board}>
+      <div className="container">
+        <div className={styles.board}>
+          {/* 검색 및 필터 */}
+          <div className={styles.boardHeader}>
+            <button className={styles.filterBtn}>제목 ↓</button>
+            <input
+                type="text"
+                placeholder="검색어를 입력하세요"
+                className={styles.searchInput}
+            />
+            <button className={styles.searchBtn}>검색</button>
+            <button
+                className={styles.createBtn}
+                onClick={() => handleNavigation("BoardCreate")}
+            >
+              <img
+                  className={styles.plusIcon}
+                  src="/images/plus_icon.png"
+                  alt="추가 아이콘"
+              />
+              작성
+            </button>
+          </div>
 
-        <div className={styles.boardListView}/>
-        <div className={styles.searchInput}/>
-        <div className={styles.searchForm}>
-          <div className={styles.searchBtn}/>
-          <b className={styles.searchTxt}>검색</b>
-        </div>
-        <div className={styles.filterForm}>
-          <div className={styles.filterBtn}/>
-          <b className={styles.filterTxt}>제목 ↓</b>
-        </div>
-        <div className={styles.boardChild}/>
-        <div className={styles.createForm}>
-          <div className={styles.searchBtn}/>
-          <b className={styles.createTxt}>작성</b>
-          <img className={styles.plusIcon} alt="" src="plus_icon.png"/>
-        </div>
-        <div className={styles.boardListForm}>
-          <div className={styles.boardItem}/>
-          <b className={styles.b}>부천시 범박동 열선도로 설치 후기</b>
-          <b className={styles.b1}>2025-01-10</b>
-          <b className={styles.boradAuthor}>작성자</b>
-          <b className={styles.updateDay}>게시일</b>
-          <b className={styles.boardName}>제목</b>
-          <b className={styles.b2}>조회수</b>
-          <b className={styles.b3}>범박동-행정복지부</b>
-          <b className={styles.b4}>456</b>
-          <div className={styles.boardListFormChild}/>
-          <div className={styles.boardListFormItem}/>
-        </div>
+          {/* 게시판 리스트 */}
+          <div className={styles.boardListView}>
+            <div className={styles.boardListHeader}>
+              <span>제목</span>
+              <span>작성자</span>
+              <span>조회수</span>
+              <span>게시일</span>
+            </div>
 
-      </div>);
+            <div className={styles.boardListItems}>
+              {boardItems.map((item, index) => (
+                  <div key={index} className={styles.boardListItem}>
+                    <span className={styles.boardTitle}>{item.title}</span>
+                    <span className={styles.boardAuthor}>{item.author}</span>
+                    <span className={styles.boardViews}>{item.views}</span>
+                    <span className={styles.boardDate}>{item.date}</span>
+                  </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+  );
 };
 
 export default Board;

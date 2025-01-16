@@ -2,13 +2,12 @@
 .head {
   position: relative;
   top: 126px;
-  left: 365px;
-  width: calc(100% - 365px); /* 화면 크기에 따라 동적 계산 */
-  height: auto; /* 높이를 텍스트 길이에 따라 자동 조정 */
-  padding: 10px 0; /* 상하 여백 추가 */
+  height: auto;
+  padding: 10px 0;
   z-index: 999;
-  display: flex; /* Flexbox를 사용하여 정렬 */
-  align-items: center; /* 아이템 수직 중앙 정렬 */
+  display: flex;
+  align-items: center;
+  background-color: #fff; /* 헤더 배경색 추가로 겹침 방지 */
 }
 
 /* 아이콘 스타일 */
@@ -17,9 +16,8 @@
   height: 45px;
   object-fit: cover;
   opacity: 0.71;
-  z-index: 3;
-  margin-right: 20px; /* 텍스트와의 간격 */
-  background: url('/public/images/head_icon.png');
+  margin-right: 20px;
+  background: url('/images/head_icon.png');
 }
 
 /* 텍스트 스타일 */
@@ -29,15 +27,15 @@
   color: #000;
   text-align: left;
   opacity: 0.71;
-  white-space: nowrap; /* 텍스트를 한 줄로 유지 */
-  overflow: hidden; /* 텍스트가 넘칠 경우 숨김 */
-  text-overflow: ellipsis; /* 넘친 텍스트를 ...로 표시 */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 /* 라인 스타일 */
 .headLine {
   position: absolute;
-  top: 85.5px;
+  bottom: 0;
   left: 0;
   border-top: 1px solid #000;
   box-sizing: border-box;
@@ -48,11 +46,6 @@
 /* 반응형 스타일 */
 /* 큰 화면 (기본 값) */
 @media (min-width: 1200px) {
-  .head {
-    left: 365px;
-    width: calc(100% - 365px);
-  }
-
   .headTxt {
     font-size: 50px;
   }
@@ -74,7 +67,7 @@
 
   .headTxt {
     font-size: 40px;
-    white-space: normal; /* 여러 줄 텍스트 허용 */
+    white-space: normal;
   }
 
   .headIcon {
@@ -89,25 +82,21 @@
     top: 80px;
     left: 0;
     width: 100%;
-    height: auto; /* 높이를 텍스트 길이에 따라 자동 조정 */
     padding: 10px;
   }
 
   .headTxt {
     font-size: 30px;
-    white-space: normal; /* 여러 줄 텍스트 허용 */
+    white-space: normal;
   }
 
   .headIcon {
     width: 30px;
     height: 30px;
-    margin-right: 10px; /* 간격 조정 */
+    margin-right: 10px;
   }
 
   .headLine {
-    top: auto;
-    bottom: 0;
-    left: 0;
     width: 100%;
   }
 }

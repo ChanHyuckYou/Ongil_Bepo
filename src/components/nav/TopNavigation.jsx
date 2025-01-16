@@ -1,4 +1,4 @@
-import styles from '../styles/Navigation.module.css';
+import styles from '../../styles/Navigation.module.css';
 
 const TopNavigation = () => {
   return (
