@@ -3,6 +3,11 @@ import express from "express";
 import * as http from "http";
 import ViteExpress from "vite-express"; // ViteExpress를 사용하는 경우(옵션)
 
+const webSocketUrl = import.meta.env.VITE_WEB_SOCKET_URL
+    || "http://localhost:3000";
+
+console.log("WebSocket URL:", webSocketUrl);
+
 // Express 애플리케이션 생성
 const app = express();
 const server = http.createServer(app);
@@ -10,8 +15,9 @@ const server = http.createServer(app);
 // Socket.IO 서버 인스턴스 생성 (CORS 옵션 포함)
 const io = new Server(server, {
   cors: {
+
     // eslint-disable-next-line no-undef
-    origin: import.meta.env.WEB_SOCKET_URL || "http://localhost:3000", // 환경변수 또는 기본값 사용
+    origin: webSocketUrl, // 환경변수 또는 기본값 사용
     methods: ["GET", "POST"],
   },
 });

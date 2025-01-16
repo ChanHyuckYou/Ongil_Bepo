@@ -3,8 +3,9 @@ import {io} from "socket.io-client";
 import styles from "../styles/BoardCreate.module.css";
 import useNavigations from "../components/Navigation/Navigations.jsx";
 
-// eslint-disable-next-line no-undef
-const socket = io(import.meta.env.EB_SOCKET_URL);
+const webSocketUrl = import.meta.env.VITE_WEB_SOCKET_URL
+    || "http://localhost:3000";
+const socket = io(webSocketUrl);
 
 const BoardCreate = () => {
   const [title, setTitle] = useState("");

@@ -3,8 +3,9 @@ import {useParams} from "react-router-dom"; // 게시글 ID를 URL에서 추출
 import {io} from "socket.io-client"; // WebSocket 클라이언트
 import styles from "../styles/BoardDetail.module.css";
 
-// eslint-disable-next-line no-undef
-const socket = io(import.meta.env.EB_SOCKET_URL);
+const webSocketUrl = import.meta.env.VITE_WEB_SOCKET_URL
+    || "http://localhost:3000";
+const socket = io(webSocketUrl);
 
 const BoardDetail = () => {
   const {postId} = useParams(); // URL에서 게시글 ID 가져오기
