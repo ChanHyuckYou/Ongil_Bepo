@@ -1,11 +1,9 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import useNavigations from "../Components/Navigation/Navigations.jsx";
 import styles from "../styles/Login.module.css";
+import { useState } from "react";
 
 const Login = () => {
-    const nav = useNavigate();
     const [isSignUpActive, setIsSignUpActive] = useState(false); // 상태 관리
-
     // 이벤트 핸들러: Sign Up 버튼 클릭
     const handleSignUpClick = () => {
     setIsSignUpActive(true);
@@ -21,8 +19,10 @@ const Login = () => {
     e.preventDefault();
     };
 
-    const handleDivClick = () => {
-      nav("/find-pwd");
+    // 페이지 이동 실행
+    const navigateTo = useNavigations();
+    const handleNavigation = (page) => {
+    navigateTo(page);
     };
 
     return (
@@ -57,10 +57,10 @@ const Login = () => {
           <h2 className={styles.form__title}>온길</h2>
           <input type="email" placeholder="Email" className={styles.input} />
           <input type="password" placeholder="Password" className={styles.input} />
-          <a href="#" className={styles.link} onClick={handleDivClick}>
+          <a href="#" className={styles.link} onClick={() => handleNavigation('Findpwd')}>
             Forgot your password?
           </a>
-          <button type="submit" className={styles.btn}>
+          <button type="submit" className={styles.btn} onClick={() => handleNavigation('Home')}>
             로그인
           </button>
         </form>
