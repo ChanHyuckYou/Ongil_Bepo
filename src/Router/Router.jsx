@@ -12,6 +12,7 @@ import RoadsRecommend from "../screens/RoadsRecommend.jsx";
 import RoadsSearch from "../screens/RoadsSearch.jsx";
 import Mypage from "../screens/Mypage.jsx";
 import Findpwd from "../screens/Findpwd.jsx";
+import Resetpwd from "../screens/Resetpwd.jsx";
 import MypageInput from "../screens/MypageInput.jsx";
 import TopNavigation from "../components/nav/TopNavigation.jsx";
 import SideNavigation from "../components/nav/SideNavigation.jsx";
@@ -23,7 +24,7 @@ function Router() {
   const pathname = location.pathname;
 
   // 경로에 따른 레이아웃 숨기기 설정
-  const hideLayoutForPaths = ["/", "/find-pwd"]; // 레이아웃 숨길 경로
+  const hideLayoutForPaths = ["/", "/find-pwd", "/reset-pwd"]; // 레이아웃 숨길 경로
   const isLayoutHidden = hideLayoutForPaths.includes(pathname);
 
   useEffect(() => {
@@ -61,6 +62,10 @@ function Router() {
       "/find-pwd": {
         title: "Find Password",
         description: "Recover your lost password",
+      },
+      "/reset-pwd": {
+        title: "Reset Password",
+        description: "Reset your password",
       },
       "/mypage-input": {
         title: "Edit My Page",
@@ -106,6 +111,7 @@ function Router() {
         <Routes>
           <Route path="/" element={<Login/>}/>
           <Route path="/find-pwd" element={<Findpwd/>}/>
+          <Route path="/reset-pwd" element={<Resetpwd/>}/>
           <Route path="/home" element={<Home/>}/>
           <Route path="/admin-page" element={<AdminPage/>}/>
           <Route path="/roads-recommend" element={<RoadsRecommend/>}/>

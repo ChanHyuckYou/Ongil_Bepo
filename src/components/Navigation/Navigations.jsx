@@ -11,8 +11,11 @@ function useNavigations() {
       case "Login":
         navigate('/');
         break;
-      case "Signup":
-        navigate('/signup');
+      case "Findpwd":
+        navigate('/find-pwd');
+        break;
+      case "Resetpwd":
+        navigate('/reset-pwd');
         break;
       case "AdminPage":
         navigate('/admin-page');
@@ -31,9 +34,6 @@ function useNavigations() {
         break;
       case "Inquire":
         navigate('/inquire');
-        break;
-      case "Findpwd":
-        navigate('/find-pwd');
         break;
       case "MypageInput":
         navigate('/mypage-input');
