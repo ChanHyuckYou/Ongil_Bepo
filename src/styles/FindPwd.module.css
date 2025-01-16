@@ -5,6 +5,10 @@ body, html {
     height: 100%;
     overflow: auto; /* Prevent body overflow */
     white-space: nowrap; /* 텍스트나 콘텐츠가 한 줄로 나가도록 설정 */
+}
+
+.FindPwdContainer {
+    height: 100vh; /* 화면 전체 높이 */
     background: url("/images/Login_background.png");
     background-repeat: no-repeat; /* 이미지 반복 방지 */
     background-size: cover; /* 배경 이미지를 전체 영역에 맞춤 */
@@ -17,8 +21,7 @@ body, html {
     width: 500px;
     height: 400px;
     overflow: hidden;
-    position: absolute;
-    top: 50%;
+    top: 47%;
     left: 53%;
     transform: translate(-50%, -50%);
 }
@@ -88,6 +91,7 @@ body, html {
     border-radius: 7px;
     border-bottom: 1px solid #a7a6a6;
     box-sizing: border-box;
+
     width: 130px;
     height: 50px;
     /* 글씨 가운데 정렬 */
@@ -120,8 +124,13 @@ body, html {
     cursor: pointer;
 }
 
+
 .responseMessage {
-  	position: relative;
-  	top: 130px;
-  	font-weight: 600;
+    position: absolute; /* FindPwdForm을 기준으로 위치 조정 */
+    top: calc(50% + 250px); /* FindPwdForm의 아래로 배치 (높이 + 간격 포함) */
+    left: calc(50% - 30px); /* 수평 중앙 */
+    transform: translate(-50%, -50%); /* 수평 중앙 보정 */
+    width: 100%;
+    font-weight: 600; /* 두께 */
+    text-align: center; /* 텍스트 가운데 정렬 */
 }
