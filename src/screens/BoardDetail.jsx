@@ -4,7 +4,7 @@ import {io} from "socket.io-client"; // WebSocket 클라이언트
 import styles from "../styles/BoardDetail.module.css";
 
 // WebSocket 연결
-const socket = io("http://localhost:3000");
+const socket = io("http://13.228.225.19:3000");
 
 const BoardDetail = () => {
   const {postId} = useParams(); // URL에서 게시글 ID 가져오기

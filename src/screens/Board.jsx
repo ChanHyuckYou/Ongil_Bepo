@@ -2,9 +2,8 @@ import {useState, useEffect} from "react";
 import {io} from "socket.io-client";
 import styles from "../styles/Board.module.css";
 import useNavigations from "../components/Navigation/Navigations.jsx";
-
 // WebSocket 연결
-const socket = io("http://localhost:3000");
+const socket = io("http://13.228.225.19:3000");
 
 const Board = () => {
   const navigateTo = useNavigations();
