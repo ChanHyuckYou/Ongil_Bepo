@@ -3,8 +3,8 @@ import {io} from "socket.io-client";
 import styles from "../styles/BoardCreate.module.css";
 import useNavigations from "../components/Navigation/Navigations.jsx";
 
-// WebSocket 연결
-const socket = io("http://13.228.225.19:3000");
+// eslint-disable-next-line no-undef
+const socket = io(process.env.EB_SOCKET_URL);
 
 const BoardCreate = () => {
   const [title, setTitle] = useState("");

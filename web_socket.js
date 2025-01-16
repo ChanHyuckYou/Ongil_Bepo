@@ -4,6 +4,13 @@ import express from "express";
 import * as http from "http";
 import ViteExpress from "vite-express"; // ViteExpress를 사용하는 경우(옵션)
 
+const io = new Server(server, {
+  cors: {
+    origin: process.env.WEB_SOCKET_URL,
+    methods: ["GET", "POST"]
+  }
+});
+
 const app = express();
 const server = http.createServer(app);
 
