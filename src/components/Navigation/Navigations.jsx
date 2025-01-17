@@ -35,9 +35,6 @@ function useNavigations() {
       case "Inquire":
         navigate('/inquire');
         break;
-      case "MypageInput":
-        navigate('/mypage-input');
-        break;
       case "RoadsRecommend":
         navigate('/roads-recommend');
         break;

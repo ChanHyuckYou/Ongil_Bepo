@@ -1,5 +1,5 @@
 import styles from '../styles/Resetpwd.module.css';
-import useNavigations from "../Components/Navigation/Navigations.jsx";
+import useNavigations from "../components/Navigation/Navigations.jsx";
 
 const Resetpwd = () => {
     const navigateTo = useNavigations();

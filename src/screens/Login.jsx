@@ -1,4 +1,4 @@
-import useNavigations from "../Components/Navigation/Navigations.jsx";
+import useNavigations from "../components/Navigation/Navigations.jsx";
 import styles from "../styles/Login.module.css";
 import { useState } from "react";
 

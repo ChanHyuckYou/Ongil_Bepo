@@ -55,9 +55,9 @@ const SideNavigation = () => {
     {
       id: 4,
       label: '마이페이지',
-      page: 'MypageInput',
+      page: 'Mypage',
       icon: '/images/login_img.png',
-      path: '/mypage-input'
+      path: '/mypage'
     },
     {
       id: 5,

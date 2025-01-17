@@ -12,7 +12,6 @@ import RoadsSearch from "../screens/RoadsSearch.jsx";
 import Mypage from "../screens/Mypage.jsx";
 import Findpwd from "../screens/Findpwd.jsx";
 import Resetpwd from "../screens/Resetpwd.jsx";
-import MypageInput from "../screens/MypageInput.jsx";
 import Layout from "../components/nav/Layout.jsx"; // Layout 컴포넌트
 import NotFound from "../screens/NotFound.jsx";
 
@@ -62,10 +61,6 @@ function Router() {
       "/reset-pwd": {
         title: "Reset Password",
         description: "Reset your password",
-      },
-      "/mypage-input": {
-        title: "Edit My Page",
-        description: "Edit your personal information",
       },
       "/roads-recommend": {
         title: "Roads Recommendation",
@@ -121,7 +116,6 @@ function Router() {
           {/*<Route path="/board/:id" element={<BoardId/>}/>  동적 경로 */}
           <Route path="/mypage" element={<Mypage/>}/>
           <Route path="/inquire" element={<Inquire/>}/>
-          <Route path="/mypage-input" element={<MypageInput/>}/>
         </Route>
 
         {/* 레이아웃이 필요 없는 경로들 */}
