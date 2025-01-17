@@ -4,7 +4,7 @@ import styles from '../../styles/DynamicHeader.module.css';
 
 const DynamicHeader = () => {
   const location = useLocation();
-  const [sideNavWidth, setSideNavWidth] = useState(365); // SideNavigation 기본 너비
+  const [sideNavWidth, setSideNavWidth] = useState(290); // SideNavigation 기본 너비
 
   // 경로에 따른 아이콘 및 텍스트 매핑
   const headerData = [
@@ -17,6 +17,7 @@ const DynamicHeader = () => {
     },
     {paths: ['/board-create'], icon: '/images/board_icon.png', text: '정보 게시판'},
     {paths: ['/inquire'], icon: '/images/help_icon.png', text: '나의 문의 내역'},
+    {paths: ['/mypage-input'], icon: '/images/mypage_icon.png', text: '내 정보 수정'},
     {paths: ['/mypage'], icon: '/images/mypage_icon.png', text: '내 정보 수정'},
     {
       paths: ['/admin-page'],
@@ -41,7 +42,7 @@ const DynamicHeader = () => {
       timeoutId = setTimeout(() => {
         const rootStyle = getComputedStyle(document.documentElement);
         const sideWidth = parseInt(
-            rootStyle.getPropertyValue('--side-nav-width')) || 365;
+            rootStyle.getPropertyValue('--side-nav-width')) || 290;
         setSideNavWidth(sideWidth);
       }, 150); // debounce 적용
     };
@@ -65,6 +66,7 @@ const DynamicHeader = () => {
       >
         <b className={styles.headTxt}>{currentHeader.text}</b>
         <div className={styles.headIcon}/>
+        <div className={styles.headLine}/>
       </div>
   );
 };

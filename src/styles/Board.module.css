@@ -1,11 +1,11 @@
 /* 기본 레이아웃 */
 .board {
-  width: calc(100% - 370px); /* SideNavigation 제외 */
+  width: 80%; /* SideNavigation 제외 */
   background-color: #fff;
   padding: 20px 40px; /* 좌우 여백 */
   position: absolute;
-  top: 200px;
-  left: 360px;
+  top: 250px;
+  left: 330px;
   box-sizing: border-box; /* 패딩 포함 계산 */
 }
 
