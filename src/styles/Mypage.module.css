@@ -2,7 +2,7 @@
   	width: 100%;
   	position: relative;
   	background-color: #fff;
-  	height: 900px;
+  	height: 100vh;
   	overflow: hidden;
   	text-align: left;
   	font-size: 20px;
@@ -14,8 +14,8 @@
     top: 160px;
     left: 370px;
     width: 77%;
-    height: 650px;
-    overflow: hidden; /* 부모를 초과하는 자식 요소 숨김 */
+    height: 70%;
+    overflow: hidden;
 }
 
 .form {
