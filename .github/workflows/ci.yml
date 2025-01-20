@@ -1,0 +1,73 @@
+# name: OnGil CI/CD Pipeline
+
+# on:
+#   push:
+#     branches: [ master ]
+#   pull_request:
+#     branches: [ master ]
+
+# jobs:
+#   frontend:
+#     name: Frontend CI
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Use Node.js 16
+#         uses: actions/setup-node@v2
+#         with:
+#           node-version: '16'
+#       - name: Install dependencies
+#         run: |
+#           cd frontend
+#           npm install
+#       - name: Run frontend tests
+#         run: |
+#           cd frontend
+#           npm test
+#       - name: Build frontend
+#         run: |
+#           cd frontend
+#           npm run build
+
+#   backend:
+#     name: Backend CI
+#     runs-on: ubuntu-latest
+
+#     steps:
+#       - uses: actions/checkout@v2
+#       - name: Use Node.js 20
+#         uses: actions/setup-node@v2
+#         with:
+#           node-version: '20'
+#       - name: Install dependencies
+#         run: |
+#           cd backend
+#           npm install
+#       - name: Run backend tests
+#         run: |
+#           cd backend
+#           npm test
+#       - name: Build backend
+#         run: |
+#           cd backend
+#           npm run build
+
+#   deploy:
+#     name: Deploy to Vercel
+#     needs: [frontend, backend]
+#     runs-on: ubuntu-latest
+#     steps:
+#       - uses: actions/checkout@v2
+
+#       # Vercel 배포
+#       - name: Deploy Frontend to Vercel
+#         uses: amondnet/vercel-action@v20
+#         with:
+#           vercel-token: ${{ secrets.VERCEL_TOKEN }}
+#           vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+#           vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+#           working-directory: ./frontend
+#           github-token: ${{ secrets.GITHUB_TOKEN }}
+#         env:
+#           VERCEL_ENV: production

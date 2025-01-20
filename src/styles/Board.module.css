@@ -1,0 +1,128 @@
+/* 기본 레이아웃 */
+.board {
+  width: 80%; /* SideNavigation 제외 */
+  background-color: #fff;
+  padding: 20px 40px; /* 좌우 여백 */
+  position: absolute;
+  top: 250px;
+  left: 330px;
+  box-sizing: border-box; /* 패딩 포함 계산 */
+}
+
+.boardHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.searchInput {
+  flex: 1;
+  margin: 0 10px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+}
+
+.filterBtn,
+.searchBtn,
+.createBtn {
+  padding: 10px 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f5f5f5;
+  cursor: pointer;
+}
+
+.createBtn {
+  display: flex;
+  align-items: center;
+}
+
+.plusIcon {
+  width: 20px;
+  height: 20px;
+  margin-right: 5px;
+}
+
+/* 리스트 뷰 */
+.boardListView {
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+/* 리스트 헤더 및 아이템 */
+.boardListHeader,
+.boardListItem {
+  display: grid;
+  grid-template-columns: 3fr 2fr 1fr 1fr; /* 동일한 열 비율 */
+  padding: 10px 20px;
+  box-sizing: border-box; /* 패딩 포함 계산 */
+}
+
+.boardListItem {
+  border-bottom: 1px solid #eee;
+}
+
+.boardListItem:last-child {
+  border-bottom: none;
+}
+
+/* 텍스트 스타일 */
+.boardTitle {
+  font-size: 16px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.boardAuthor,
+.boardViews,
+.boardDate {
+  font-size: 14px;
+
+}
+
+/* 반응형 스타일 */
+/* 태블릿 */
+@media (max-width: 768px) {
+  .board {
+    width: calc(100% - 50px); /* SideNavigation 제거 시 여백 유지 */
+    left: 0;
+    padding: 20px 25px;
+  }
+
+  .boardListHeader,
+  .boardListItem {
+    grid-template-columns: 2fr 1fr 1fr; /* 열 개수 줄임 */
+  }
+
+  .boardDate {
+    display: none; /* 게시일 숨김 */
+  }
+}
+
+/* 모바일 */
+@media (max-width: 480px) {
+  .board {
+    width: 100%;
+    left: 0;
+    padding: 15px;
+  }
+
+  .boardHeader {
+    flex-direction: column; /* 검색 영역 세로 정렬 */
+    gap: 10px;
+  }
+
+  .boardListHeader,
+  .boardListItem {
+    grid-template-columns: 1fr 1fr; /* 열 개수 줄임 */
+  }
+
+  .boardAuthor {
+    display: none; /* 작성자 숨김 */
+  }
+}

@@ -1,0 +1,234 @@
+.mypage {
+  	width: 100%;
+  	position: relative;
+  	background-color: #fff;
+  	height: 100vh;
+  	overflow: hidden;
+  	text-align: left;
+  	font-size: 20px;
+  	color: #000;
+  	font-family: Inter;
+}
+.mypageForm {
+    position: absolute;
+    top: 160px;
+    left: 370px;
+    width: 77%;
+    height: 70%;
+    overflow: hidden;
+}
+
+.form {
+    height: 100%; /* 부모 요소 높이를 기준으로 */
+    width: 100%; /* 부모 요소 너비를 기준으로 */
+    /*모양*/
+  	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  	border-radius: 9px;
+  	border: 1px solid rgba(0, 0, 0, 0.36);
+  	box-sizing: border-box;
+}
+
+.mypageinput {
+    display: flex; /* Flexbox 활성화 */
+    flex-direction: column; /* 세로 정렬 */
+    justify-content: center; /* 세로 방향으로 중앙 정렬 */
+    align-items: center; /* 가로 방향으로 중앙 정렬 */
+    height: 100%;
+}
+.editmyinfo {
+    display: flex; /* Flexbox 활성화 */
+    flex-direction: column; /* 세로 정렬 */
+    justify-content: center; /* 세로 방향으로 중앙 정렬 */
+    align-items: center; /* 가로 방향으로 중앙 정렬 */
+    height: 100%;
+}
+
+.mypageImgIcon {
+    background-image: url('/images/Mypage_img.png');
+  	width: 167px;
+  	height: 167px;
+  	object-fit: cover;
+  	margin-bottom: 27px;
+}
+
+.inputform {
+    width: 600px;
+    height: 200px;
+}
+
+.editform {
+    display: flex; /* Flexbox 활성화 */
+    flex-direction: column; /* 세로 정렬 */
+    justify-content: center; /* 세로 방향으로 중앙 정렬 */
+    align-items: center; /* 가로 방향으로 중앙 정렬 */
+    height: 100%;
+    width: 600px;
+    height: 100%;
+}
+
+.pwdcheckTxt {
+    width: 600px;
+    height: 20px;
+    margin-bottom: 10px;
+    font-size: 15px;
+    font-weight: 700;
+}
+
+.pwdInput {
+  	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  	border-radius: 2px;
+  	background-color: #fff;
+  	border-bottom: 1px solid #969696;
+  	border: none;
+  	box-sizing: border-box;
+  	width: 100%;
+  	height: 50px;
+}
+
+.input {
+  	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  	border-radius: 2px;
+  	background-color: #fff;
+  	border-bottom: 1px solid #969696;
+  	border: none;
+  	box-sizing: border-box;
+  	width: 70%;
+  	height: 50px;
+    padding: 0.9rem 0.9rem;
+    margin: 0.8rem 0;
+    margin-right: auto; /* 오른쪽 정렬 */
+}
+
+.dup {
+    width: 100%;
+}
+
+.checkbtn {
+    /* 위치 */
+    margin-left: 30px;
+    /* 모양 */
+    background-color: #79A1A8;
+    border-radius: 10px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+    border: 1px solid #A8A8A8; /* 테두리 */
+    /* 크기 */
+    width: 150px;
+    height: 50px;
+    /* 글씨 */
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    justify-content : center;
+    align-items : center;
+    /* 커서 */
+    cursor: pointer;
+    /* 움직임 */
+    transition: transform 80ms ease-in;
+}
+.checkbtn:hover {
+    transform: scale(1.05); /* Hover 시 확대 효과 */
+}
+
+.checkbtn:active {
+    transform: scale(0.95); /* 클릭 시 축소 효과 */
+}
+
+.okBtn1 {
+    /* 위치 */
+    position: relative;
+    top: 30px;
+    margin-right: auto; /* 오른쪽 정렬 */
+    /* 모양 */
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+    border: 1px solid #A8A8A8; /* 테두리 */
+    /* 크기 */
+    width: 100%;
+    height: 50px;
+    /* 글씨 가운데 정렬 */
+    display: flex;
+    font-size: 15px;
+    font-weight: 600;
+    justify-content : center;
+    align-items : center;
+    /* 커서 */
+    cursor: pointer;
+    /* 움직임 */
+    transition: transform 80ms ease-in;
+}
+.okBtn1:hover {
+    transform: scale(1.05); /* Hover 시 확대 효과 */
+}
+
+.okBtn1:active {
+    transform: scale(0.95); /* 클릭 시 축소 효과 */
+}
+
+.okBtn2 {
+    /* 위치 */
+    position: relative;
+    top: 10px;
+    margin-right: auto; /* 오른쪽 정렬 */
+    /* 모양 */
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+    border: 1px solid #A8A8A8; /* 테두리 */
+    /* 크기 */
+    width: 70%;
+    height: 50px;
+    /* 글씨 가운데 정렬 */
+    display: flex;
+    font-size: 15px;
+    font-weight: 600;
+    justify-content : center;
+    align-items : center;
+    /* 커서 */
+    cursor: pointer;
+    /* 움직임 */
+    transition: transform 80ms ease-in;
+}
+.okBtn2:hover {
+    transform: scale(1.05); /* Hover 시 확대 효과 */
+}
+
+.okBtn2:active {
+    transform: scale(0.95); /* 클릭 시 축소 효과 */
+}
+
+.Withdraw {
+    /* 위치 */
+    position: relative;
+    margin-left: auto; /* 오른쪽 정렬 */
+    top: 20px;
+    /* 모양 */
+    background-color: #FF8A8A;
+    border-radius: 10px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+    border: 1px solid #A8A8A8; /* 테두리 */
+    /* 크기 */
+    width: 150px;
+    height: 50px;
+    /* 글씨 가운데 정렬 */
+    display: flex;
+    font-size: 15px;
+    font-weight: 600;
+    justify-content : center;
+    align-items : center;
+    /* 커서 */
+    cursor: pointer;
+    /* 움직임 */
+    transition: transform 80ms ease-in;
+}
+.Withdraw:hover {
+    transform: scale(1.05); /* Hover 시 확대 효과 */
+}
+
+.Withdraw:active {
+    transform: scale(0.95); /* 클릭 시 축소 효과 */
+}

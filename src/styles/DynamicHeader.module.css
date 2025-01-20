@@ -1,0 +1,91 @@
+/* 컨테이너 스타일 */
+.head {
+  position: relative;
+  top: 126px;
+  height: auto;
+  padding: 10px 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  margin-left: 80px;
+  background-color: #fff; /* 헤더 배경색 추가로 겹침 방지 */
+}
+
+/* 아이콘 스타일 */
+.headIcon {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+  opacity: 0.71;
+  margin-left: 10px;
+  background: url('/images/head_icon.png');
+}
+
+/* 텍스트 스타일 */
+.headTxt {
+  font-size: 40px;
+  font-family: Inter, sans-serif;
+  color: #000;
+  text-align: left;
+  opacity: 0.71;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  /* 밑에 공백 */
+  margin-bottom: 10px;
+}
+
+/* 라인 스타일 */
+.headLine {
+  position: absolute;
+  bottom: 0;
+  border-top: 1px solid #000;
+  box-sizing: border-box;
+  width: 90%;
+  opacity: 0.71;
+  padding: 0px 40px;
+}
+
+/* 반응형 스타일 */
+/* 큰 화면 (기본 값) */
+@media (min-width: 1200px) {
+  .headIcon {
+    width: 45px;
+    height: 45px;
+  }
+}
+
+/* 중간 화면 (태블릿) */
+@media (max-width: 1199px) and (min-width: 768px) {
+  .head {
+    top: 100px;
+    left: 0;
+    width: 100%;
+    padding: 10px 20px;
+  }
+
+  .headIcon {
+    width: 40px;
+    height: 40px;
+  }
+}
+
+/* 작은 화면 (모바일) */
+@media (max-width: 767px) {
+  .head {
+    top: 80px;
+    left: 0;
+    width: 100%;
+    padding: 10px;
+  }
+
+  .headIcon {
+    width: 30px;
+    height: 30px;
+    margin-right: 10px;
+  }
+
+  .headLine {
+    width: 100%;
+  }
+}

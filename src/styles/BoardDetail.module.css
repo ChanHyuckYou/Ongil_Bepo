@@ -1,0 +1,217 @@
+/* 기본 레이아웃 */
+.boarddetail {
+  width: calc(100% - 370px); /* SideNavigation 제외 */
+  position: absolute;
+  background-color: #fff;
+  min-height: 1080px;
+  text-align: left;
+  font-size: 20px;
+  color: #000;
+  font-family: Inter, sans-serif;
+  top: 280px;
+  left: 330px;
+  box-sizing: border-box;
+  padding: 20px 40px;
+}
+
+/* 게시글 영역 */
+.board {
+  margin: 20px auto;
+  width: 100%;
+  max-width: 1457px;
+  height: auto;
+  border: 1px solid rgba(0, 0, 0, 0.36);
+  border-radius: 9px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  background-color: #fff;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.postForm {
+  margin-bottom: 20px;
+  background-color: #e9e9e9;
+  border: 1px solid #000;
+  border-radius: 5px;
+  padding: 15px 20px;
+}
+
+.boardPostTxt {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.contentForm {
+  margin-top: 20px;
+  background-color: #e9e9e9;
+  border: 1px solid #000;
+  border-radius: 5px;
+  padding: 20px;
+}
+
+.boardContentTxt {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.createUser,
+.createDay {
+  display: block;
+  font-size: 14px;
+  color: #555;
+  margin-top: 5px;
+}
+
+/* 댓글 영역 */
+.commentsView {
+  margin-top: 30px;
+  padding: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.36);
+  border-radius: 9px;
+  background-color: #fff;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+}
+
+.commentCreateForm {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.commentForm {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid rgba(0, 0, 0, 0.36);
+  border-radius: 5px;
+}
+
+.createBtn {
+  width: 50px;
+  height: 50px;
+  background-color: #007bff;
+  color: #fff;
+  font-size: 24px;
+  font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.createBtn:hover {
+  background-color: #0056b3;
+}
+
+/* 댓글 리스트 */
+.commentUseritem {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+}
+
+.commentItem {
+  font-size: 16px;
+  color: #555;
+  margin-top: 5px;
+}
+
+/* 반응형 스타일 */
+/* 태블릿 */
+@media (max-width: 768px) {
+  .boarddetail {
+    width: calc(100% - 50px); /* 좌우 여백 조정 */
+    left: 0;
+    padding: 20px 25px;
+  }
+
+  .board {
+    padding: 15px;
+  }
+
+  .postForm,
+  .contentForm {
+    padding: 15px;
+  }
+
+  .boardPostTxt {
+    font-size: 16px;
+  }
+
+  .boardContentTxt {
+    font-size: 14px;
+  }
+
+  .createUser,
+  .createDay {
+    font-size: 12px;
+  }
+
+  .commentsView {
+    padding: 15px;
+  }
+
+  .commentCreateForm {
+    gap: 10px;
+  }
+
+  .createBtn {
+    width: 40px;
+    height: 40px;
+    font-size: 18px;
+  }
+
+  .commentUseritem,
+  .commentItem {
+    font-size: 14px;
+  }
+}
+
+/* 모바일 */
+@media (max-width: 480px) {
+  .boarddetail {
+    width: 100%;
+    left: 0;
+    padding: 15px;
+  }
+
+  .board {
+    padding: 10px;
+  }
+
+  .postForm,
+  .contentForm {
+    padding: 10px;
+  }
+
+  .boardPostTxt {
+    font-size: 14px;
+  }
+
+  .boardContentTxt {
+    font-size: 12px;
+  }
+
+  .createUser,
+  .createDay {
+    font-size: 10px;
+  }
+
+  .commentsView {
+    padding: 10px;
+  }
+
+  .createBtn {
+    width: 30px;
+    height: 30px;
+    font-size: 16px;
+  }
+
+  .commentUseritem,
+  .commentItem {
+    font-size: 12px;
+  }
+}

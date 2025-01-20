@@ -1,0 +1,11 @@
+/* 모든 @import 규칙을 파일의 최상단으로 이동 */
+@import url('https://fonts.googleapis.com/css2?family=Stylish:wght@400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;900&display=swap');
+
+/* 기본 스타일 */
+body {
+  margin: 0;
+  line-height: normal;
+  font-family: 'Inter', sans-serif;
+}
+

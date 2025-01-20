@@ -1,0 +1,87 @@
+.roadssearch {
+  	width: 100%;
+  	position: relative;
+  	background-color: #fff;
+  	height: 100vh;
+  	overflow: hidden;
+  	text-align: left;
+  	font-size: 20px;
+  	font-family: Inter;
+}
+.roadsSearchForm {
+    position: absolute;
+    top: 160px;
+    left: 370px;
+    width: 77%;
+    height: 70%;
+    overflow: hidden;
+}
+.form {
+    height: 100%; /* 부모 요소 높이를 기준으로 */
+    width: 100%; /* 부모 요소 너비를 기준으로 */
+    /*모양*/
+  	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  	border-radius: 9px;
+  	border: 1px solid rgba(0, 0, 0, 0.36);
+  	box-sizing: border-box;
+    display: flex; /* Flexbox 활성화 */
+    flex-direction: column; /* 세로 정렬 */
+    justify-content: center; /* 세로 방향으로 중앙 정렬 */
+    align-items: center; /* 가로 방향으로 중앙 정렬 */
+}
+.dup {
+    display: flex; /* 가로로 정렬 */
+    gap: 10px; /* 텍스트와 입력 필드 사이 간격 */
+    margin-bottom: 15px; /* 행 간의 간격 */
+    align-items : center; /* 세로로 정렬 */
+}
+
+.guideTxt {
+    margin-bottom: 15px; /* 행 간의 간격 */
+}
+.inputTxt {
+}
+
+.select {
+  	box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  	border-radius: 2px;
+  	background-color: #fff;
+  	border-bottom: 1px solid #969696;
+  	border: none;
+  	box-sizing: border-box;
+  	width: 200px;
+  	height: 50px;
+    padding: 0.9rem 0.9rem;
+    margin: 0.8rem 0;
+}
+
+.searchBtn {
+    /* 위치 */
+    margin-left: 30px;
+    /* 모양 */
+    background-color: #79A1A8;
+    border-radius: 10px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    box-sizing: border-box;
+    border: 1px solid #A8A8A8; /* 테두리 */
+    /* 크기 */
+    width: 150px;
+    height: 50px;
+    /* 글씨 */
+    color: #fff;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center; /* 텍스트 가로 가운데 정렬 */
+    line-height: 50px; /* 버튼 높이와 동일하게 설정하여 수직 가운데 정렬 */
+    /* 커서 */
+    cursor: pointer;
+    /* 움직임 */
+    transition: transform 80ms ease-in;
+}
+.searchBtn:hover {
+    transform: scale(1.05); /* Hover 시 확대 효과 */
+}
+
+.searchBtn:active {
+    transform: scale(0.95); /* 클릭 시 축소 효과 */
+}

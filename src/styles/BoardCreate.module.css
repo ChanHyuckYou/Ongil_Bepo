@@ -1,0 +1,158 @@
+/* 기본 레이아웃 */
+.boardcreate {
+  width: calc(100% - 370px); /* SideNavigation 제외 */
+  position: absolute;
+  background-color: #fff;
+  min-height: 1080px;
+  overflow: hidden;
+  text-align: left;
+  height: 100%;
+  top: 250px;
+  left: 330px;
+  box-sizing: border-box;
+  padding: 20px 40px;
+}
+
+/* 폼 컨테이너 */
+.boardForm {
+  width: 100%; /* 전체 너비로 설정 */
+  max-width: 1457px; /* 최대 너비 */
+  margin: 0 auto; /* 가운데 정렬 */
+  background-color: #fff;
+  border: 1px solid rgba(0, 0, 0, 0.36);
+  border-radius: 9px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* 제목 입력 영역 */
+.postForm {
+  margin-bottom: 20px;
+  background-color: #e9e9e9;
+  border: 1px solid #000;
+  border-radius: 5px;
+  padding: 20px;
+  width: 100%; /* 반응형 너비 */
+  box-sizing: border-box;
+}
+
+.postTxt {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px; /* 아래 간격 추가 */
+}
+
+.inputField {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-top: 10px;
+  box-sizing: border-box;
+}
+
+/* 게시판 글 입력 영역 */
+.contentForm {
+  margin-top: 20px;
+  background-color: #e9e9e9;
+  border: 1px solid #000;
+  border-radius: 5px;
+  padding: 20px;
+  width: 100%; /* 반응형 너비 */
+  box-sizing: border-box;
+}
+
+.contentTxt {
+  font-size: 16px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px; /* 아래 간격 추가 */
+}
+
+.textArea {
+  width: 100%;
+  height: 200px;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  margin-top: 10px;
+  box-sizing: border-box;
+  resize: none; /* 크기 조절 비활성화 */
+}
+
+/* 버튼 스타일 */
+.createBtnWrapper {
+  text-align: right;
+  margin-top: 20px;
+}
+
+.createBtn {
+  background-color: #007bff;
+  color: #fff;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.createBtn:hover {
+  background-color: #0056b3;
+}
+
+/* 반응형 스타일 */
+/* 태블릿 */
+@media (max-width: 768px) {
+  .boardcreate {
+    width: calc(100% - 50px);
+    padding: 20px 25px;
+  }
+
+  .boardForm,
+  .contentForm,
+  .postForm {
+    width: 100%; /* 화면 전체 너비 */
+    padding: 15px;
+  }
+
+  .createBtn {
+    width: 120px; /* 버튼 크기 조정 */
+    height: 45px;
+    font-size: 14px;
+  }
+
+  .postTxt,
+  .contentTxt {
+    font-size: 14px;
+  }
+}
+
+/* 모바일 */
+@media (max-width: 480px) {
+  .boardcreate {
+    width: 100%;
+    padding: 15px;
+  }
+
+  .boardForm,
+  .contentForm,
+  .postForm {
+    padding: 10px;
+  }
+
+  .createBtn {
+    width: 100px;
+    height: 40px;
+    font-size: 12px;
+  }
+
+  .postTxt,
+  .contentTxt {
+    font-size: 12px;
+  }
+}
