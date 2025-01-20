@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import styles from '../styles/Inquire.module.css';
 
 import {io} from "socket.io-client";
-const webSocketUrl = "https://localhost:5173/Inquire";
+const webSocketUrl = "http://localhost:3000";
+
 const socket = io(webSocketUrl);
 
 const Inquire = () => {
