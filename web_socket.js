@@ -37,6 +37,21 @@ io.on("connection", (socket) => {
     io.emit("newPost", data); // 모든 클라이언트에게 브로드캐스팅
   });
 
+  // 클라이언트로부터 게시글 업데이트 요청
+  socket.on("updatePost", (updatedPost) => {
+    console.log("Received updated post:", updatedPost);
+
+    // 기존 게시글을 찾아 업데이트
+    const index = posts.findIndex((item) => item.id === updatedPost.id);
+    if (index !== -1) {
+      posts[index] = updatedPost; // 기존 데이터 수정
+      io.emit("updatedPost", updatedPost); // 모든 클라이언트에게 브로드캐스팅
+      console.log("Post updated successfully:", updatedPost);
+    } else {
+      console.log("Post not found for update:", updatedPost);
+    }
+  });
+
   // 특정 게시글 데이터 요청 처리
   socket.on("getPostDetail", (postId, callback) => {
     const post = posts.find((item) => item.id === postId);
