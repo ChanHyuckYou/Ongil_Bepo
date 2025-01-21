@@ -128,6 +128,7 @@
 .formGroup label {
   display: block;
   margin-bottom: 5px;
+  margin-top: 20px;
   font-weight: bold;
 }
 
@@ -158,6 +159,11 @@ font-family: Arial, sans-serif; /* 여기에 원하는 글꼴 지정 */
   gap: 10px;
 }
 
+
+.modalContent p {
+  font-size: 15px;
+}
+
 .closeBtn {
   background: #ddd;
   border: none;
@@ -167,10 +173,14 @@ font-family: Arial, sans-serif; /* 여기에 원하는 글꼴 지정 */
 }
 
 .submitBtn {
-  background: #007bff;
+  background: #425360;
   border: none;
   padding: 10px 15px;
   color: white;
   cursor: pointer;
   border-radius: 4px;
+}
+
+.line {
+  border-top: 1px solid #D3D3D3;
 }
