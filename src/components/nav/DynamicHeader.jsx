@@ -10,6 +10,7 @@ const DynamicHeader = () => {
   const headerData = [
     {paths: ['/home'], icon: '/images/home_icon.png', text: '대시보드 홈'},
     {paths: ['/roads-search'], icon: '/images/road_icon.png', text: '열선 도로 추천'},
+    {paths: ['/roads-recommend'], icon: '/images/road_icon.png', text: '열선 도로 추천'},
     {
       paths: ['/board-main', '/board-create'],
       icon: '/images/board_icon.png',

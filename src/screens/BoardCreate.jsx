@@ -3,7 +3,7 @@ import {io} from "socket.io-client";
 import styles from "../styles/BoardCreate.module.css";
 import useNavigations from "../components/Navigation/Navigations.jsx";
 
-const webSocketUrl = "https://ongil-front.onrender.com";
+const webSocketUrl = "http://localhost:3000";
 const socket = io(webSocketUrl);
 
 const BoardCreate = () => {
