@@ -4,6 +4,7 @@ import { io } from "socket.io-client";
 
 const webSocketUrl = "http://localhost:3000";
 const socket = io(webSocketUrl);
+const ITEMS_PER_PAGE = 5; // 페이지당 게시글 수
 
 const Inquire = () => {
   const [isModalOpen, setIsModalOpen] = useState(false); // 문의 작성
@@ -15,6 +16,9 @@ const Inquire = () => {
   const [selectedItem, setSelectedItem] = useState(null); // 선택된 항목 데이터
   const [adminAnswer, setAdminAnswer] = useState(""); // 관리자가 작성한 답변
   const [isAdmin, setIsAdmin] = useState(true); // 관리자 인증 여부
+  // 페이지네이션 상태
+  const [currentPage, setCurrentPage] = useState(1);
+  const totalPages = Math.ceil(inquireItems.length / ITEMS_PER_PAGE);
 
   useEffect(() => {
     // 관리자 토큰
@@ -32,9 +36,14 @@ const Inquire = () => {
       setInquireItems(posts);
     };
 
+    // (2) 서버에서 새 게시글이 생성되었다고 브로드캐스트가 오면 받음
     const handleNewPost = (newPost) => {
       console.log("New post received:", newPost);
-      setInquireItems((prevItems) => [...prevItems, newPost]);
+      setInquireItems((prevItems) => [newPost, ...prevItems]); // 최신 게시글을 상단에 추가
+      // 필요에 따라 페이지 조정
+      if ((inquireItems.length + 1) > ITEMS_PER_PAGE * currentPage) {
+        setCurrentPage((prevPage) => prevPage + 1);
+      }
     };
 
     const handleUpdatedPost = (updatedPost) => {
@@ -53,7 +62,7 @@ const Inquire = () => {
       socket.off("newPost", handleNewPost);
       socket.off("updatedPost", handleUpdatedPost);
     };
-  }, []);
+  }, [inquireItems.length, currentPage]);
 
   // 작성 팝업창
   const openCreate = () => setIsModalOpen(true);
@@ -122,6 +131,19 @@ const Inquire = () => {
     closeModal();
   };
 
+  // 페이지 변경 핸들러
+  const goToPage = (page) => {
+    if (page < 1 || page > totalPages) {
+      return;
+    }
+    setCurrentPage(page);
+  };
+
+  // 현재 페이지에 해당하는 게시글 추출
+  const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
+  const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
+  const currentItems = inquireItems.slice(indexOfFirstItem, indexOfLastItem);
+
   return (
     <div className="container">
       <div className={styles.inquire}>
@@ -147,7 +169,7 @@ const Inquire = () => {
             </div>
             {/* 문의 내용 */}
             <div className={styles.inquireListItems}>
-              {inquireItems.map((item) => (
+              {currentItems.map((item) => (
                 <div
                   key={item.id}
                   className={styles.inquireListItem}
@@ -164,6 +186,38 @@ const Inquire = () => {
               ))}
             </div>
           </div>
+
+            {/* 페이지네이션 컨트롤 */}
+            {totalPages > 1 && (
+                <div className={styles.pagination}>
+                  <button
+                      onClick={() => goToPage(currentPage - 1)}
+                      disabled={currentPage === 1}
+                      className={styles.pageBtn}
+                  >
+                    이전
+                  </button>
+                  {/* 페이지 번호 표시 */}
+                  {Array.from({length: totalPages}, (_, index) => (
+                      <button
+                          key={index + 1}
+                          onClick={() => goToPage(index + 1)}
+                          className={`${styles.pageBtn} ${
+                              currentPage === index + 1 ? styles.activePage : ""
+                          }`}
+                      >
+                        {index + 1}
+                      </button>
+                  ))}
+                  <button
+                      onClick={() => goToPage(currentPage + 1)}
+                      disabled={currentPage === totalPages}
+                      className={styles.pageBtn}
+                  >
+                    다음
+                  </button>
+                </div>
+            )}
         </div>
 
         {/* 문의내용 작성 팝업창 */}
