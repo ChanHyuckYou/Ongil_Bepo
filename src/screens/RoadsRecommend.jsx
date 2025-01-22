@@ -6,7 +6,7 @@ const RoadsRecommend = () => {
     const [roads, setRoads] = useState([ // 임의 데이터 설정
         {
             "rank": "1순위",
-            "location": "원미구 원미1동 원미로",
+            "location": "경기도 수원시 권선구 당수동 수원로 73번길",
             "freezingIndex": 1342,
             "slope": "10%",
             "trafficVolume": 93480
@@ -41,8 +41,8 @@ const RoadsRecommend = () => {
                     {roads.map((road, index) => (
                         <div key={index} className={styles.item}>
                             <div className={styles.itemContent}>
-                                <p>{road.rank} : {road.location}</p>
-                                <button className={styles.itemButton}>상세보기</button>
+                                <p className={styles.title}>{road.rank} : {road.location}</p>
+                                <button className={styles.itemButton}>주변보호기관</button>
                             </div>
                             <div>결빙예측지수 : {road.freezingIndex}</div>
                             <div>경사도 : {road.slope}</div>
