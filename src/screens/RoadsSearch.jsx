@@ -1,5 +1,6 @@
 import styles from '../styles/RoadsSearch.module.css';
 import {useState, useEffect} from 'react';
+import useNavigations from "../components/Navigation/Navigations.jsx";
 
 const RoadsSearch = () => {
     const [data, setData] = useState([]);
@@ -23,6 +24,12 @@ const RoadsSearch = () => {
     setData(testData); // 테스트 데이터를 상태에 설정
     }, []);
 
+  // 페이지 이동 실행
+  const navigateTo = useNavigations();
+  const handleNavigation = (page) => {
+    navigateTo(page);
+  }
+
   return (
       <div className={styles.roadssearch}>
         <div className={styles.roadsSearchForm}>
@@ -36,7 +43,7 @@ const RoadsSearch = () => {
                       ))}
                     </select>
               </div>
-              <div className={styles.searchBtn}>검색</div>
+              <div className={styles.searchBtn} onClick={() => handleNavigation('RoadsRecommend')}>검색</div>
           </div>
         </div>
       </div>);

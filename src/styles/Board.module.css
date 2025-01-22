@@ -57,6 +57,7 @@
 .boardListHeader,
 .boardListItem {
   display: grid;
+  border-bottom: 1px solid #000;
   grid-template-columns: 3fr 2fr 1fr 1fr; /* 동일한 열 비율 */
   padding: 10px 20px;
   box-sizing: border-box; /* 패딩 포함 계산 */
@@ -134,9 +135,9 @@
 }
 
 .activePage {
-  background-color: #0070f3;
+  background-color: #79A1A8;
   color: white;
-  border-color: #0070f3;
+  border-color: #79A1A8;
 }
 
 /* 검색 타입 선택 스타일 */

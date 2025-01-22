@@ -1,60 +1,59 @@
+import { useState, useEffect } from 'react';
 import styles from '../styles/RoadsRecommend.module.css';
 
 const RoadsRecommend = () => {
-  return (
-      <div className={styles.roadsrecommend}>
+    // 상태값 정의
+    const [roads, setRoads] = useState([ // 임의 데이터 설정
+        {
+            "rank": "1순위",
+            "location": "원미구 원미1동 원미로",
+            "freezingIndex": 1342,
+            "slope": "10%",
+            "trafficVolume": 93480
+        },
+        {
+            "rank": "2순위",
+            "location": "다른 도로 이름",
+            "freezingIndex": 1200,
+            "slope": "8%",
+            "trafficVolume": 75400
+        },
+        {
+            "rank": "3순위",
+            "location": "다른 도로 이름",
+            "freezingIndex": 1200,
+            "slope": "6%",
+            "trafficVolume": 75400
+        }
+    ]); // 초기값을 임의 데이터로 설정
+    const [loading, setLoading] = useState(false); // 로딩 상태
 
-        <img className={styles.roadviewBtnIcon} alt="" src="roadview_btn.png"/>
+    // 서버에서 데이터를 가져오는 부분은 임시로 생략하고, loading은 false로 설정
 
-        <img className={styles.mapIcon} alt="" src="map.svg"/>
-        <div className={styles.recommendTable}>
-          <div className={styles.recommendView}/>
-          <div className={styles.line1}/>
-          <div className={styles.line2}/>
-          <div className={styles.line3}/>
-          <b className={styles.recommendList}>열선 도로 추천 목록</b>
-          <b className={styles.item}>{`1순위 : 원미구 원미1동 원미로   `}</b>
-          <div className={styles.item1}>
-            <p className={styles.p}>결빙예측지수 : 1342</p>
-            <p className={styles.p}>경사도 : 10%</p>
-            <p className={styles.p}>교통량 : 93,480</p>
-            <p className={styles.p}>&nbsp;</p>
-            <p className={styles.p}>&nbsp;</p>
-          </div>
-          <b className={styles.item2}>2순위 : 오정구 봉오대로</b>
-          <div className={styles.item3}>
-            <p className={styles.p}>결빙예측지수 : 1342</p>
-            <p className={styles.p}>경사도 : 10%</p>
-            <p className={styles.p}>교통량 : 93,480</p>
-            <p className={styles.p}>&nbsp;</p>
-          </div>
-          <b className={styles.item4}>3순위 : 소사구 옥길동 연동로</b>
-          <div className={styles.item5}>
-            <p className={styles.p}>결빙예측지수 : 1342</p>
-            <p className={styles.p}>경사도 : 10%</p>
-            <p className={styles.p}>교통량 : 93,480</p>
-          </div>
-          <div className={styles.scrollVar}/>
-          <div className={styles.scroll}/>
-          <div className={styles.fileBtn}>
-            <div className={styles.fileForm}/>
-            <b className={styles.fileTxt}>파일 요청</b>
-          </div>
-          <div className={styles.guard3}>
-            <div className={styles.fileForm}/>
-            <b className={styles.guardTxt}>주변보호기관</b>
-          </div>
-          <div className={styles.guard2}>
-            <div className={styles.fileForm}/>
-            <b className={styles.guardTxt}>주변보호기관</b>
-          </div>
-          <div className={styles.guard1}>
-            <div className={styles.fileForm}/>
-            <b className={styles.guardTxt}>주변보호기관</b>
-          </div>
+    return (
+        <div className={styles.roadsrecommend}>
+            <div className={styles.roadtable}>
+                <div className={styles.ListHeader}>
+                    <span>열선 도로 추천 목록</span>
+                    <button>파일요청</button>
+                </div>
+                <div className={styles.ListItems}>
+                    {roads.map((road, index) => (
+                        <div key={index} className={styles.item}>
+                            <div className={styles.itemContent}>
+                                <p>{road.rank} : {road.location}</p>
+                                <button className={styles.itemButton}>상세보기</button>
+                            </div>
+                            <div>결빙예측지수 : {road.freezingIndex}</div>
+                            <div>경사도 : {road.slope}</div>
+                            <div>교통량 : {road.trafficVolume.toLocaleString()}</div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+            <div className={styles.map}/>
         </div>
-
-      </div>);
+    );
 };
 
 export default RoadsRecommend;
