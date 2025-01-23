@@ -87,7 +87,6 @@ const Login = () => {
 
       const result = await response.json();
       if (response.ok) {
-        alert("로그인 성공");
         localStorage.setItem("access_token", result.access_token);
         setLoginData({ email: "", password: "" }); // 입력 필드 초기화
         handleNavigation("Home"); // 홈 페이지로 이동
