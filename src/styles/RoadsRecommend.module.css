@@ -1,139 +1,191 @@
 .roadsrecommend {
-    display: flex;
-    position: relative; /* 기본 위치를 기준으로 상대적 배치 */
-    width: 95%; /* 화면 너비의 80%에서 300px을 제외 */
-    height: 100vh;
-    overflow: hidden;
-    margin-left: 268px; /* 왼쪽에 300px 간격 추가 */
-    box-sizing: border-box; /* 패딩 포함 너비 계산 */
+  display: flex;
+  position: relative; /* 기본 위치를 기준으로 상대적 배치 */
+  width: 95%; /* 화면 너비의 95% */
+  height: 100vh;
+  overflow: hidden;
+  margin-left: 268px; /* 왼쪽에 268px 간격 추가 */
+  box-sizing: border-box; /* 패딩 포함 너비 계산 */
 }
 
 .roadtable {
-    position: relative;
-    width: 30%;
-    height: 600px;
-    top: 200px;
-    left: 100px;
-    box-sizing: border-box; /* 패딩 포함 계산 */
-    /*모양*/
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 9px;
-    border: 1px solid rgba(0, 0, 0, 0.36);
-    box-sizing: border-box;
-    /*스크롤*/
-    overflow: auto;
-}
-
-.roadtable {
-    position: relative;
-    width: 30%;
-    height: 600px;
-    top: 200px;
-    left: 100px;
-    box-sizing: border-box; /* 패딩 포함 계산 */
-    /* 모양 */
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 9px;
-    border: 1px solid rgba(0, 0, 0, 0.36);
-    /* 스크롤 */
-    overflow: hidden; /* 전체 스크롤을 숨기고 개별로 관리 */
+  position: relative;
+  width: 30%; /* 목록의 너비 */
+  height: 600px;
+  top: 200px;
+  left: 100px; /* 왼쪽에 여백 추가 */
+  box-sizing: border-box;
+  /* 스타일 */
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 9px;
+  border: 1px solid rgba(0, 0, 0, 0.36);
+  overflow: hidden;
 }
 
 .ListHeader {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 0; /* 하단 여백 제거 */
-    padding: 20px 20px;
-    box-sizing: border-box; /* 패딩 포함 계산 */
-    font-size: 20px;
-    font-weight: 600;
-    border-bottom: 1px solid #000; /* 구분선 */
-    background-color: #fff; /* 고정된 영역 배경 */
-    position: sticky; /* 스크롤 시 고정 */
-    top: 0; /* 상단에 고정 */
-    z-index: 1; /* 위로 올라오도록 설정 */
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 0;
+  padding: 20px;
+  box-sizing: border-box;
+  font-size: 20px;
+  font-weight: 600;
+  border-bottom: 1px solid #000;
+  background-color: #fff;
+  position: sticky;
+  top: 0;
+  z-index: 1; /* 스크롤 시 헤더 고정 */
 }
 
 .ListItems {
-    height: calc(100% - 70px); /* 헤더 높이를 제외한 영역 */
-    overflow-y: auto; /* 세로 스크롤 활성화 */
-    padding: 10px; /* 내부 여백 */
-    box-sizing: border-box; /* 패딩 포함 계산 */
+  height: calc(100% - 70px); /* 헤더 높이를 제외한 영역 */
+  overflow-y: auto; /* 세로 스크롤 활성화 */
+  padding: 10px;
+  box-sizing: border-box;
 }
 
 .ListItems p {
-    font-size: 18px;
-    font-weight: 700;
-    width: 75%;
-    height: auto; /* 높이는 자동 조정 */
-    word-break: break-all; /* 긴 단어를 어디서나 줄바꿈 */
-    overflow-wrap: anywhere; /* 어디서든 줄바꿈 가능 */
-    white-space: normal; /* 공백에서 줄바꿈 허용 */
-    box-sizing: border-box; /* 패딩 포함 너비 계산 */
+  font-size: 18px;
+  font-weight: 700;
+  width: 100%;
+  word-break: break-word; /* 긴 단어 줄바꿈 */
+  white-space: normal;
 }
 
 .item {
-    cursor: pointer; /* 버튼 */
-    margin-bottom: 10px; /* 항목 간 간격 */
-    padding: 30px; /* 항목 내부 여백 */
-    padding-top: 10px; /* 항목 내부 여백 */
-    border-bottom: 2px solid #868e96; /* 테두리 */
+  cursor: pointer;
+  margin-bottom: 10px;
+  padding: 20px;
+  border-bottom: 1px solid #ddd;
+  background-color: #f9f9f9;
+  border-radius: 5px;
+  transition: transform 0.2s ease-in-out;
+}
+
+.item:hover {
+  transform: scale(1.02); /* Hover 시 살짝 확대 */
+}
+
+.itemContent {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .itemButton,
 .ListHeader button {
-    /* 위치 */
-    position: relative;
-    /* 모양 */
-    background-color: #fff;
-    border-radius: 10px;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    box-sizing: border-box;
-    border: 1px solid #A8A8A8; /* 테두리 */
-    /* 크기 */
-    width: 100px;
-    height: 50px;
-    /* 글씨 가운데 정렬 */
-    display: flex;
-    font-size: 15px;
-    font-weight: 600;
-    justify-content : center;
-    align-items : center;
-    /* 커서 */
-    cursor: pointer;
-    /* 움직임 */
-    transition: transform 80ms ease-in;
-}
-.itemButton:hover,
-.ListHeader button:hover {
-    transform: scale(1.05); /* Hover 시 확대 효과 */
-}
-.itemButton:active,
-.ListHeader button:active {
-    transform: scale(0.95); /* 클릭 시 축소 효과 */
+  position: relative;
+  background-color: #007bff;
+  color: white;
+  border-radius: 10px;
+  border: none;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  width: 100px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  transition: transform 80ms ease-in;
 }
 
-.itemContent {
-    display: flex;
-    justify-content: space-between; /* 양쪽 끝으로 배치 */
-    align-items: center; /* 세로 가운데 정렬 */
+.itemButton:hover,
+.ListHeader button:hover {
+  transform: scale(1.05);
+  background-color: #0056b3; /* Hover 시 색상 변경 */
+}
+
+.itemButton:active,
+.ListHeader button:active {
+  transform: scale(0.95);
 }
 
 .map {
-    position: relative;
-    width: 45%;
-    height: 600px;
-    box-sizing: border-box; /* 패딩 포함 계산 */
-    /*모양*/
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-    border-radius: 9px;
-    border: 1px solid rgba(0, 0, 0, 0.36);
-    box-sizing: border-box;
-    margin-left: 100px;
-    /*위치*/
-    top: 200px;
-    left: 100px;
+  position: relative;
+  width: 45%;
+  height: 600px;
+  top: 200px;
+  left: 100px;
+  box-sizing: border-box;
+  margin-left: 50px; /* 왼쪽 여백 */
+  /* 스타일 */
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 9px;
+  border: 1px solid rgba(0, 0, 0, 0.36);
 }
+
+.roadview {
+  display: none; /* 초기 상태는 숨김 */
+  position: relative; /* .map과 동일 */
+  width: 45%; /* .map과 동일 */
+  height: 600px; /* .map과 동일 */
+  top: 200px; /* .map과 동일 */
+  left: 100px; /* .map과 동일 */
+  box-sizing: border-box;
+  margin-left: 50px; /* .map과 동일 */
+  /* 스타일 */
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 9px;
+  border: 1px solid rgba(0, 0, 0, 0.36);
+}
+
+.viewRoadview .roadview {
+  display: block; /* 로드뷰 활성화 시 표시 */
+}
+
+.roadviewButton {
+  position: relative; /* 부모 요소 기준으로 위치 설정 */
+  top: 150px; /* 화면 상단에서 10px 간격 */
+  right: 10px; /* 화면 오른쪽에서 10px 간격 */
+  height: 40px;
+  z-index: 1000; /* 버튼이 지도 및 로드뷰 위에 표시되도록 설정 */
+  padding: 10px 15px; /* 버튼 내부 여백 */
+  background-color: #007bff; /* 버튼 배경색 */
+  color: white; /* 텍스트 색상 */
+  border: none; /* 테두리 제거 */
+  border-radius: 5px; /* 모서리 둥글게 처리 */
+  cursor: pointer; /* 커서를 포인터로 변경 */
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); /* 버튼 그림자 */
+  transition: transform 0.2s, background-color 0.2s; /* 호버 애니메이션 */
+}
+
+.roadviewButton:hover {
+  background-color: #0056b3; /* Hover 시 배경색 변경 */
+  transform: scale(1.1); /* Hover 시 살짝 확대 */
+}
+
+.roadviewButton:active {
+  transform: scale(0.95); /* 클릭 시 축소 */
+}
+
+.categoryButtons {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  z-index: 1000;
+  display: flex;
+  gap: 10px;
+}
+
+.categoryButton {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.categoryButton:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.categoryButton.active {
+  background-color: #0056b3;
+}
+
 
 
