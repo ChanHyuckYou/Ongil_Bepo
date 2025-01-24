@@ -1,32 +1,46 @@
+/* RoadsRecommend.module.css */
+
 .roadsrecommend {
   display: flex;
-  position: relative; /* 기본 위치를 기준으로 상대적 배치 */
-  width: 95%; /* 화면 너비의 95% */
+  flex-direction: column;
+  width: 100%;
   height: 100vh;
   overflow: hidden;
-  margin-left: 268px; /* 왼쪽에 268px 간격 추가 */
-  box-sizing: border-box; /* 패딩 포함 너비 계산 */
+  position: relative;
+  margin-left: 370px; /* .leftNavi의 너비에 맞춤 */
+  padding-top: 150px; /* .topNavi의 높이에 맞춤 */
+  box-sizing: border-box;
 }
 
-.roadtable {
-  position: relative;
-  width: 30%; /* 목록의 너비 */
-  height: 600px;
-  top: 200px;
-  left: 100px; /* 왼쪽에 여백 추가 */
+
+/* Content Section */
+.content {
+  display: flex;
+  padding: 20px;
+  gap: 20px;
   box-sizing: border-box;
-  /* 스타일 */
+  overflow: hidden;
+  height: calc(100vh - 160px); /* 전체 높이에서 Header와 Controls의 높이 빼기 */
+  width: auto;
+}
+
+/* 도로 목록 */
+.roadtable {
+  width: 30%;
+  height: 100%;
+  box-sizing: border-box;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 9px;
   border: 1px solid rgba(0, 0, 0, 0.36);
   overflow: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .ListHeader {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0;
   padding: 20px;
   box-sizing: border-box;
   font-size: 20px;
@@ -35,12 +49,12 @@
   background-color: #fff;
   position: sticky;
   top: 0;
-  z-index: 1; /* 스크롤 시 헤더 고정 */
+  z-index: 1;
 }
 
 .ListItems {
-  height: calc(100% - 70px); /* 헤더 높이를 제외한 영역 */
-  overflow-y: auto; /* 세로 스크롤 활성화 */
+  flex: 1;
+  overflow-y: auto;
   padding: 10px;
   box-sizing: border-box;
 }
@@ -49,7 +63,7 @@
   font-size: 18px;
   font-weight: 700;
   width: 100%;
-  word-break: break-word; /* 긴 단어 줄바꿈 */
+  word-break: break-word;
   white-space: normal;
 }
 
@@ -64,7 +78,7 @@
 }
 
 .item:hover {
-  transform: scale(1.02); /* Hover 시 살짝 확대 */
+  transform: scale(1.02);
 }
 
 .itemContent {
@@ -73,8 +87,7 @@
   align-items: center;
 }
 
-.itemButton,
-.ListHeader button {
+.itemButton {
   position: relative;
   background-color: #007bff;
   color: white;
@@ -90,102 +103,438 @@
   transition: transform 80ms ease-in;
 }
 
-.itemButton:hover,
-.ListHeader button:hover {
+.itemButton:hover {
   transform: scale(1.05);
-  background-color: #0056b3; /* Hover 시 색상 변경 */
+  background-color: #0056b3;
 }
 
-.itemButton:active,
-.ListHeader button:active {
+.itemButton:active {
   transform: scale(0.95);
 }
 
-.map {
+/* 지도 컨테이너 */
+.mapContainer {
   position: relative;
-  width: 45%;
-  height: 600px;
-  top: 200px;
-  left: 100px;
+  width: 55%;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+/* Controls Section */
+.controls {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 10px 15px;
+  border-radius: 8px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
+/* 카테고리 버튼 섹션 */
+.categoryButtons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.categoryButton {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  background-color: #f0f0f0;
+  color: #333;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s;
+  font-size: 14px; /* 기본 폰트 사이즈 */
+}
+
+.categoryButton:hover {
+  background-color: #e0e0e0;
+}
+
+.categoryButton.active {
+  background-color: #007bff;
+  color: white;
+}
+
+.categoryButton:active {
+  transform: scale(0.95);
+}
+
+/* Roadview Toggle Button */
+.roadviewButton {
+  height: 40px;
+  padding: 8px 15px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  transition: transform 0.2s, background-color 0.2s;
+  font-size: 16px; /* 기본 폰트 사이즈 */
+}
+
+.roadviewButton:hover {
+  background-color: #0056b3;
+  transform: scale(1.05);
+}
+
+.roadviewButton:active {
+  transform: scale(0.95);
+}
+
+/* 검색 반경 슬라이더 */
+.searchRadius {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.searchRadius label {
+  font-size: 14px;
+}
+
+.searchRadius input[type="range"] {
+  width: 200px;
+}
+
+.searchRadius span {
+  font-size: 14px;
+}
+
+/* 지도 */
+.map {
+  width: 100%;
+  height: 100%;
   box-sizing: border-box;
-  margin-left: 50px; /* 왼쪽 여백 */
-  /* 스타일 */
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 9px;
   border: 1px solid rgba(0, 0, 0, 0.36);
 }
 
+/* 로드뷰 */
 .roadview {
-  display: none; /* 초기 상태는 숨김 */
-  position: relative; /* .map과 동일 */
-  width: 45%; /* .map과 동일 */
-  height: 600px; /* .map과 동일 */
-  top: 200px; /* .map과 동일 */
-  left: 100px; /* .map과 동일 */
+  display: none;
+  width: 100%;
+  height: 100%;
   box-sizing: border-box;
-  margin-left: 50px; /* .map과 동일 */
-  /* 스타일 */
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   border-radius: 9px;
   border: 1px solid rgba(0, 0, 0, 0.36);
 }
 
 .viewRoadview .roadview {
-  display: block; /* 로드뷰 활성화 시 표시 */
+  display: block;
 }
 
-.roadviewButton {
-  position: relative; /* 부모 요소 기준으로 위치 설정 */
-  top: 150px; /* 화면 상단에서 10px 간격 */
-  right: 10px; /* 화면 오른쪽에서 10px 간격 */
-  height: 40px;
-  z-index: 1000; /* 버튼이 지도 및 로드뷰 위에 표시되도록 설정 */
-  padding: 10px 15px; /* 버튼 내부 여백 */
-  background-color: #007bff; /* 버튼 배경색 */
-  color: white; /* 텍스트 색상 */
-  border: none; /* 테두리 제거 */
-  border-radius: 5px; /* 모서리 둥글게 처리 */
-  cursor: pointer; /* 커서를 포인터로 변경 */
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25); /* 버튼 그림자 */
-  transition: transform 0.2s, background-color 0.2s; /* 호버 애니메이션 */
+.viewRoadview .map {
+  display: none;
 }
 
-.roadviewButton:hover {
-  background-color: #0056b3; /* Hover 시 배경색 변경 */
-  transform: scale(1.1); /* Hover 시 살짝 확대 */
+/* 반응형 스타일 */
+
+/* 큰 화면 (기본) */
+@media (min-width: 1200px) {
+  .roadsrecommend {
+    margin-left: 270px; /* .leftNavi의 기본 너비 */
+  }
 }
 
-.roadviewButton:active {
-  transform: scale(0.95); /* 클릭 시 축소 */
+/* 중간 화면 (태블릿) */
+@media (max-width: 1199px) and (min-width: 768px) {
+  .roadsrecommend {
+    margin-left: 220px; /* .leftNavi의 너비 조정 */
+    padding-top: 80px;
+  }
+
+  .roadtable {
+    width: 35%;
+  }
+
+  .mapContainer {
+    width: 65%;
+  }
+
+  .map,
+  .roadview {
+    width: 100%;
+  }
+
+  /* Controls Section 조정 */
+  .controls {
+    top: 10px;
+    left: 10px;
+  }
 }
 
-.categoryButtons {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  z-index: 1000;
-  display: flex;
-  gap: 10px;
+/* 작은 화면 (모바일) */
+@media (max-width: 767px) {
+  .roadsrecommend {
+    margin-left: 180px; /* .leftNavi의 너비 조정 */
+    padding-top: 80px;
+    padding: 10px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .content {
+    flex-direction: column;
+    height: calc(100vh - 160px);
+  }
+
+  .roadtable {
+    width: 100%;
+    height: 40%;
+  }
+
+  .mapContainer {
+    width: 100%;
+    height: 60%;
+  }
+
+  .map,
+  .roadview {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* 컨트롤 섹션 조정 */
+  .controls {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .roadviewButton {
+    width: 100%;
+    text-align: center;
+    margin-left: 0;
+  }
+
+  .searchRadius {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .searchRadius input[type="range"] {
+    width: 100%;
+  }
+
+  .categoryButtons {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .controls {
+    gap: 10px;
+  }
 }
 
-.categoryButton {
-  padding: 10px 15px;
-  background-color: #007bff;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: transform 0.2s, background-color 0.2s;
+/* 추가 반응형 조정 (필요 시) */
+@media (max-width: 480px) {
+  .roadsrecommend {
+    margin-left: 180px; /* .leftNavi의 너비 조정 */
+    padding-top: 60px; /* .topNavi의 높이 조정 */
+  }
+
+  .roadtable {
+    height: 50%;
+  }
+
+  .mapContainer {
+    height: 50%;
+  }
+
+  .map,
+  .roadview {
+    height: 100%;
+  }
+
+  .header {
+    padding: 10px;
+  }
+
+  .controls {
+    padding: 10px;
+  }
+
+  /* 컨트롤 섹션 조정 */
+  .controls {
+    gap: 5px;
+  }
+
+  .roadviewButton {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  .searchRadius label,
+  .searchRadius span {
+    font-size: 12px;
+  }
+
+  .categoryButton {
+    font-size: 10px;
+    padding: 4px 6px;
+  }
 }
 
-.categoryButton:hover {
-  background-color: #0056b3;
-  transform: scale(1.05);
+/* 중간 화면 (태블릿) */
+@media (max-width: 1199px) and (min-width: 768px) {
+  .roadsrecommend {
+    margin-left: 220px; /* .leftNavi의 너비 조정 */
+    padding-top: 80px;
+  }
+
+  .roadtable {
+    width: 35%;
+  }
+
+  .mapContainer {
+    width: 65%;
+  }
+
+  .map,
+  .roadview {
+    width: 100%;
+  }
+
+  /* Controls Section 조정 */
+  .controls {
+    top: 10px;
+    left: 10px;
+  }
 }
 
-.categoryButton.active {
-  background-color: #0056b3;
+/* 작은 화면 (모바일) */
+@media (max-width: 767px) {
+  .roadsrecommend {
+    margin-left: 180px; /* .leftNavi의 너비 조정 */
+    padding-top: 80px;
+    padding: 10px;
+  }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .content {
+    flex-direction: column;
+    height: calc(100vh - 160px);
+  }
+
+  .roadtable {
+    width: 100%;
+    height: 40%;
+  }
+
+  .mapContainer {
+    width: 100%;
+    height: 60%;
+  }
+
+  .map,
+  .roadview {
+    width: 100%;
+    height: 100%;
+  }
+
+  /* 컨트롤 섹션 조정 */
+  .controls {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .roadviewButton {
+    width: 100%;
+    text-align: center;
+    margin-left: 0;
+  }
+
+  .searchRadius {
+    width: 100%;
+    margin-left: 0;
+  }
+
+  .searchRadius input[type="range"] {
+    width: 100%;
+  }
+
+  .categoryButtons {
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .controls {
+    gap: 10px;
+  }
 }
 
+/* 추가 반응형 조정 (필요 시) */
+@media (max-width: 480px) {
+  .roadsrecommend {
+    margin-left: 180px; /* .leftNavi의 너비 조정 */
+    padding-top: 60px; /* .topNavi의 높이 조정 */
+  }
 
+  .roadtable {
+    height: 50%;
+  }
 
+  .mapContainer {
+    height: 50%;
+  }
+
+  .map,
+  .roadview {
+    height: 100%;
+  }
+
+  .header {
+    padding: 10px;
+  }
+
+  .controls {
+    padding: 10px;
+  }
+
+  /* 컨트롤 섹션 조정 */
+  .controls {
+    gap: 5px;
+  }
+
+  .roadviewButton {
+    font-size: 12px;
+    padding: 4px 8px;
+  }
+
+  .searchRadius label,
+  .searchRadius span {
+    font-size: 12px;
+  }
+
+  .categoryButton {
+    font-size: 10px;
+    padding: 4px 6px;
+  }
+}
