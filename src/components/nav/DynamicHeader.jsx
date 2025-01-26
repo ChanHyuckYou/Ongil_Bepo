@@ -12,7 +12,7 @@ const DynamicHeader = () => {
     {paths: ['/roads-search'], icon: '/images/road_icon.png', text: '열선 도로 추천'},
     {paths: ['/roads-recommend'], icon: '/images/road_icon.png', text: '열선 도로 추천'},
     {
-      paths: ['/board-main', '/board-create'],
+      paths: ['/board-main', '/board-create', '/board-detail'],
       icon: '/images/board_icon.png',
       text: '정보 게시판'
     },
@@ -28,7 +28,7 @@ const DynamicHeader = () => {
   ];
 
   const currentHeader = headerData.find(entry =>
-      entry.paths.includes(location.pathname)
+    entry.paths.some(path => location.pathname.startsWith(path)) // 경로 시작이 일치하는 경우
   ) || {
     icon: '/images/default_icon.png',
     text: '페이지를 찾을 수 없습니다',

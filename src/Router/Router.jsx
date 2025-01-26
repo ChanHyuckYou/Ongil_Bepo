@@ -74,6 +74,10 @@ function Router() {
         title: "Board Detail",
         description: "View details of the board post",
       },
+      "/board-detail/:postId": {
+        title: "Board Detail",
+        description: "View details of the board post",
+      },
     };
 
     const defaultMeta = {
@@ -83,9 +87,8 @@ function Router() {
 
     const matchedPath = Object.keys(metaData).find((path) => {
       if (path.includes(":")) {
-        // 동적 경로 처리
-        const basePath = path.split("/:")[0];
-        return pathname.startsWith(basePath);
+        const basePath = path.split("/:")[0]; // 동적 경로의 기본 경로 추출
+        return pathname.startsWith(basePath); // 기본 경로가 일치하는지 확인
       }
       return path === pathname;
     });
@@ -111,7 +114,7 @@ function Router() {
           <Route path="/roads-recommend" element={<RoadsRecommend/>}/>
           <Route path="/roads-search" element={<RoadsSearch/>}/>
           <Route path="/board-main" element={<BoardMain/>}/>
-          <Route path="/board-detail" element={<BoardDetail/>}/>
+          <Route path="/board-detail/:postId" element={<BoardDetail/>}/>
           <Route path="/board-create" element={<BoardCreate/>}/>
           {/*<Route path="/board/:id" element={<BoardId/>}/>  동적 경로 */}
           <Route path="/mypage" element={<Mypage/>}/>

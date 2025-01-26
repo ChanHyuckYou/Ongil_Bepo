@@ -1,13 +1,13 @@
-import {useState, useEffect} from "react";
-import {useParams} from "react-router-dom"; // 게시글 ID를 URL에서 추출
-import {io} from "socket.io-client"; // WebSocket 클라이언트
+import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom"; // 게시글 ID를 URL에서 추출
+import { io } from "socket.io-client"; // WebSocket 클라이언트
 import styles from "../styles/BoardDetail.module.css";
 
 const webSocketUrl = "http://localhost:3000";
 const socket = io(webSocketUrl);
 
 const BoardDetail = () => {
-  const {postId} = useParams(); // URL에서 게시글 ID 가져오기
+  const { postId } = useParams(); // URL에서 게시글 ID 가져오기
   const [postDetail, setPostDetail] = useState(null); // 게시글 상세 정보 상태
   const [loading, setLoading] = useState(true); // 로딩 상태
 
@@ -35,32 +35,54 @@ const BoardDetail = () => {
   }
 
   return (
-      <div className={styles.boarddetail}>
-        <div className={styles.board}>
-          {/* 제목 */}
-          <div className={styles.postForm}>
-            <b className={styles.boardPostTxt}>{postDetail.title}</b>
-          </div>
+    <div className={styles.boarddetail}>
+      <div className={styles.board}>
 
-          {/* 내용 */}
-          <div className={styles.contentForm}>
-            <b className={styles.boardContentTxt}>{postDetail.content}</b>
-          </div>
-
-          {/* 작성자 및 날짜 */}
-          <b className={styles.createUser}>
-            작성자: {postDetail.author}
-          </b>
-          <b className={styles.createDay}>{postDetail.date}</b>
+        {/* 작성자 및 날짜 */}
+        <div className={styles.metaInfo}>
+          <p className={styles.author}>
+            <strong>작성자:</strong> {postDetail.author}
+          </p>
+          <p className={styles.date}>
+            <strong>작성일:</strong> {postDetail.date}
+          </p>
+          <p className={styles.views}>
+            <strong>조회수:</strong> {postDetail.views}
+          </p>
+          <p className={styles.category}>
+          <strong>카테고리:</strong> {postDetail.category}
+          </p>
+        </div>
+        <div className={styles.line}/>
+        {/* 제목 */}
+        <div className={styles.postForm}>
+          {postDetail.title}
+        </div>
+        <div className={styles.line}/>
+        {/* 내용 */}
+        <div className={styles.contentForm}>
+          {postDetail.content}
         </div>
 
-        {/* 댓글 영역 (추후 확장 가능) */}
-        <div className={styles.commentsView}>
-          <div className={styles.commentFf}>
-            댓글 기능은 여기에 구현됩니다.
-          </div>
-        </div>
       </div>
+
+        {/* 파일 다운로드 링크 표시 */}
+        <div className={styles.fileList}>
+          {postDetail.files && postDetail.files.map((file, index) => (
+            <div key={index} className={styles.fileItem}>
+              <span className={styles.fileName}>{file.name}</span>
+              {file.downloadUrl && (
+                <a href={file.downloadUrl} download>다운로드</a>
+              )}
+            </div>
+          ))}
+        </div>
+      {/* 댓글 영역 (추후 확장 가능) */}
+      <div className={styles.commentsView}>
+        <h3>댓글</h3>
+        <p>댓글 기능은 여기에 구현됩니다.</p>
+      </div>
+    </div>
   );
 };
 

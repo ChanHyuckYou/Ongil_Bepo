@@ -3,7 +3,7 @@ import {useNavigate} from 'react-router-dom';
 function useNavigations() {
   const navigate = useNavigate();
 
-  return (page) => {
+   return (page, params) => {
     switch (page) {
       case "Home":
         navigate('/home');
@@ -24,7 +24,12 @@ function useNavigations() {
         navigate('/board-main');
         break;
       case "BoardDetail":
-        navigate('/board-detail');
+        // params.postId를 통해 동적 경로 처리
+        if (params?.postId) {
+          navigate(`/board-detail/${params.postId}`);
+        } else {
+          console.error("Missing postId for BoardDetail navigation");
+        }
         break;
       case "BoardCreate":
         navigate('/board-create');

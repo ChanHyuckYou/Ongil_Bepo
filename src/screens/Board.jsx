@@ -54,7 +54,8 @@ const Board = () => {
   };
 
   const handleDetailNavigation = (postId) => {
-    navigateTo(`/board-detail/${postId}`); // 상세 페이지로 이동
+    console.log(`/board-detail/${postId}`);
+    navigateTo(`/board-detail/${postId}`);
   };
 
   // 페이지 변경 핸들러
@@ -156,8 +157,7 @@ const Board = () => {
                   <div
                       key={item.id}
                       className={styles.boardListItem}
-                      onClick={() => handleDetailNavigation(
-                          item.id)} // 클릭 시 상세 페이지로 이동
+                      onClick={() => navigateTo("BoardDetail", { postId: item.id })} // 동적 경로로 이동
                       style={{cursor: "pointer"}} // 클릭 가능 커서 추가
                   >
                     <span className={styles.boardTitle}>{item.title}</span>

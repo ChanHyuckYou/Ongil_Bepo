@@ -68,6 +68,21 @@ io.on("connection", (socket) => {
   });
 });
 
+
+/*// 파일 업로드 처리
+app.post('/upload', upload.array('files'), (req, res) => {
+  if (!req.files) {
+    return res.status(400).json({ message: "No files uploaded" });
+  }
+
+  // 업로드된 파일의 URL을 생성
+  const fileUrls = req.files.map(file => {
+    return `/uploads/${file.filename}`; // 파일 경로 생성 (업로드된 파일 이름)
+  });
+
+  res.json({ fileUrls });
+});*/
+
 server.listen(3000, () => {
   console.log("Server is running on port 3000");
 });

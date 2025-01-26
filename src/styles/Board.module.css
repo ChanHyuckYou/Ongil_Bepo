@@ -3,8 +3,8 @@
   width: 80%; /* SideNavigation 제외 */
   background-color: #fff;
   padding: 20px 40px; /* 좌우 여백 */
-  position: absolute;
-  top: 250px;
+  position: relative;
+  top: 200px;
   left: 330px;
   box-sizing: border-box; /* 패딩 포함 계산 */
 }
