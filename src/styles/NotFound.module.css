@@ -1,11 +1,11 @@
 /* NotFound.css */
 
-body {
+.body {
   margin: 0;
   font-family: Arial, sans-serif;
 }
 
-.not-found-container {
+.container {
   background-color: #f4f4f9;
   color: #333;
   display: flex;
@@ -18,18 +18,18 @@ body {
   box-sizing: border-box;
 }
 
-h1 {
+.h1 {
   font-size: 4rem;
   color: #ff6b6b;
   margin: 0;
   transition: color 0.3s;
 }
 
-h1:hover {
+.h1:hover {
   color: #e63946;
 }
 
-p {
+.p {
   font-size: 1.2rem;
   margin: 20px 0;
 }
@@ -51,7 +51,7 @@ p {
   transform: scale(1.05);
 }
 
-.btn-container {
+.btn_container {
   margin-top: 20px;
   display: flex;
   flex-wrap: wrap;
@@ -86,11 +86,11 @@ p {
 
 /* 태블릿과 그보다 큰 화면 */
 @media (min-width: 768px) {
-  h1 {
+  .h1 {
     font-size: 5rem;
   }
 
-  p {
+  .p {
     font-size: 1.5rem;
   }
 
@@ -103,11 +103,11 @@ p {
 
 /* 모바일 화면 */
 @media (max-width: 767px) {
-  h1 {
+  .h1 {
     font-size: 3rem;
   }
 
-  p {
+  .p {
     font-size: 1rem;
   }
 
