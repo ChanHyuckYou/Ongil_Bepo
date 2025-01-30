@@ -9,6 +9,7 @@
   align-items: center;
   margin-left: 80px;
   background-color: #fff; /* 헤더 배경색 추가로 겹침 방지 */
+  background-repeat: no-repeat; /* 이미지 반복 취소 */
 }
 
 /* 아이콘 스타일 */
@@ -65,8 +66,8 @@
   }
 
   .headIcon {
-    width: 40px;
-    height: 40px;
+    width: 45px;
+    height: 45px;
   }
 }
 
@@ -80,8 +81,8 @@
   }
 
   .headIcon {
-    width: 30px;
-    height: 30px;
+    width: 45px;
+    height: 45px;
     margin-right: 10px;
   }
 

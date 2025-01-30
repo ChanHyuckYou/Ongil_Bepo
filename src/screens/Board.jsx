@@ -53,11 +53,6 @@ const Board = () => {
     navigateTo(page); // 작성 페이지로 이동
   };
 
-  const handleDetailNavigation = (postId) => {
-    console.log(`/board-detail/${postId}`);
-    navigateTo(`/board-detail/${postId}`);
-  };
-
   // 페이지 변경 핸들러
   const goToPage = (page) => {
     if (page < 1 || page > totalPages) {
@@ -146,6 +141,7 @@ const Board = () => {
           {/* 게시판 리스트 */}
           <div className={styles.boardListView}>
             <div className={styles.boardListHeader}>
+              <span>카테고리</span>
               <span>제목</span>
               <span>작성자</span>
               <span>조회수</span>
@@ -160,6 +156,7 @@ const Board = () => {
                       onClick={() => navigateTo("BoardDetail", { postId: item.id })} // 동적 경로로 이동
                       style={{cursor: "pointer"}} // 클릭 가능 커서 추가
                   >
+                    <span className={styles.boardCategory}>{item.category}</span>
                     <span className={styles.boardTitle}>{item.title}</span>
                     <span className={styles.boardAuthor}>{item.author}</span>
                     <span className={styles.boardViews}>{item.views}</span>

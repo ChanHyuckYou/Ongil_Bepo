@@ -22,33 +22,58 @@
   box-sizing: border-box;
 }
 
+/* 게시글 영역 */
+.board {
+  margin: 20px auto;
+  width: 100%;
+  height: auto;
+  border: 1px solid rgba(0, 0, 0, 0.36);
+  border-radius: 9px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  background-color: #fff;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+/* 제목 영역 */
+.titleForm {
+  font-size: 24px;
+  font-weight: bold;
+  margin-bottom: 10px;
+  white-space: normal; /* 텍스트가 길어지면 자동으로 줄 바꿈 */
+  word-wrap: break-word; /* 긴 단어가 있을 경우 줄 바꿈 */
+}
+
+/* 내용 영역 */
+.contentForm {
+  font-size: 16px;
+  line-height: 1.5;
+  white-space: normal; /* 텍스트가 길어지면 자동으로 줄 바꿈 */
+  word-wrap: break-word; /* 긴 단어가 있을 경우 줄 바꿈 */
+  padding: 10px 0;
+}
+
 .metaInfo {
   display: flex;
   flex-wrap: wrap; /* 필요 시 줄 바꿈 */
   gap: 20px; /* 항목들 간의 간격을 설정 */
 }
 
-.line {
- border-top: 0.5px solid #808080;
- width: 100%;
- margin-bottom: 20px;
-}
-.author,
-.date,
-.views,
-.category {
+.metaInfo p {
+  margin: 0;              /* 기본 마진 제거 */
+  white-space: nowrap;    /* 줄 바꿈 방지 */
   display: block;
   font-size: 14px;
   color: #555;
   margin-top: 5px;
 }
 
-.postForm {
-  margin-bottom: 20px;
-  font-size: 20px;
-  font-weight: 500;
+.line {
+ border-top: 0.5px solid #808080;
+ width: 100%;
+ margin-bottom: 20px;
+ margin-top: 20px;
 }
-
 
 /* 댓글 영역 */
 .commentsView {
@@ -87,26 +112,119 @@
   margin-top: 5px;
 }
 
-/* 생성 버튼 */
-.createBtn {
-  width: 50px;
-  height: 50px;
-  background-color: #007bff;
-  color: #fff;
-  font-size: 24px;
-  font-weight: bold;
+/* 댓글 입력 부분 */
+.commentInput {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  border-radius: 50%;
+  justify-content: flex-end; /* 버튼을 오른쪽 정렬 */
+  align-items: center; /* 입력창과 버튼을 세로 중앙 정렬 */
+  gap: 10px; /* 입력창과 버튼 간격 */
+}
+
+.commentInput input{
+  flex: 1;
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 16px;
+  width: 80%;
+}
+
+.commentInput button{
+  /* 모양 */
+  background-color: #79A1A8;
+  border-radius: 10px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  box-sizing: border-box;
+  border: 1px solid #A8A8A8; /* 테두리 */
+  /* 크기 */
+  width: 100px;
+  height: 50px;
+  /* 글씨 */
+  color: #fff;
+  font-size: 15px;
+  font-weight: 600;
+  text-align: center; /* 텍스트 가로 가운데 정렬 */
+  line-height: 50px; /* 버튼 높이와 동일하게 설정하여 수직 가운데 정렬 */
+  /* 커서 */
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  /* 움직임 */
+  transition: transform 80ms ease-in;
 }
 
-.createBtn:hover {
-  background-color: #0056b3;
+.commentInput button:hover {
+  transform: scale(1.05); /* Hover 시 확대 효과 */
 }
 
+.commentInput button:active {
+  transform: scale(0.95); /* 클릭 시 축소 효과 */
+}
+
+/* 댓글 내용들 */
+.commentList {
+  list-style: none; /* 기본 리스트 스타일 제거 */
+  padding: 0;
+  margin-left: 10px;
+}
+
+.commentItem {
+  display: flex;
+  flex-direction: column; /* 세로로 정렬 */
+  padding: 10px 0;
+  border-bottom: 1px solid #ddd; /* 아래쪽 경계선 */
+  flex-grow: 1; /* 자식 요소가 내용에 맞게 확장되도록 설정 */
+}
+
+.commentItem strong {
+  font-size: 16px;
+  font-weight: bold; /* 사용자 이름 강조 */
+}
+
+.commentItem .commentContent {
+  font-size: 14px;
+  color: #555; /* 본문 텍스트 색상 */
+  line-height: 1.4;
+  word-wrap: break-word; /* 긴 단어가 있을 경우 줄 바꿈 처리 */
+  white-space: normal; /* 기본적으로 줄 바꿈 허용 */
+}
+
+.commentItem .commentDate {
+  font-size: 12px;
+  color: #999; /* 날짜 텍스트 색상 */
+}
+
+
+.buttonInput {
+  text-align: right;
+}
+
+/* 수정 버튼, 삭제 버튼 */
+.editButton,
+.deleteButton {
+  margin-left: auto;
+  margin-top: 5px;
+  font-size: 12px;
+  background-color: transparent;
+  color: #d9534f;
+  padding: 10px 15px;
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+}
+
+.editButton:hover,
+.deleteButton:hover {
+  text-decoration: underline;
+  background-color: darkred;
+}
+
+.editButton {
+  background-color: transparent;
+  color: #93A9EB;
+}
+
+.editButton:hover {
+  background-color: darkblue;
+}
 
 /* 반응형 스타일 */
 /* 태블릿 */
@@ -199,4 +317,55 @@
     padding: 10px;
   }
 
+}
+
+
+
+
+/* BoardDetail.module.css */
+.fileList {
+  margin-top: 20px;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+}
+
+.fileItem {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.fileItem:last-child {
+  border-bottom: none;
+}
+
+.fileName {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.fileItem a {
+  font-size: 14px;
+  font-weight: 500;
+  color: #007bff;
+  text-decoration: none;
+  border: 1px solid #007bff;
+  padding: 5px 10px;
+  border-radius: 4px;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.fileItem a:hover {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.fileItem a:active {
+  background-color: #0056b3;
 }

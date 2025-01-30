@@ -38,17 +38,26 @@ io.on("connection", (socket) => {
   });
 
   // 클라이언트로부터 게시글 업데이트 요청
-  socket.on("updatePost", (updatedPost) => {
-    console.log("Received updated post:", updatedPost);
+  socket.on("updatePost", (updatedPost, callback) => {
+    console.log("게시글 수정 요청:", updatedPost);
 
-    // 기존 게시글을 찾아 업데이트
-    const index = posts.findIndex((item) => item.id === updatedPost.id);
+    // `postId`로 기존 게시글 찾기
+    const index = posts.findIndex((post) => post.id === updatedPost.postId);
+
     if (index !== -1) {
-      posts[index] = updatedPost; // 기존 데이터 수정
-      io.emit("updatedPost", updatedPost); // 모든 클라이언트에게 브로드캐스팅
-      console.log("Post updated successfully:", updatedPost);
+      // 기존 데이터 유지하면서 새로운 데이터 병합
+      posts[index] = { ...posts[index], ...updatedPost };
+
+      console.log("게시글 수정 완료:", posts[index]);
+
+      // 모든 클라이언트에게 수정된 게시글 전달
+      io.emit("updatedPost", posts[index]);
+
+      // 클라이언트에 성공 응답 반환
+      callback({ success: true, message: "게시글 수정 성공" });
     } else {
-      console.log("Post not found for update:", updatedPost);
+      console.log("게시글 수정 실패: 찾을 수 없음", updatedPost);
+      callback({ success: false, message: "게시글을 찾을 수 없습니다." });
     }
   });
 
@@ -62,26 +71,71 @@ io.on("connection", (socket) => {
     }
   });
 
+  // 게시글 삭제 처리
+  socket.on("deletePost", ({ postId, author }, callback) => {
+    const index = posts.findIndex((p) => p.id === postId);
+    if (index !== -1) {
+      if (posts[index].author !== author) {
+        console.log("게시글 삭제 실패: 권한 없음");
+        callback({ success: false, message: "게시글 삭제 권한이 없습니다." });
+        return;
+      }
+
+      posts.splice(index, 1);
+      io.emit("deletedPost", postId);
+      console.log("게시글 삭제 성공:", postId);
+      callback({ success: true });
+    } else {
+      console.log("게시글 삭제 실패: 찾을 수 없음", postId);
+      callback({ success: false, message: "게시글을 찾을 수 없습니다." });
+    }
+  });
+
+  // 댓글 요청 처리
+  socket.on("createComment", (comment, callback) => {
+    const post = posts.find((p) => p.id === comment.postId);
+    if (post) {
+      post.comments = post.comments || [];
+      post.comments.push(comment);
+      io.emit("newComment", comment);
+      console.log("댓글 저장 성공:", comment);  // ← 이 로그가 뜨는지 확인!
+      callback({ success: true });
+    } else {
+      console.log("댓글 저장 실패: 게시글이 없음");
+      callback({ success: false, message: "게시글을 찾을 수 없습니다." });
+    }
+  });
+
+  // 댓글 삭제 처리
+  socket.on("deleteComment", ({ postId, commentDate, author }, callback) => {
+    const post = posts.find((p) => p.id === postId);
+    if (!post || !post.comments) {
+      callback({ success: false, message: "게시글을 찾을 수 없습니다." });
+      return;
+    }
+
+    // 🔥 `findIndex` 대신 `filter`를 사용해서 안전하게 삭제
+    const updatedComments = post.comments.filter(
+      (comment) => comment.date !== commentDate || comment.author !== author
+    );
+
+    // 댓글 개수가 줄어들었는지 확인 (삭제 성공 여부)
+    if (updatedComments.length < post.comments.length) {
+      post.comments = updatedComments;
+      io.emit("deletedComment", { postId, commentDate }); // 모든 클라이언트에 삭제 정보 전달
+      console.log("댓글 삭제 성공:", commentDate);
+      callback({ success: true });
+    } else {
+      console.log("댓글 삭제 실패: 댓글을 찾을 수 없음");
+      callback({ success: false, message: "댓글을 찾을 수 없습니다." });
+    }
+  });
+
   // 클라이언트 연결 해제
   socket.on("disconnect", () => {
     console.log("Client disconnected:", socket.id);
   });
 });
-
-
-/*// 파일 업로드 처리
-app.post('/upload', upload.array('files'), (req, res) => {
-  if (!req.files) {
-    return res.status(400).json({ message: "No files uploaded" });
-  }
-
-  // 업로드된 파일의 URL을 생성
-  const fileUrls = req.files.map(file => {
-    return `/uploads/${file.filename}`; // 파일 경로 생성 (업로드된 파일 이름)
-  });
-
-  res.json({ fileUrls });
-});*/
 
 server.listen(3000, () => {
   console.log("Server is running on port 3000");
