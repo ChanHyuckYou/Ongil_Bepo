@@ -1,6 +1,14 @@
+// src/components/Login.jsx
+
 import useNavigations from "../components/Navigation/Navigations.jsx";
 import styles from "../styles/Login.module.css";
-import { useState } from "react";
+import {useState} from "react";
+import {
+  checkEmail,
+  sendSignupCode,
+  completeSignup,
+  loginUser
+} from '../components/ApiRoute/auth.jsx';
 
 const Login = () => {
   const [isSignUpActive, setIsSignUpActive] = useState(false); // 상태 관리
@@ -8,32 +16,36 @@ const Login = () => {
     name: "",
     email: "",
     password: "",
-    confirmPassword: "",
-    managementArea: "",
+    confirm_password: "", // confirmPassword에서 confirm_password로 변경
+    jurisdiction: "",    // managementArea에서 jurisdiction으로 변경
     department: "",
   });
+
   const [loginData, setLoginData] = useState({
     email: "",
     password: "",
   });
+  const [error, setError] = useState(""); // 오류 메시지 상태
 
   // 이벤트 핸들러: Sign Up 버튼 클릭
   const handleSignUpClick = () => {
     setIsSignUpActive(true);
+    setError("");
   };
 
   // 이벤트 핸들러: Sign In 버튼 클릭
   const handleSignInClick = () => {
     setIsSignUpActive(false);
+    setError("");
   };
 
   // Input 변경 핸들러
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const {name, value} = e.target;
     if (isSignUpActive) {
-      setFormData((prev) => ({ ...prev, [name]: value }));
+      setFormData((prev) => ({...prev, [name]: value}));
     } else {
-      setLoginData((prev) => ({ ...prev, [name]: value }));
+      setLoginData((prev) => ({...prev, [name]: value}));
     }
   };
 
@@ -43,133 +55,73 @@ const Login = () => {
     navigateTo(page);
   };
 
-  // 회원가입 이메일 전송
-  const handleSendEmail = async (email) => {
-    try {
-      const response = await fetch("http://127.0.0.1:8000/auth/signup/send-code", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: email }),
-      });
-
-      const result = await response.json();
-      if (response.ok) {
-        alert(result.message || "회원가입 인증 이메일을 발송했습니다.");
-      } else {
-        alert(result.detail || "이메일 전송 실패.");
-      }
-    } catch (error) {
-      console.error("이메일 전송 오류:", error);
-      alert("서버 오류가 발생했습니다.");
-    }
-  };
-
-  // 이메일 인증 후 회원가입 완료
-  const handleCompleteSignUp = async (email, password, confirm_password, name, managementArea, department) => {
-    try {
-      const response = await fetch("http://127.0.0.1:8000/auth/signup/complete", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-          confirm_password: confirm_password,
-          name: name,
-          jurisdiction: managementArea,  // 예시로, 사용자의 권한을 "user"로 설정
-          department: department,
-        }),
-      });
-
-      const result = await response.json();
-      if (response.ok) {
-        alert(result.message || "회원가입이 완료되었습니다.");
-      } else {
-        alert(result.detail || "회원가입에 실패했습니다.");
-      }
-    } catch (error) {
-      console.error("회원가입 완료 오류:", error);
-      alert("서버 오류가 발생했습니다.");
-    }
-  };
-
-  // 회원가입 요청
-  const handleSignUpSubmit = async (e) => {
-    e.preventDefault();
-
-    // 1. 이메일 전송을 먼저 실행
-    await handleSendEmail(formData.email);
-
-    // 2. 사용자에게 이메일 인증을 요청한 후
-    const confirmation = window.confirm("이메일을 확인하고 인증을 완료하세요. 완료되면 회원가입을 완료할 수 있습니다.");
-
-    if (confirmation) {
-      // 3. 이메일 인증 후 회원가입 완료 요청
-      await handleCompleteSignUp(formData.email, formData.password, formData.confirmPassword, formData.name, formData.managementArea, formData.department);
-/*       setFormData({
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        managementArea: "",
-        department: "",
-      });
-      setIsSignUpActive(false); // 로그인 화면으로 전환 */
-    } else {
-      alert("이메일 인증을 완료해야 회원가입을 계속 진행할 수 있습니다.");
-    }
-  };
-
-  // 로그인 요청
-  const handleSignInSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch("http://127.0.0.1:8000/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(loginData),
-      });
-
-      const result = await response.json();
-      if (response.ok) {
-        localStorage.setItem("access_token", result.access_token);
-        localStorage.setItem("is_admin", result.is_admin); // ✅ 관리자 여부 저장
-        setLoginData({ email: "", password: "" }); // 입력 필드 초기화
-        handleNavigation("Home"); // 홈 페이지로 이동
-      } else {
-        alert(result.detail || "로그인에 실패했습니다.");
-      }
-    } catch (error) {
-      console.error("로그인 오류:", error);
-      alert("서버 오류가 발생했습니다.");
-    }
-  };
-
-  // 중복확인 요청
+  // 이메일 중복 확인 요청
   const handleEmailCheck = async () => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/auth/signup/check-email", {
-        method: "POST", // 반드시 POST
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: formData.email }),
-      });
-
-      const result = await response.json();
-
-      if (response.ok) {
-        alert(result.message);  // result가 JSON 객체이므로 result.message 사용
-      } else {
-        alert(result.detail || "에러가 발생했습니다.");
-      }
-    } catch (error) {
-      console.error("중복 확인 오류:", error);
-      alert("서버 오류가 발생했습니다.");
+      const result = await checkEmail(formData.email);
+      alert(result.message || "사용 가능한 이메일입니다.");
+    } catch (err) {
+      alert(err.detail || err.message || "이메일 확인에 실패했습니다.");
     }
   };
 
+  const handleSignUpSubmit = async (e) => {
+    e.preventDefault();
+    setError(""); // 에러 초기화
+
+    // 비밀번호와 확인 비밀번호 일치 여부 확인
+    if (formData.password !== formData.confirm_password) {
+      setError("비밀번호가 일치하지 않습니다.");
+      return;
+    }
+
+    try {
+      // 1. 이메일 중복 확인
+      await checkEmail(formData.email);
+
+      // 2. 인증 코드 전송
+      await sendSignupCode(formData.email);
+      alert("인증 코드가 이메일로 전송되었습니다. 이메일을 확인해주세요.");
+      setIsSignUpActive(false); // 이메일 인증 후 로그인 화면으로 전환
+    } catch (err) {
+      // 에러 로그 출력하여 정확한 내용을 확인
+      console.error("회원가입 에러:", err);
+
+      // 에러 메시지 추출 및 문자열로 변환
+      let errorMessage = "회원가입에 실패했습니다.";
+      if (err.detail) {
+        if (Array.isArray(err.detail)) {
+          // Pydantic의 상세 에러 메시지 배열 처리
+          errorMessage = err.detail.map((d) => d.msg).join(", ");
+        } else if (typeof err.detail === "string") {
+          errorMessage = err.detail;
+        }
+      } else if (err.message) {
+        if (typeof err.message === "string") {
+          errorMessage = err.message;
+        } else {
+          // message가 객체인 경우 JSON 문자열로 변환
+          errorMessage = JSON.stringify(err.message);
+        }
+      }
+
+      setError(errorMessage);
+    }
+  };
+
+// 로그인 오류 처리에서 같은 방식으로 적용
+  const handleSignInSubmit = async (e) => {
+    e.preventDefault();
+    setError(""); // 에러 초기화
+
+    try {
+      await loginUser(loginData.email, loginData.password);
+      setLoginData({email: "", password: ""}); // 입력 필드 초기화
+      handleNavigation("Home"); // 홈 페이지로 이동
+    } catch (err) {
+      setError(err.detail || err.message || "로그인에 실패했습니다.");
+    }
+  };
 
   return (
       <div className={styles.background}>
@@ -183,7 +135,7 @@ const Login = () => {
               className={`${styles.container__form} ${styles["container--signup"]}`}
           >
             <form className={styles.form} onSubmit={handleSignUpSubmit}>
-              <img src="public/images/login_logo.png" className={styles.form__title} />
+              <h2 className={styles.form__title}>온길</h2>
               <input
                   type="text"
                   name="name"
@@ -222,19 +174,19 @@ const Login = () => {
               />
               <input
                   type="password"
-                  name="confirmPassword"
+                  name="confirm_password" // confirmPassword에서 confirm_password로 변경
                   placeholder="Re-enter password"
                   className={styles.input}
-                  value={formData.confirmPassword}
+                  value={formData.confirm_password}
                   onChange={handleChange}
                   required
               />
               <input
                   type="text"
-                  name="managementArea"
+                  name="jurisdiction" // managementArea에서 jurisdiction으로 변경
                   placeholder="Local government area"
                   className={styles.input}
-                  value={formData.managementArea}
+                  value={formData.jurisdiction}
                   onChange={handleChange}
                   required
               />
@@ -247,6 +199,7 @@ const Login = () => {
                   onChange={handleChange}
                   required
               />
+              {error && <p className={styles.error}>{error}</p>}
               <button type="submit" className={styles.btn}>
                 회원가입
               </button>
@@ -258,7 +211,7 @@ const Login = () => {
               className={`${styles.container__form} ${styles["container--signin"]}`}
           >
             <form className={styles.form} onSubmit={handleSignInSubmit}>
-              <img src="public/images/login_logo.png" className={styles.form__title} />
+              <h2 className={styles.form__title}>온길</h2>
               <input
                   type="email"
                   name="email"
@@ -277,6 +230,7 @@ const Login = () => {
                   onChange={handleChange}
                   required
               />
+              {error && <p className={styles.error}>{error}</p>}
               <a
                   href="#"
                   className={styles.link}

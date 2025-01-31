@@ -1,11 +1,7 @@
 import {useState, useEffect} from "react";
-import {io} from "socket.io-client";
+
 import styles from "../styles/Board.module.css";
 import useNavigations from "../components/Navigation/Navigations.jsx";
-
-const webSocketUrl = "http://localhost:3000";
-// WebSocket 연결
-const socket = io(webSocketUrl);
 
 const ITEMS_PER_PAGE = 10; // 페이지당 게시글 수
 
@@ -153,7 +149,8 @@ const Board = () => {
                   <div
                       key={item.id}
                       className={styles.boardListItem}
-                      onClick={() => navigateTo("BoardDetail", { postId: item.id })} // 동적 경로로 이동
+                      onClick={() => navigateTo("BoardDetail",
+                          {postId: item.id})} // 동적 경로로 이동
                       style={{cursor: "pointer"}} // 클릭 가능 커서 추가
                   >
                     <span className={styles.boardCategory}>{item.category}</span>
