@@ -24,15 +24,12 @@
 }
 
 .form__title {
-  	font-size: 50px;
-  	font-family: Stylish;
-  	display: inline-block;
-  	width: 100px;
-  	height: 65px;
-  	text-shadow: 6px 6px 6px rgba(0, 0, 0, 0.25);
-  	margin: 0;
-    margin-bottom: 1.25rem;
-    color: #848F8E;
+  display: inline-block;
+  width: 120px;
+  height: auto;
+  margin: 0;
+  margin-right: 1.26rem;
+  margin-bottom: 0.1rem;
 }
 
 .link {
@@ -155,9 +152,9 @@
 .btn {
   /* 색상 */
   background-color: var(--blue);
-  background-image: linear-gradient(90deg, var(--blue) 0%, var(--lightblue) 74%);
-  border-radius: 20px;
-  border: 1px solid var(--blue); /* 테두리 */
+  background-image: linear-gradient(90deg, #848F8E 0%, var(--lightblue) 74%);
+  border-radius: 13px;
+  border: none; /* 테두리 */
   color: var(--white);
   cursor: pointer;  /* 커서 */
    /* 글씨 */
@@ -172,12 +169,14 @@
   margin-top: 1.5rem;
 }
 
-.btn:active {
-  transform: scale(0.95);
+.checkbtn:hover,
+.btn:hover {
+    transform: scale(1.05); /* Hover 시 확대 효과 */
 }
 
-.btn:focus {
-  outline: none;
+.checkbtn:active,
+.btn:active {
+    transform: scale(0.95); /* 클릭 시 축소 효과 */
 }
 
 .form {
@@ -209,10 +208,11 @@
     height: 50px;
     /* 모양 */
     background-color: var(--blue);
-    background-image: linear-gradient(90deg, var(--blue) 0%, var(--lightblue) 74%);
-    border-radius: 14px;
-    box-sizing: border-box;
-    border: 1px solid var(--blue);
+    background-image: linear-gradient(90deg, #848F8E 0%, var(--lightblue) 74%);
+    border-radius: 13px;
+    color: var(--white);
+    border: none; /* 테두리 */
+    cursor: pointer;  /* 커서 */
     /* 글씨 가운데 정렬 */
     margin-left: 15px;
     color: #fff;
@@ -222,15 +222,6 @@
     cursor: pointer;
     /* 움직임 */
     transition: transform 80ms ease-in;
-
-}
-
-.checkbtn:active {
-  transform: scale(0.95);
-}
-
-.checkbtn:focus {
-  outline: none;
 }
 
 @keyframes show {

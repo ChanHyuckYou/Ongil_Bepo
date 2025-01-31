@@ -11,13 +11,7 @@ const TopNavigation = () => {
           <img
               className={styles.logoTxt}
               alt="Logo Text"
-              src="/images/logo_txt.png"
-          />
-          {/* 오른쪽 상단 아이콘 */}
-          <img
-              className={styles.logoImgIcon}
-              alt="Logo Icon"
-              src="/images/logo_img.png"
+              src="/images/logo.png"
           />
         </div>
       </div>

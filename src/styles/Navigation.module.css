@@ -191,54 +191,11 @@
   display: flex;
   justify-content: right;
   align-items: center;
-  margin-right: 60px;
+  margin-right: 40px;
 }
 
 .logoTxt {
-  width: 100px;
+  width: 125px;
   height: auto;
   z-index: 2;
-}
-
-.logoImgIcon {
-  position: absolute;
-  top: 0;
-  right: 0;
-  width: 40px;
-  height: 40px;
-  margin-right: -20px;
-  object-fit: contain;
-  z-index: 1;
-}
-
-@media (max-width: 768px) {
-  .Toplogo {
-    height: 70px;
-    margin-right: 40px;
-  }
-
-  .logoTxt {
-    width: 80px;
-  }
-
-  .logoImgIcon {
-    width: 32px;
-    height: 32px;
-  }
-}
-
-@media (max-width: 480px) {
-  .Toplogo {
-    height: 60px;
-    margin-right: 20px;
-  }
-
-  .logoTxt {
-    width: 60px;
-  }
-
-  .logoImgIcon {
-    width: 28px;
-    height: 28px;
-  }
 }
