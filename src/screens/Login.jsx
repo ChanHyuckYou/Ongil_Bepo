@@ -43,109 +43,6 @@ const Login = () => {
     navigateTo(page);
   };
 
-  // 회원가입 이메일 전송
-  const handleSendEmail = async (email) => {
-    try {
-      const response = await fetch("http://127.0.0.1:8000/auth/signup/send-code", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email: email }),
-      });
-
-      const result = await response.json();
-      if (response.ok) {
-        alert(result.message || "회원가입 인증 이메일을 발송했습니다.");
-      } else {
-        alert(result.detail || "이메일 전송 실패.");
-      }
-    } catch (error) {
-      console.error("이메일 전송 오류:", error);
-      alert("서버 오류가 발생했습니다.");
-    }
-  };
-
-  // 이메일 인증 후 회원가입 완료
-  const handleCompleteSignUp = async (email, password, confirm_password, name, managementArea, department) => {
-    try {
-      const response = await fetch("http://127.0.0.1:8000/auth/signup/complete", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email: email,
-          password: password,
-          confirm_password: confirm_password,
-          name: name,
-          jurisdiction: managementArea,  // 예시로, 사용자의 권한을 "user"로 설정
-          department: department,
-        }),
-      });
-
-      const result = await response.json();
-      if (response.ok) {
-        alert(result.message || "회원가입이 완료되었습니다.");
-      } else {
-        alert(result.detail || "회원가입에 실패했습니다.");
-      }
-    } catch (error) {
-      console.error("회원가입 완료 오류:", error);
-      alert("서버 오류가 발생했습니다.");
-    }
-  };
-
-  // 회원가입 요청
-  const handleSignUpSubmit = async (e) => {
-    e.preventDefault();
-
-    // 1. 이메일 전송을 먼저 실행
-    await handleSendEmail(formData.email);
-
-    // 2. 사용자에게 이메일 인증을 요청한 후
-    const confirmation = window.confirm("이메일을 확인하고 인증을 완료하세요. 완료되면 회원가입을 완료할 수 있습니다.");
-
-    if (confirmation) {
-      // 3. 이메일 인증 후 회원가입 완료 요청
-      await handleCompleteSignUp(formData.email, formData.password, formData.confirmPassword, formData.name, formData.managementArea, formData.department);
-/*       setFormData({
-        name: "",
-        email: "",
-        password: "",
-        confirmPassword: "",
-        managementArea: "",
-        department: "",
-      });
-      setIsSignUpActive(false); // 로그인 화면으로 전환 */
-    } else {
-      alert("이메일 인증을 완료해야 회원가입을 계속 진행할 수 있습니다.");
-    }
-  };
-
-  // 로그인 요청
-  const handleSignInSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await fetch("http://127.0.0.1:8000/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(loginData),
-      });
-
-      const result = await response.json();
-      if (response.ok) {
-        localStorage.setItem("access_token", result.access_token);
-        localStorage.setItem("is_admin", result.is_admin); // ✅ 관리자 여부 저장
-        setLoginData({ email: "", password: "" }); // 입력 필드 초기화
-        handleNavigation("Home"); // 홈 페이지로 이동
-      } else {
-        alert(result.detail || "로그인에 실패했습니다.");
-      }
-    } catch (error) {
-      console.error("로그인 오류:", error);
-      alert("서버 오류가 발생했습니다.");
-    }
-  };
-
   // 중복확인 요청
   const handleEmailCheck = async () => {
     try {
@@ -170,6 +67,73 @@ const Login = () => {
     }
   };
 
+  // 회원가입 이메일 전송
+  const handleSendEmail = async () => {
+    const requestData = {
+      email: formData.email,
+      password: formData.password,
+      confirm_password: formData.confirmPassword,
+      name: formData.name,
+      jurisdiction: formData.managementArea,
+      department: formData.department,
+    };
+
+    console.log("📌 전송할 데이터:", requestData); // 🔍 확인용
+
+    try {
+
+      const response = await fetch("http://127.0.0.1:8000/auth/signup/send-email", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(requestData),
+      });
+      console.log("📌 직렬화된 데이터:", JSON.stringify(requestData, null, 2));
+
+    } catch (error) {
+      console.error("이메일 전송 오류:", error);
+      alert("서버 오류가 발생했습니다. 관리자에게 문의하세요.");
+    }
+  };
+
+
+  // 회원가입 완료 처리
+  const handleSignUpSubmit = async (e) => {
+    e.preventDefault();
+    handleSendEmail();
+  };
+
+  // 로그인 처리
+  const handleLoginSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await fetch("http://127.0.0.1:8000/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(loginData),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // 로그인 성공, 토큰 저장
+        localStorage.setItem("access_token", result.access_token);
+        localStorage.setItem("refresh_token", result.refresh_token);
+        localStorage.setItem("is_admin", result.is_admin);
+
+        // 로그인 후 리디렉션 (예: 대시보드로 이동)
+        handleNavigation("Home")
+      } else {
+        alert(result.detail || "로그인 실패");
+      }
+    } catch (error) {
+      console.error("로그인 오류:", error);
+      alert("서버 오류가 발생했습니다.");
+    }
+  };
 
   return (
       <div className={styles.background}>
@@ -257,7 +221,7 @@ const Login = () => {
           <div
               className={`${styles.container__form} ${styles["container--signin"]}`}
           >
-            <form className={styles.form} onSubmit={handleSignInSubmit}>
+            <form className={styles.form} >
               <img src="public/images/login_logo.png" className={styles.form__title} />
               <input
                   type="email"
@@ -284,7 +248,7 @@ const Login = () => {
               >
                 Forgot your password?
               </a>
-              <button type="submit" className={styles.btn}>
+              <button type="submit" className={styles.btn} onClick={handleLoginSubmit}>
                 로그인
               </button>
             </form>
