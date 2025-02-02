@@ -4,7 +4,7 @@ import axios from 'axios';
 
 // Axios 인스턴스 생성
 const api = axios.create({
-  baseURL: 'http://127.0.0.1:8000/auth', // FastAPI 서버의 기본 URL로 변경하세요
+  baseURL: 'http://127.0.0.1:8000/auth', // FastAPI 서버의 기본 URL
   headers: {
     'Content-Type': 'application/json',
   },
@@ -32,17 +32,17 @@ export const checkEmail = async (email) => {
   }
 };
 
-// 2. 회원가입 인증 이메일 전송
-export const sendSignupCode = async (email) => {
+// 2. 회원가입 인증 이메일 전송 (전체 회원가입 데이터를 전송)
+export const sendSignupCode = async (signupData) => {
   try {
-    const response = await api.post('/signup/send-code', {email});
+    const response = await api.post('/signup/send-code', signupData);
     return response.data;
   } catch (error) {
     throw error.response?.data || {message: '인증 코드 전송 중 오류가 발생했습니다.'};
   }
 };
 
-// 3. 이메일 인증 확인 (웹에서 실행되므로 필요에 따라 클라이언트에서 처리)
+// 3. 이메일 인증 확인 (인증 토큰을 query parameter로 전송)
 export const confirmEmail = async (token) => {
   try {
     const response = await api.get('/signup/confirm', {params: {token}});
@@ -52,7 +52,7 @@ export const confirmEmail = async (token) => {
   }
 };
 
-// 4. 회원가입 완료
+// 4. 회원가입 완료 (서버에서 해당 엔드포인트를 사용하지 않는다면 삭제하거나 추후 사용)
 export const completeSignup = async (signupData) => {
   try {
     const response = await api.post('/signup/complete', signupData);
@@ -80,7 +80,7 @@ export const loginUser = async (email, password) => {
 export const logout = async (token) => {
   try {
     const response = await api.post('/logout', {token});
-    // 토큰 제거
+    // 로컬 저장소에서 토큰 제거
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('is_admin');

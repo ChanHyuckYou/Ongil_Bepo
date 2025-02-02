@@ -60,8 +60,8 @@
 }
 
 .metaInfo p {
-  margin: 0;              /* 기본 마진 제거 */
-  white-space: nowrap;    /* 줄 바꿈 방지 */
+  margin: 0; /* 기본 마진 제거 */
+  white-space: nowrap; /* 줄 바꿈 방지 */
   display: block;
   font-size: 14px;
   color: #555;
@@ -69,10 +69,10 @@
 }
 
 .line {
- border-top: 0.5px solid #808080;
- width: 100%;
- margin-bottom: 20px;
- margin-top: 20px;
+  border-top: 0.5px solid #808080;
+  width: 100%;
+  margin-bottom: 20px;
+  margin-top: 20px;
 }
 
 /* 댓글 영역 */
@@ -120,7 +120,7 @@
   gap: 10px; /* 입력창과 버튼 간격 */
 }
 
-.commentInput input{
+.commentInput input {
   flex: 1;
   padding: 20px;
   border: 1px solid #ddd;
@@ -129,7 +129,7 @@
   width: 80%;
 }
 
-.commentInput button{
+.commentInput button {
   /* 모양 */
   background-color: #79A1A8;
   border-radius: 10px;
@@ -318,8 +318,6 @@
   }
 
 }
-
-
 
 
 /* BoardDetail.module.css */

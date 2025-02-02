@@ -80,7 +80,7 @@ const Login = () => {
       await checkEmail(formData.email);
 
       // 2. 인증 코드 전송
-      await sendSignupCode(formData.email);
+      await sendSignupCode(formData);
       alert("인증 코드가 이메일로 전송되었습니다. 이메일을 확인해주세요.");
       setIsSignUpActive(false); // 이메일 인증 후 로그인 화면으로 전환
     } catch (err) {
