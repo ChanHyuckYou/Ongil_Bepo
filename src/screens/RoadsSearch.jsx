@@ -2,7 +2,7 @@ import styles from '../styles/RoadsSearch.module.css';
 import {useState, useEffect} from 'react';
 import useNavigations from "../components/Navigation/Navigations.jsx";
 import locationData from '../../public/data/locations_nested.json'; // JSON 데이터 가져오기
-import LoadingPage from "../components/loading/LoadingPage.jsx"; // LoadingPage 컴포넌트 가져오기
+import LoadingPage from "../components/spinner/LoadingPage.jsx"; // LoadingPage 컴포넌트 가져오기
 
 const RoadsSearch = () => {
   const [data, setData] = useState([]);

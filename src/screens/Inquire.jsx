@@ -1,9 +1,6 @@
-import React, { useState, useEffect } from "react";
+import {useState, useEffect} from "react";
 import styles from "../styles/Inquire.module.css";
-import { io } from "socket.io-client";
 
-const webSocketUrl = "http://localhost:3000";
-const socket = io(webSocketUrl);
 const ITEMS_PER_PAGE = 5; // 페이지당 게시글 수
 
 const Inquire = () => {
@@ -49,7 +46,8 @@ const Inquire = () => {
     const handleUpdatedPost = (updatedPost) => {
       console.log("Updated post received:", updatedPost);
       setInquireItems((prevItems) =>
-        prevItems.map((item) => (item.id === updatedPost.id ? updatedPost : item))
+          prevItems.map(
+              (item) => (item.id === updatedPost.id ? updatedPost : item))
       );
     };
 
@@ -145,47 +143,49 @@ const Inquire = () => {
   const currentItems = inquireItems.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
-    <div className="container">
-      <div className={styles.inquire}>
-        <div className={styles.inquireForm}>
-          <div className={styles.create}>
-            <button className={styles.inquireCreateBtn} onClick={openCreate}>
-              <img
-                className={styles.plusIcon}
-                src="/images/plus_icon.png"
-                alt="추가 아이콘"
-              />
-              작성
-            </button>
-          </div>
-          {/* 문의하기 게시판 */}
-          <div className={styles.inquireListView}>
-            <div className={styles.inquireListHeader}>
-              <span>문의내역</span>
-              <span>제목</span>
-              <span>부서명</span>
-              <span>문의일</span>
-              <span>답변</span>
+      <div className="container">
+        <div className={styles.inquire}>
+          <div className={styles.inquireForm}>
+            <div className={styles.create}>
+              <button className={styles.inquireCreateBtn} onClick={openCreate}>
+                <img
+                    className={styles.plusIcon}
+                    src="/images/plus_icon.png"
+                    alt="추가 아이콘"
+                />
+                작성
+              </button>
             </div>
-            {/* 문의 내용 */}
-            <div className={styles.inquireListItems}>
-              {currentItems.map((item) => (
-                <div
-                  key={item.id}
-                  className={styles.inquireListItem}
-                  onClick={() => handleItemClick(item)} // 클릭 시 상세 모달 열기
-                >
-                  <span className={styles.inquireCategory}>{item.category}</span>
-                  <span className={styles.inquireTitle}>{item.title}</span>
-                  <span className={styles.inquireAuthor}>{item.author}</span>
-                  <span className={styles.inquireDate}>{item.date}</span>
-                  <span className={styles.inquireAnswer}>
+            {/* 문의하기 게시판 */}
+            <div className={styles.inquireListView}>
+              <div className={styles.inquireListHeader}>
+                <span>문의내역</span>
+                <span>제목</span>
+                <span>부서명</span>
+                <span>문의일</span>
+                <span>답변</span>
+              </div>
+              {/* 문의 내용 */}
+              <div className={styles.inquireListItems}>
+                {currentItems.map((item) => (
+                    <div
+                        key={item.id}
+                        className={styles.inquireListItem}
+                        onClick={() => handleItemClick(item)} // 클릭 시 상세 모달 열기
+                    >
+                      <span
+                          className={styles.inquireCategory}>{item.category}</span>
+                      <span className={styles.inquireTitle}>{item.title}</span>
+                      <span
+                          className={styles.inquireAuthor}>{item.author}</span>
+                      <span className={styles.inquireDate}>{item.date}</span>
+                      <span className={styles.inquireAnswer}>
                     {item.answer ? "Y" : "N"}
                   </span>
-                </div>
-              ))}
+                    </div>
+                ))}
+              </div>
             </div>
-          </div>
 
             {/* 페이지네이션 컨트롤 */}
             {totalPages > 1 && (
@@ -218,107 +218,111 @@ const Inquire = () => {
                   </button>
                 </div>
             )}
-        </div>
-
-        {/* 문의내용 작성 팝업창 */}
-        {isModalOpen && (
-          <div className={styles.modalOverlay}>
-            <div className={styles.modalContent} onClick={(e) => e.stopPropagation()}>
-              <h2>문의 작성</h2>
-              <form>
-                <div className={styles.formGroup}>
-                  <label>문의내역</label>
-                  <select
-                    className={styles.select}
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                  >
-                    <option value="데이터 문의">데이터 문의</option>
-                    <option value="기술관련 문의">기술관련 문의</option>
-                    <option value="서비스 추가 문의">서비스 추가 문의</option>
-                    <option value="시스템 오류">시스템 오류</option>
-                    <option value="기타">기타</option>
-                  </select>
-                </div>
-                <div className={styles.formGroup}>
-                  <label>제목</label>
-                  <input
-                    type="text"
-                    value={title}
-                    placeholder="제목을 입력하세요"
-                    onChange={(e) => setTitle(e.target.value)}
-                  />
-                </div>
-                <div className={styles.formGroup}>
-                  <label>내용</label>
-                  <textarea
-                    value={content}
-                    placeholder="내용을 입력하세요"
-                    onChange={(e) => setContent(e.target.value)}
-                  ></textarea>
-                </div>
-                <div className={styles.modalActions}>
-                  <button type="button" onClick={closeModal} className={styles.closeBtn}>
-                    닫기
-                  </button>
-                  <button type="submit" onClick={handleCreate} className={styles.submitBtn}>
-                    확인
-                  </button>
-                </div>
-              </form>
-            </div>
           </div>
-        )}
 
-        {/* 문의 상세 보기 팝업창 */}
-        {isDetailModalOpen && selectedItem && (
-          <div className={styles.modalOverlay}>
-            <div className={styles.modalContent}>
-              <h2>문의 상세</h2>
-              <p><strong>문의 일자</strong> | {selectedItem.date}</p>
-              <p><strong>작성자</strong> | {selectedItem.author}</p>
-              <p><strong>문의내역</strong> | {selectedItem.category}</p>
-              <div className={styles.line}></div>
-              <p><strong>제목</strong></p>
-              <p>{selectedItem.title}</p>
-              <p><strong>내용</strong></p>
-              <p>{selectedItem.content}</p>
-              <div className={styles.line}></div>
-              <p><strong>답변</strong></p>
-              <p>{selectedItem.answer || "답변 대기 중"}</p>
-
-              {/* 관리자 답변작성 */}
-              {isAdmin && (
-                <div className={styles.formGroup}>
-                  <div className={styles.line}></div>
-                  <label>답변 작성</label>
-                  <textarea
-                    value={adminAnswer}
-                    placeholder="답변을 입력하세요"
-                    onChange={(e) => setAdminAnswer(e.target.value)}
-                  ></textarea>
+          {/* 문의내용 작성 팝업창 */}
+          {isModalOpen && (
+              <div className={styles.modalOverlay}>
+                <div className={styles.modalContent}
+                     onClick={(e) => e.stopPropagation()}>
+                  <h2>문의 작성</h2>
+                  <form>
+                    <div className={styles.formGroup}>
+                      <label>문의내역</label>
+                      <select
+                          className={styles.select}
+                          value={category}
+                          onChange={(e) => setCategory(e.target.value)}
+                      >
+                        <option value="데이터 문의">데이터 문의</option>
+                        <option value="기술관련 문의">기술관련 문의</option>
+                        <option value="서비스 추가 문의">서비스 추가 문의</option>
+                        <option value="시스템 오류">시스템 오류</option>
+                        <option value="기타">기타</option>
+                      </select>
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label>제목</label>
+                      <input
+                          type="text"
+                          value={title}
+                          placeholder="제목을 입력하세요"
+                          onChange={(e) => setTitle(e.target.value)}
+                      />
+                    </div>
+                    <div className={styles.formGroup}>
+                      <label>내용</label>
+                      <textarea
+                          value={content}
+                          placeholder="내용을 입력하세요"
+                          onChange={(e) => setContent(e.target.value)}
+                      ></textarea>
+                    </div>
+                    <div className={styles.modalActions}>
+                      <button type="button" onClick={closeModal}
+                              className={styles.closeBtn}>
+                        닫기
+                      </button>
+                      <button type="submit" onClick={handleCreate}
+                              className={styles.submitBtn}>
+                        확인
+                      </button>
+                    </div>
+                  </form>
                 </div>
-              )}
-
-              <div className={styles.modalActions}>
-                <button type="button" onClick={closeModal} className={styles.closeBtn}>
-                  닫기
-                </button>
-                {isAdmin && (
-                  <button
-                    type="button"
-                    onClick={handleAnswerSubmit}
-                    className={styles.submitBtn}
-                  >
-                    답변 전송
-                  </button>
-                )}
               </div>
-            </div>
-          </div>
-        )}
+          )}
+
+          {/* 문의 상세 보기 팝업창 */}
+          {isDetailModalOpen && selectedItem && (
+              <div className={styles.modalOverlay}>
+                <div className={styles.modalContent}>
+                  <h2>문의 상세</h2>
+                  <p><strong>문의 일자</strong> | {selectedItem.date}</p>
+                  <p><strong>작성자</strong> | {selectedItem.author}</p>
+                  <p><strong>문의내역</strong> | {selectedItem.category}</p>
+                  <div className={styles.line}></div>
+                  <p><strong>제목</strong></p>
+                  <p>{selectedItem.title}</p>
+                  <p><strong>내용</strong></p>
+                  <p>{selectedItem.content}</p>
+                  <div className={styles.line}></div>
+                  <p><strong>답변</strong></p>
+                  <p>{selectedItem.answer || "답변 대기 중"}</p>
+
+                  {/* 관리자 답변작성 */}
+                  {isAdmin && (
+                      <div className={styles.formGroup}>
+                        <div className={styles.line}></div>
+                        <label>답변 작성</label>
+                        <textarea
+                            value={adminAnswer}
+                            placeholder="답변을 입력하세요"
+                            onChange={(e) => setAdminAnswer(e.target.value)}
+                        ></textarea>
+                      </div>
+                  )}
+
+                  <div className={styles.modalActions}>
+                    <button type="button" onClick={closeModal}
+                            className={styles.closeBtn}>
+                      닫기
+                    </button>
+                    {isAdmin && (
+                        <button
+                            type="button"
+                            onClick={handleAnswerSubmit}
+                            className={styles.submitBtn}
+                        >
+                          답변 전송
+                        </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+          )}
+        </div>
       </div>
-    </div>
   );
 };
 
