@@ -1,7 +1,10 @@
+// src/components/SideNavigation.jsx
 import {useState, useEffect, useRef} from 'react';
 import {useLocation} from "react-router-dom";
 import styles from '../../styles/Navigation.module.css';
 import useNavigations from "../Navigation/Navigations.jsx";
+// auth.jsx에서 logout 함수를 import
+import {logout} from "../ApiRoute/auth.jsx";
 
 const SideNavigation = () => {
   const [selectedIndex, setSelectedIndex] = useState({group: 'top', index: 0});
@@ -15,10 +18,12 @@ const SideNavigation = () => {
   const navigateTo = useNavigations();
   const location = useLocation();
 
-  const handleNavigation = (page) => {
-    navigateTo(page); // 페이지 이동 실행
-  };
+  // localStorage에서 is_admin 가져오기
+  const isAdmin = localStorage.getItem('is_admin') === 'true';
+  // Access Token(로그아웃 API 호출시 필요)
+  const accessToken = localStorage.getItem('access_token');
 
+  // 상단 메뉴
   const topItems = [
     {
       id: 0,
@@ -46,11 +51,12 @@ const SideNavigation = () => {
       label: '파일 요청 승인',
       page: 'AdminPage',
       icon: '/images/admin_img.png',
-      onlyOn: '/admin-page',
-      path: '/admin-page'
+      path: '/admin-page',
+      isAdminItem: true, // 관리자 전용
     },
   ];
 
+  // 하단 메뉴
   const bottomItems = [
     {
       id: 4,
@@ -75,23 +81,24 @@ const SideNavigation = () => {
     },
   ];
 
-  const currentPath = location.pathname.replace(/\/$/, ''); // 끝 슬래시 제거
+  // 현재 경로
+  const currentPath = location.pathname.replace(/\/$/, '');
 
-  const renderTopItems = topItems.filter((item) => {
-    if (item.onlyOn) {
-      return currentPath === item.onlyOn.replace(/\/$/, ''); // 정확히 일치하는 경로만 필터링
+  // 상단 메뉴 중, 관리자 메뉴는 isAdmin이 true일 때만 표시
+  const filteredTopItems = topItems.filter((item) => {
+    if (item.isAdminItem && !isAdmin) {
+      return false;
     }
     return true;
   });
 
+  // 레이아웃 계산 함수
   const updateLayout = () => {
     const rootStyle = getComputedStyle(document.documentElement);
 
-    // CSS 변수 값 가져오기
     setItemHeight(parseInt(rootStyle.getPropertyValue('--item-height')) || 60);
     setItemMargin(parseInt(rootStyle.getPropertyValue('--item-margin')) || 20);
 
-    // topNavContainer와 bottomNavContainer의 위치 업데이트
     if (topContainerRef.current) {
       setTopStart(topContainerRef.current.offsetTop);
     }
@@ -101,30 +108,62 @@ const SideNavigation = () => {
   };
 
   useEffect(() => {
-    // 경로 변경 시 활성화된 아이템 설정
+    updateLayout();
+    window.addEventListener('resize', updateLayout);
+    return () => window.removeEventListener('resize', updateLayout);
+  }, []);
+
+  // 경로 변경 시, 해당 아이템을 active 처리
+  useEffect(() => {
     const path = location.pathname;
-    const topIndex = topItems.findIndex(item => item.path === path);
-    const bottomIndex = bottomItems.findIndex(item => item.path === path);
+
+    // 상단메뉴 체크
+    const topIndex = filteredTopItems.findIndex((item) => {
+      if (Array.isArray(item.path)) {
+        return item.path.includes(path);
+      }
+      return item.path === path;
+    });
+
+    // 하단메뉴 체크
+    const bottomIndex = bottomItems.findIndex((item) => {
+      if (Array.isArray(item.path)) {
+        return item.path.includes(path);
+      }
+      return item.path === path;
+    });
 
     if (topIndex !== -1) {
       setSelectedIndex({group: 'top', index: topIndex});
     } else if (bottomIndex !== -1) {
       setSelectedIndex({group: 'bottom', index: bottomIndex});
     }
-  }, [location.pathname]);
+  }, [location.pathname, filteredTopItems]);
 
-  useEffect(() => {
-    updateLayout(); // 초기 레이아웃 설정
-    window.addEventListener('resize', updateLayout); // 화면 크기 변경에 대응
+  // 메뉴 클릭 시 페이지 이동 or 로그아웃
+  const handleNavigation = async (item, groupIndex, itemIndex) => {
+    setSelectedIndex({group: groupIndex, index: itemIndex});
 
-    return () => {
-      window.removeEventListener('resize', updateLayout); // 이벤트 리스너 정리
-    };
-  }, []);
+    if (item.label === '로그아웃') {
+      // 로그아웃
+      try {
+        if (accessToken) {
+          await logout(accessToken);  // 서버에 로그아웃 API 콜
+        }
+        // 로그아웃 후 로그인 페이지로
+        navigateTo('Login');
+      } catch (error) {
+        console.error('로그아웃 실패:', error);
+      }
+    } else {
+      // 일반 메뉴
+      navigateTo(item.page);
+    }
+  };
 
+  // selector(하이라이트 바) 위치 계산
   const calculateTop = () => {
     const totalItemHeight = itemHeight + itemMargin;
-
     if (selectedIndex.group === 'top') {
       return topStart + selectedIndex.index * totalItemHeight;
     } else {
@@ -134,22 +173,23 @@ const SideNavigation = () => {
 
   return (
       <div className={styles.leftNavi}>
-        {/* 선택된 아이템 표시 */}
+        {/* 선택된 아이템 표시 (Selector) */}
         <div className={styles.selector1Icon}
              style={{top: `${calculateTop()}px`}}/>
         <div className={styles.selector2} style={{top: `${calculateTop()}px`}}/>
 
-        {/* 상단 아이템 */}
+        {/* 상단 아이템 목록 */}
         <div className={styles.menuItems} ref={topContainerRef}>
-          {renderTopItems.map((item, index) => (
+          {filteredTopItems.map((item, index) => (
               <div
                   key={item.id}
-                  className={`${styles.navItem} ${selectedIndex.group === 'top'
-                  && selectedIndex.index === index ? styles.active : ''}`}
-                  onClick={() => {
-                    setSelectedIndex({group: 'top', index});
-                    handleNavigation(item.page);
-                  }}
+                  className={`${styles.navItem} ${
+                      selectedIndex.group === 'top' && selectedIndex.index
+                      === index
+                          ? styles.active
+                          : ''
+                  }`}
+                  onClick={() => handleNavigation(item, 'top', index)}
               >
                 <img src={item.icon} alt={item.label}/>
                 <b>{item.label}</b>
@@ -157,18 +197,18 @@ const SideNavigation = () => {
           ))}
         </div>
 
-        {/* 하단 아이템 */}
+        {/* 하단 아이템 목록 */}
         <div className={styles.bottomNavContainer} ref={bottomContainerRef}>
           {bottomItems.map((item, index) => (
               <div
                   key={item.id}
-                  className={`${styles.navItem} ${selectedIndex.group
-                  === 'bottom' && selectedIndex.index === index ? styles.active
-                      : ''}`}
-                  onClick={() => {
-                    setSelectedIndex({group: 'bottom', index});
-                    handleNavigation(item.page);
-                  }}
+                  className={`${styles.navItem} ${
+                      selectedIndex.group === 'bottom' && selectedIndex.index
+                      === index
+                          ? styles.active
+                          : ''
+                  }`}
+                  onClick={() => handleNavigation(item, 'bottom', index)}
               >
                 <img src={item.icon} alt={item.label}/>
                 <b>{item.label}</b>

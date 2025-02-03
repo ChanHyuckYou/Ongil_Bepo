@@ -4,10 +4,10 @@
   width: 100%;
   position: relative;
   background-color: #fff;
-  height: 100vh;
+  height: 110vh;
   overflow: hidden;
-  text-align: left;
-  font-size: 20px;
+  margin-left: 370px; /* .leftNavi의 너비에 맞춤 */
+  padding-top: 150px; /* .topNavi의 높이에 맞춤 */
 }
 
 /* 기존 controls 클래스 제거, roadsSearchForm 내부에 있는 form 클래스 중심으로 스타일링 */
@@ -16,7 +16,7 @@
   position: absolute;
   top: 160px;
   left: 100px;
-  width: 77%;
+  width: 80%;
   height: 70%;
   overflow: hidden;
 }
@@ -146,6 +146,52 @@
   }
 }
 
+/* 가중치 섹션 */
+.weightContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.weightItem {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-items: center;
+}
+
+.weightLabel {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.weightInput {
+  width: 70px;
+  height: 40px;
+  font-size: 16px;
+  padding: 0.5rem;
+  text-align: right;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  outline: none;
+
+  /* === 스핀 버튼 제거 === */
+  /* 크롬, 사파리, 엣지(크로미엄) */
+  -webkit-appearance: none;
+  -moz-appearance: textfield; /* 파이어폭스 */
+}
+
+.weightInput::-webkit-outer-spin-button,
+.weightInput::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+
 /* 작은 화면 (모바일) */
 @media (max-width: 767px) {
   .roadssearch {
@@ -196,6 +242,20 @@
     width: 100%;
     margin-top: 15px;
     font-size: 14px;
+  }
+
+  .weightContainer {
+    flex-direction: column; /* 모바일에서는 세로로 쌓이도록 */
+    gap: 10px;
+  }
+
+  .weightItem {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .weightInput {
+    width: 100%;
   }
 }
 

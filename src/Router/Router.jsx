@@ -14,6 +14,8 @@ import Findpwd from "../screens/Findpwd.jsx";
 import Resetpwd from "../screens/Resetpwd.jsx";
 import Layout from "../components/nav/Layout.jsx"; // Layout 컴포넌트
 import NotFound from "../screens/NotFound.jsx";
+import ProtectedRoute from "../routes/ProtectedRoute.jsx";
+import AdminRoute from "../routes/AdminRoute.jsx";
 
 /*import BoardId from "../screens/BoardId.jsx"; // 동적 경로에 대한 컴포넌트*/
 
@@ -109,16 +111,25 @@ function Router() {
       <Routes>
         {/* 레이아웃이 필요한 경로들을 Layout으로 감쌈 */}
         <Route element={<Layout/>}>
-          <Route path="/home" element={<Home/>}/>
-          <Route path="/admin-page" element={<AdminPage/>}/>
-          <Route path="/roads-recommend" element={<RoadsRecommend/>}/>
-          <Route path="/roads-search" element={<RoadsSearch/>}/>
-          <Route path="/board-main" element={<BoardMain/>}/>
-          <Route path="/board-detail/:postId" element={<BoardDetail/>}/>
-          <Route path="/board-create" element={<BoardCreate/>}/>
+          <Route path="/home"
+                 element={<ProtectedRoute><Home/></ProtectedRoute>}/>
+          <Route path="/admin-page"
+                 element={<AdminRoute><AdminPage/></AdminRoute>}/>
+          <Route path="/roads-recommend"
+                 element={<ProtectedRoute><RoadsRecommend/></ProtectedRoute>}/>
+          <Route path="/roads-search"
+                 element={<ProtectedRoute><RoadsSearch/></ProtectedRoute>}/>
+          <Route path="/board-main"
+                 element={<ProtectedRoute><BoardMain/></ProtectedRoute>}/>
+          <Route path="/board-detail/:postId"
+                 element={<ProtectedRoute><BoardDetail/></ProtectedRoute>}/>
+          <Route path="/board-create"
+                 element={<ProtectedRoute><BoardCreate/></ProtectedRoute>}/>
           {/*<Route path="/board/:id" element={<BoardId/>}/>  동적 경로 */}
-          <Route path="/mypage" element={<Mypage/>}/>
-          <Route path="/inquire" element={<Inquire/>}/>
+          <Route path="/mypage"
+                 element={<ProtectedRoute><Mypage/></ProtectedRoute>}/>
+          <Route path="/inquire"
+                 element={<ProtectedRoute><Inquire/></ProtectedRoute>}/>
         </Route>
 
         {/* 레이아웃이 필요 없는 경로들 */}

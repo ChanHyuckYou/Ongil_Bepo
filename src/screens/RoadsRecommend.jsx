@@ -11,7 +11,13 @@ import {
   faUserFriends,
 } from "@fortawesome/free-solid-svg-icons";
 
+// polygon.json을 직접 import
+import polygonData from "../../public/data/polygon.json";
+
 const RoadsRecommend = () => {
+  // ------------------------------
+  // 기존 도로 데이터 예시
+  // ------------------------------
   const [roads, setRoads] = useState([
     {
       rank: "1순위",
@@ -35,12 +41,25 @@ const RoadsRecommend = () => {
       trafficVolume: 75400,
     },
   ]);
+
+  // ------------------------------
+  // 결빙사고 다발지역(폴리곤) 데이터
+  // ------------------------------
+  const [multiAccidentAreas, setMultiAccidentAreas] = useState([]);
+  const [showAccidentPolygons, setShowAccidentPolygons] = useState(false);
+  const [accidentPolygons, setAccidentPolygons] = useState([]);
+
+  // ------------------------------
+  // 지도, 로드뷰 관련
+  // ------------------------------
   const [isRoadview, setIsRoadview] = useState(false);
   const [map, setMap] = useState(null);
   const [roadview, setRoadview] = useState(null);
   const [rvClient, setRvClient] = useState(null);
 
+  // ------------------------------
   // 카테고리 상태
+  // ------------------------------
   const [activeCategories, setActiveCategories] = useState({
     hospital: false,
     seniorCenter: false,
@@ -54,10 +73,14 @@ const RoadsRecommend = () => {
   const [categoryMarkers, setCategoryMarkers] = useState([]);
 
   // 검색 반경 상태
-  const [searchRadius, setSearchRadius] = useState(20000); // 20km
+  const [searchRadius, setSearchRadius] = useState(20000);
 
+  // ------------------------------
+  // 지도 생성 useEffect
+  // ------------------------------
   useEffect(() => {
     const script = document.createElement("script");
+    // 실제 발급받은 AppKey를 사용해야 합니다.
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=08b03f93523dfa3e040fac4f08ce8934&libraries=services&autoload=false`;
     script.async = true;
     document.head.appendChild(script);
@@ -76,6 +99,7 @@ const RoadsRecommend = () => {
         // 교통 정보 오버레이 제거
         mapInstance.removeOverlayMapTypeId(window.kakao.maps.MapTypeId.TRAFFIC);
 
+        // 로드뷰 설정
         const rvContainer = document.getElementById("roadview");
         const roadviewInstance = new window.kakao.maps.Roadview(rvContainer);
         const rvClientInstance = new window.kakao.maps.RoadviewClient();
@@ -84,21 +108,17 @@ const RoadsRecommend = () => {
         setRoadview(roadviewInstance);
         setRvClient(rvClientInstance);
 
-        // 기존 도로 마커 추가 (예시)
+        // 테스트용 도로 마커 생성
         roads.forEach((road) => {
           const marker = new window.kakao.maps.Marker({
             position: new window.kakao.maps.LatLng(37.469055190532536,
                 126.80784397139458),
             map: mapInstance,
           });
-
           window.kakao.maps.event.addListener(marker, "click", () => {
             alert(`${road.rank}: ${road.location}`);
           });
         });
-
-        // 인포윈도우 생성
-        const infowindow = new window.kakao.maps.InfoWindow({zIndex: 1});
       });
     };
 
@@ -107,79 +127,183 @@ const RoadsRecommend = () => {
     };
   }, [roads]);
 
-  // 카테고리별 마커 업데이트
-  useEffect(() => {
-    if (map) {
-      const ps = new window.kakao.maps.services.Places();
-      const infowindow = new window.kakao.maps.InfoWindow({zIndex: 1});
-
-      // 기존 카테고리 마커 제거
-      categoryMarkers.forEach((marker) => marker.setMap(null));
-      setCategoryMarkers([]);
-
-      // 카테고리별 키워드 매핑
-      const categoryKeywordMapping = {
-        hospital: "병원",
-        seniorCenter: "노인회관",
-        publicInstitution: "공공기관",
-        daycare: "어린이집",
-        school: "학교",
-        touristAttraction: "관광명소",
-      };
-
-      // 활성화된 카테고리 필터링
-      const selectedCategories = Object.keys(activeCategories).filter(
-          (category) => activeCategories[category]
-      );
-
-      selectedCategories.forEach((category) => {
-        const keyword = categoryKeywordMapping[category];
-        if (keyword) {
-          // 검색할 중심 좌표와 반경 설정
-          const center = map.getCenter();
-          const radius = searchRadius; // 설정된 반경 사용
-
-          // 키워드 검색 옵션 설정
-          const options = {
-            location: center,
-            radius: radius,
-          };
-
-          // 키워드 검색
-          ps.keywordSearch(keyword, (data, status, pagination) => {
-            if (status === window.kakao.maps.services.Status.OK) {
-              const newMarkers = data.map((place) => {
-                const marker = new window.kakao.maps.Marker({
-                  map: map,
-                  position: new window.kakao.maps.LatLng(place.y, place.x),
-                  title: place.place_name,
-                  image: getCategoryIcon(category),
-                });
-
-                // 마커 클릭 이벤트 등록
-                window.kakao.maps.event.addListener(marker, "click", () => {
-                  const content = `<div style="padding:5px;font-size:12px;">${place.place_name}<br/>${place.address_name}</div>`;
-                  infowindow.setContent(content);
-                  infowindow.open(map, marker);
-                });
-
-                return marker;
-              });
-
-              setCategoryMarkers((prev) => [...prev, ...newMarkers]);
-
-              if (pagination.hasNextPage) {
-                pagination.nextPage();
-              }
-            } else {
-              console.error(`키워드 검색 실패: ${status}`);
-            }
-          }, options);
-        }
-      });
+  // ------------------------------
+  // polygon.json 데이터 로드 (import로 이미 로드됨)
+  // -> 버튼 클릭 시 상태에 반영
+  // ------------------------------
+  const handleFetchPolygonData = () => {
+    // polygonData가 {"2019":[...], "2020":[...]} 이런 식으로 되어있으므로
+    // 여러 연도의 배열을 하나로 합친 뒤 setMultiAccidentAreas
+    let combinedAreas = [];
+    for (const year in polygonData) {
+      combinedAreas = combinedAreas.concat(polygonData[year]);
     }
-  }, [activeCategories, map, searchRadius]);
+    setMultiAccidentAreas(combinedAreas);
 
+    // 자동으로 폴리곤 표시
+    setShowAccidentPolygons(true);
+  };
+
+  // ------------------------------
+  // "결빙사고 다발지역" 폴리곤 표시 useEffect
+  // ------------------------------
+  useEffect(() => {
+    if (!map) {
+      return;
+    }
+
+    // 기존 폴리곤 제거
+    accidentPolygons.forEach((poly) => poly.setMap(null));
+    setAccidentPolygons([]);
+
+    // 새로 폴리곤 생성
+    if (showAccidentPolygons) {
+      const newPolygons = multiAccidentAreas
+      .map((area) => {
+        try {
+          // area.Polygon 에 있는 GeoJSON 문자열 파싱
+          const geojson = JSON.parse(area.Polygon);
+          // "Polygon" 타입이라 가정: [ [ [lng, lat], ... ] ] 구조
+          const coords = geojson.coordinates[0];
+
+          // kakao.maps.LatLng[] 형태로 변환
+          const path = coords.map(
+              ([lng, lat]) => new window.kakao.maps.LatLng(lat, lng)
+          );
+
+          // 폴리곤 생성
+          const polygon = new window.kakao.maps.Polygon({
+            path: path,
+            strokeWeight: 3,
+            strokeColor: "#FF0000",
+            strokeOpacity: 0.8,
+            strokeStyle: "solid",
+            fillColor: "#FFEEEE",
+            fillOpacity: 0.6,
+          });
+
+          // 지도에 표시
+          polygon.setMap(map);
+
+          // 폴리곤 클릭 이벤트
+          window.kakao.maps.event.addListener(polygon, "click", () => {
+            alert(
+                `지점명: ${area.지점명}\n` +
+                `사망자수: ${area.사망자수}\n` +
+                `사상자수: ${area.사상자수}\n` +
+                `중상자수: ${area.중상자수}\n` +
+                `경상자수: ${area.경상자수}`
+            );
+          });
+
+          return polygon;
+        } catch (err) {
+          console.error("GeoJSON 파싱 오류:", err);
+          return null;
+        }
+      })
+      .filter(Boolean);
+
+      setAccidentPolygons(newPolygons);
+    }
+  }, [map, showAccidentPolygons, multiAccidentAreas]);
+
+  // ------------------------------
+  // 카테고리 검색용 ps 객체 생성
+  // ------------------------------
+  const [ps, setPs] = useState(null);
+  useEffect(() => {
+    if (map && !ps) {
+      setPs(new window.kakao.maps.services.Places());
+    }
+  }, [map, ps]);
+
+  // ------------------------------
+  // 카테고리별 장소 검색 & 마커 표시
+  // ------------------------------
+  useEffect(() => {
+    if (!map || !ps) {
+      return;
+    }
+
+    const infowindow = new window.kakao.maps.InfoWindow({zIndex: 1});
+
+    // 기존 카테고리 마커 제거
+    categoryMarkers.forEach((marker) => marker.setMap(null));
+    setCategoryMarkers([]);
+
+    // 카테고리별 키워드
+    const categoryKeywordMapping = {
+      hospital: "병원",
+      seniorCenter: "노인회관",
+      publicInstitution: "공공기관",
+      daycare: "어린이집",
+      school: "학교",
+      touristAttraction: "관광명소",
+    };
+
+    // 활성화된 카테고리만 검색
+    const selectedCategories = Object.keys(activeCategories).filter(
+        (cat) => activeCategories[cat]
+    );
+
+    // 각각의 카테고리에 대해 검색
+    selectedCategories.forEach((category) => {
+      const keyword = categoryKeywordMapping[category];
+      if (keyword) {
+        const center = map.getCenter();
+        const radius = searchRadius;
+
+        const options = {
+          location: center,
+          radius: radius,
+        };
+
+        ps.keywordSearch(
+            keyword,
+            (data, status, pagination) => {
+              if (status === window.kakao.maps.services.Status.OK) {
+                const newMarkers = data.map((place) => {
+                  const marker = new window.kakao.maps.Marker({
+                    map: map,
+                    position: new window.kakao.maps.LatLng(place.y, place.x),
+                    title: place.place_name,
+                    image: getCategoryIcon(category),
+                  });
+
+                  // 마커 클릭 이벤트
+                  window.kakao.maps.event.addListener(marker, "click", () => {
+                    const content = `
+                    <div style="padding:5px;font-size:12px;">
+                      ${place.place_name}<br/>${place.address_name}
+                    </div>
+                  `;
+                    infowindow.setContent(content);
+                    infowindow.open(map, marker);
+                  });
+
+                  return marker;
+                });
+
+                setCategoryMarkers((prev) => [...prev, ...newMarkers]);
+
+                // 페이지가 더 있으면 추가 요청
+                if (pagination.hasNextPage) {
+                  pagination.nextPage();
+                }
+              } else {
+                console.error(`키워드 검색 실패: ${status}`);
+              }
+            },
+            options
+        );
+      }
+    });
+  }, [activeCategories, map, ps, searchRadius]);
+
+  // ------------------------------
+  // 카테고리별 아이콘 설정
+  // ------------------------------
   const getCategoryIcon = (category) => {
     const iconSize = new window.kakao.maps.Size(24, 35);
     let imageSrc = "";
@@ -210,6 +334,9 @@ const RoadsRecommend = () => {
     return new window.kakao.maps.MarkerImage(imageSrc, iconSize);
   };
 
+  // ------------------------------
+  // 이벤트 핸들러
+  // ------------------------------
   const handleCategoryToggle = (category) => {
     setActiveCategories((prev) => ({
       ...prev,
@@ -218,9 +345,9 @@ const RoadsRecommend = () => {
   };
 
   const handleRoadviewToggle = () => {
-    if (!isRoadview && rvClient && roadview) {
+    if (!isRoadview && rvClient && roadview && map) {
       const position = map.getCenter();
-      rvClient.getNearestPanoId(position, 100, (panoId) => { // 100m 반경 설정
+      rvClient.getNearestPanoId(position, 100, (panoId) => {
         if (panoId) {
           roadview.setPanoId(panoId, position);
           setIsRoadview(true);
@@ -233,10 +360,15 @@ const RoadsRecommend = () => {
     }
   };
 
+  const handlePolygonToggle = () => {
+    setShowAccidentPolygons((prev) => !prev);
+  };
+
+  // ------------------------------
+  // 렌더링
+  // ------------------------------
   return (
       <div className={styles.roadsrecommend}>
-
-        {/* Content Section */}
         <div className={styles.content}>
           {/* 도로 목록 */}
           <div className={styles.roadtable}>
@@ -322,6 +454,22 @@ const RoadsRecommend = () => {
                   <FontAwesomeIcon icon={faLandmark}/> 관광명소
                 </button>
               </div>
+
+              {/* 다발지역 폴리곤 데이터 불러오기 버튼 */}
+              <button
+                  className={styles.categoryButton}
+                  onClick={handleFetchPolygonData}
+              >
+                폴리곤 데이터 불러오기
+              </button>
+
+              {/* 다발지역 폴리곤 표시/숨기기 버튼 */}
+              <button
+                  className={styles.categoryButton}
+                  onClick={handlePolygonToggle}
+              >
+                {showAccidentPolygons ? "다발지역 숨기기" : "다발지역 보기"}
+              </button>
 
               {/* Roadview Toggle Button */}
               <button
