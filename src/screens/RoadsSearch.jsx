@@ -1,7 +1,6 @@
 import styles from '../styles/RoadsSearch.module.css';
 import {useState, useEffect} from 'react';
 import useNavigations from "../components/Navigation/Navigations.jsx";
-import locationData from '../../public/data/locations_nested.json';
 import LoadingPage from "../components/spinner/LoadingPage.jsx";
 
 const RoadsSearch = () => {
@@ -9,11 +8,16 @@ const RoadsSearch = () => {
   const [sido, setSido] = useState('');
   const [sigungu, setSigungu] = useState('');
   const [eupmyeondong, setEupmyeondong] = useState('');
+  const locationData = '/data/polygon.json';
 
-  // 가중치 관련 state
-  const [icingWeight, setIcingWeight] = useState('');    // 결빙 가능성 지수
-  const [slopeWeight, setSlopeWeight] = useState('');    // 도로별 경사도
-  const [trafficWeight, setTrafficWeight] = useState(''); // 교통량 데이터
+  // 기존 가중치 관련 state (기본 값 20으로 설정)
+  const [icingWeight, setIcingWeight] = useState(20);
+  const [slopeWeight, setSlopeWeight] = useState(20);
+  const [trafficWeight, setTrafficWeight] = useState(20);
+
+  // 사고 관련 state (기본 값 20으로 설정)
+  const [accidentCount, setAccidentCount] = useState(20); // 사고발생건수
+  const [accidentRate, setAccidentRate] = useState(20); // 사고율
 
   const [sigunguOptions, setSigunguOptions] = useState([]);
   const [eupmyeondongOptions, setEupmyeondongOptions] = useState([]);
@@ -23,6 +27,15 @@ const RoadsSearch = () => {
   useEffect(() => {
     setData(locationData);
   }, []);
+
+  // 사고발생건수와 사고율 초기화
+  const resetWeights = () => {
+    setIcingWeight(0);  // 0으로 초기화
+    setSlopeWeight(0);  // 0으로 초기화
+    setTrafficWeight(0); // 0으로 초기화
+    setAccidentCount(0); // 0으로 초기화
+    setAccidentRate(0);  // 0으로 초기화
+  };
 
   // 시도명 변경 시 시군구명 옵션 업데이트
   useEffect(() => {
@@ -71,23 +84,18 @@ const RoadsSearch = () => {
     }
   }, [sigungu, sido, data]);
 
-  /**
-   * icingWeight, slopeWeight가 둘 다 설정되면
-   * 마지막 필드(trafficWeight)를 자동으로 100 - (icing + slope)로 맞춤
-   */
-  useEffect(() => {
-    if (icingWeight > 0 && slopeWeight > 0) {
-      const sum = icingWeight + slopeWeight;
-      if (sum > 100) {
-        alert("결빙 가능성 지수와 경사도의 합이 100을 초과했습니다.");
-        setSlopeWeight(0);
-      } else {
-        setTrafficWeight(100 - sum);
-      }
+  // 가중치의 합이 100을 초과하지 않도록 처리하는 로직
+  const updateWeights = () => {
+    const sum = icingWeight + slopeWeight + trafficWeight + accidentCount
+        + accidentRate;
+    if (sum > 100) {
+      alert("가중치의 합이 100을 초과했습니다.");
+      return false;
     }
-  }, [icingWeight, slopeWeight]);
+    return true;
+  };
 
-  // 5단위 선택 (숫자 범위 체크)
+  // 각 가중치 값의 범위를 0~100으로 제한
   const handleIcingChange = (e) => {
     const value = parseInt(e.target.value || "0", 10);
     if (value < 0 || value > 100) {
@@ -112,15 +120,29 @@ const RoadsSearch = () => {
     setTrafficWeight(value);
   };
 
-  // 페이지 이동 실행
+  const handleAccidentCountChange = (e) => {
+    const value = parseInt(e.target.value || "0", 10);
+    if (value < 0 || value > 100) {
+      return;
+    }
+    setAccidentCount(value);
+  };
+
+  const handleAccidentRateChange = (e) => {
+    const value = parseInt(e.target.value || "0", 10);
+    if (value < 0 || value > 100) {
+      return;
+    }
+    setAccidentRate(value);
+  };
+
   const navigateTo = useNavigations();
   const handleNavigation = () => {
     if (sido && sigungu && eupmyeondong) {
-      const sumWeights = icingWeight + slopeWeight + trafficWeight;
-      if (sumWeights !== 100) {
-        alert(`가중치의 합이 100이 되도록 설정해주세요! (현재: ${sumWeights})`);
+      if (!updateWeights()) {
         return;
       }
+
       setIsLoading(true);
       setTimeout(() => {
         setIsLoading(false);
@@ -130,7 +152,9 @@ const RoadsSearch = () => {
           eupmyeondong,
           icingWeight,
           slopeWeight,
-          trafficWeight
+          trafficWeight,
+          accidentCount,
+          accidentRate
         });
       }, 5000);
     } else {
@@ -138,14 +162,10 @@ const RoadsSearch = () => {
     }
   };
 
-  /**
-   * 5 단위 리스트를 미리 만들어서 datalist에 사용
-   * 0, 5, 10, ... 100 까지
-   */
   const increments = Array.from({length: 21}, (_, i) => i * 5);
 
-  // === 현재 남은 가중치 계산 ===
-  const remain = 100 - (icingWeight + slopeWeight + trafficWeight);
+  const remain = 100 - (icingWeight + slopeWeight + trafficWeight
+      + accidentCount + accidentRate);
 
   return (
       <div className={styles.roadssearch}>
@@ -211,20 +231,17 @@ const RoadsSearch = () => {
                   </select>
                 </div>
 
-
                 <p style={{opacity: 0.9}}>
                   * 선택하신 읍면동의 가중치를 적용하여 열선도로를 추천합니다.
                   <span style={{color: 'red'}}>     현재 남은 가중치 : {remain}</span>
                 </p>
-
                 {/* 5단위로 선택할 수 있는 리스트(datalist) */}
                 <datalist id="increments">
                   {increments.map((val) => (
                       <option key={val} value={val}/>
                   ))}
                 </datalist>
-
-                {/* 가중치 폼 */}
+                {/* 기존 가중치 필드 (결빙 가능성, 경사도, 교통량) */}
                 <div className={styles.weightContainer}>
                   <div className={styles.weightItem}>
                     <label className={styles.weightLabel}>결빙 가능성 지수</label>
@@ -235,7 +252,7 @@ const RoadsSearch = () => {
                         max="100"
                         list="increments"
                         className={styles.weightInput}
-                        value={icingWeight}
+                        value={icingWeight === 0 ? '' : icingWeight} // 0이면 빈 값
                         onChange={handleIcingChange}
                     />
                   </div>
@@ -248,7 +265,7 @@ const RoadsSearch = () => {
                         max="100"
                         list="increments"
                         className={styles.weightInput}
-                        value={slopeWeight}
+                        value={slopeWeight === 0 ? '' : slopeWeight} // 0이면 빈 값
                         onChange={handleSlopeChange}
                     />
                   </div>
@@ -261,11 +278,47 @@ const RoadsSearch = () => {
                         max="100"
                         list="increments"
                         className={styles.weightInput}
-                        value={trafficWeight}
+                        value={trafficWeight === 0 ? ''
+                            : trafficWeight} // 0이면 빈 값
                         onChange={handleTrafficChange}
                     />
                   </div>
+
+                  {/* 사고발생건수와 사고율 입력 필드 */}
+                  <div className={styles.weightItem}>
+                    <label className={styles.weightLabel}>사고발생건수</label>
+                    <input
+                        type="number"
+                        step="5"
+                        min="0"
+                        max="100"
+                        list="increments"
+                        className={styles.weightInput}
+                        value={accidentCount === 0 ? ''
+                            : accidentCount} // 0이면 빈 값
+                        onChange={handleAccidentCountChange}
+                    />
+                  </div>
+                  <div className={styles.weightItem}>
+                    <label className={styles.weightLabel}>사고율</label>
+                    <input
+                        type="number"
+                        step="5"
+                        min="0"
+                        max="100"
+                        list="increments"
+                        className={styles.weightInput}
+                        value={accidentRate === 0 ? ''
+                            : accidentRate} // 0이면 빈 값
+                        onChange={handleAccidentRateChange}
+                    />
+                  </div>
                 </div>
+
+                {/* 초기화 버튼 */}
+                <button className={styles.searchBtn} onClick={resetWeights}>
+                  가중치 초기화
+                </button>
 
                 {/* 검색 버튼 */}
                 <div className={styles.searchBtn} onClick={handleNavigation}>

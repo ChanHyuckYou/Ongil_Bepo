@@ -68,6 +68,7 @@ export const loginUser = async (email, password) => {
     const response = await api.post('/login', {email, password});
     // 토큰 저장
     localStorage.setItem('access_token', response.data.access_token);
+    console.log(response.data.access_token);
     localStorage.setItem('refresh_token', response.data.refresh_token);
     localStorage.setItem('is_admin', response.data.is_admin);
     return response.data;
