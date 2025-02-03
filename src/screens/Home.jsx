@@ -4,8 +4,9 @@ import styles from '../styles/Home.module.css';
 const Home = () => {
   return (
       <div className={styles.home}>
-        <img className={styles.dashbodeImgIcon} alt=""
-             src="/images/dashbode_img.png"/>
+          <div className={styles.Widgets}>
+
+          </div>
       </div>
   );
 };

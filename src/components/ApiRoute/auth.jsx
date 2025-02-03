@@ -25,10 +25,12 @@ api.interceptors.request.use(
 // 1. 이메일 중복 및 형식 확인
 export const checkEmail = async (email) => {
   try {
-    const response = await api.post('/signup/check-email', {email});
+    const response = await api.post('/signup/check-email', { email });
     return response.data;
   } catch (error) {
-    throw error.response?.data || {message: '이메일 확인 중 오류가 발생했습니다.'};
+    // 서버에서 보내주는 오류 메시지를 반환
+    const errorMessage = error.response?.data?.detail || error.message || '이메일 확인 중 오류가 발생했습니다.';
+    throw new Error(errorMessage);
   }
 };
 
@@ -38,7 +40,8 @@ export const sendSignupCode = async (signupData) => {
     const response = await api.post('/signup/send-code', signupData);
     return response.data;
   } catch (error) {
-    throw error.response?.data || {message: '인증 코드 전송 중 오류가 발생했습니다.'};
+    const errorMessage = error.response?.data?.detail || error.message || '인증 코드 전송 중 오류가 발생했습니다.';
+    throw new Error(errorMessage);
   }
 };
 
@@ -48,7 +51,8 @@ export const confirmEmail = async (token) => {
     const response = await api.get('/signup/confirm', {params: {token}});
     return response.data;
   } catch (error) {
-    throw error.response?.data || {message: '이메일 인증 중 오류가 발생했습니다.'};
+    const errorMessage = error.response?.data?.detail || error.message || '이메일 인증 중 오류가 발생했습니다.';
+    throw new Error(errorMessage);
   }
 };
 
@@ -58,7 +62,8 @@ export const completeSignup = async (signupData) => {
     const response = await api.post('/signup/complete', signupData);
     return response.data;
   } catch (error) {
-    throw error.response?.data || {message: '회원가입 완료 중 오류가 발생했습니다.'};
+    const errorMessage = error.response?.data?.detail || error.message || '회원가입 완료 중 오류가 발생했습니다.';
+    throw new Error(errorMessage);
   }
 };
 
@@ -73,7 +78,8 @@ export const loginUser = async (email, password) => {
     localStorage.setItem('is_admin', response.data.is_admin);
     return response.data;
   } catch (error) {
-    throw error.response?.data || {message: '로그인 중 오류가 발생했습니다.'};
+    const errorMessage = error.response?.data?.detail || error.message || '로그인 중 오류가 발생했습니다.';
+    throw new Error(errorMessage);
   }
 };
 
@@ -87,7 +93,8 @@ export const logout = async (token) => {
     localStorage.removeItem('is_admin');
     return response.data;
   } catch (error) {
-    throw error.response?.data || {message: '로그아웃 중 오류가 발생했습니다.'};
+    const errorMessage = error.response?.data?.detail || error.message || '로그아웃 중 오류가 발생했습니다.';
+    throw new Error(errorMessage);
   }
 };
 
@@ -100,7 +107,8 @@ export const refreshAccessToken = async () => {
     localStorage.setItem('access_token', response.data.access_token);
     return response.data;
   } catch (error) {
-    throw error.response?.data || {message: '토큰 갱신 중 오류가 발생했습니다.'};
+    const errorMessage = error.response?.data?.detail || error.message || '토큰 갱신 중 오류가 발생했습니다.';
+    throw new Error(errorMessage);
   }
 };
 
@@ -110,7 +118,8 @@ export const getProtectedData = async () => {
     const response = await api.get('/protected');
     return response.data;
   } catch (error) {
-    throw error.response?.data || {message: '보호된 데이터 가져오기 중 오류가 발생했습니다.'};
+    const errorMessage = error.response?.data?.detail || error.message || '보호된 데이터 가져오기 중 오류가 발생했습니다.';
+    throw new Error(errorMessage);
   }
 };
 
@@ -120,7 +129,8 @@ export const findPassword = async (email) => {
     const response = await api.post('/findpwd', {email});
     return response.data;
   } catch (error) {
-    throw error.response?.data || {message: '비밀번호 찾기 요청 중 오류가 발생했습니다.'};
+    const errorMessage = error.response?.data?.detail || error.message || '비밀번호 찾기 요청 중 오류가 발생했습니다.';
+    throw new Error(errorMessage);
   }
 };
 
@@ -130,7 +140,8 @@ export const verifyCode = async (email, code) => {
     const response = await api.post('/verify-code', {email, code});
     return response.data;
   } catch (error) {
-    throw error.response?.data || {message: '인증 코드 확인 중 오류가 발생했습니다.'};
+    const errorMessage = error.response?.data?.detail || error.message || '인증 코드 확인 중 오류가 발생했습니다.';
+    throw new Error(errorMessage);
   }
 };
 
@@ -140,7 +151,8 @@ export const resetPassword = async (resetData) => {
     const response = await api.post('/reset-password', resetData);
     return response.data;
   } catch (error) {
-    throw error.response?.data || {message: '비밀번호 재설정 중 오류가 발생했습니다.'};
+    const errorMessage = error.response?.data?.detail || error.message || '비밀번호 재설정 중 오류가 발생했습니다.';
+    throw new Error(errorMessage);
   }
 };
 
