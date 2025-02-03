@@ -116,7 +116,7 @@ const Login = () => {
   };
 
   // 로그인 처리
-  const handleLoginSubmit = async (e) => {
+  const handleSignInSubmit = async (e) => {
     e.preventDefault();
 
     // 이메일 형식이 올바른지 확인
