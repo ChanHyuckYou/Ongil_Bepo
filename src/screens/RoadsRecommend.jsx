@@ -12,12 +12,13 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 
 // polygon.json을 직접 import
-import polygonData from "../../public/data/polygon.json";
+import polygonData from "../data/polygon.json";
 
 const RoadsRecommend = () => {
   // ------------------------------
   // 기존 도로 데이터 예시
   // ------------------------------
+
   const [roads, setRoads] = useState([
     {
       rank: "1순위",

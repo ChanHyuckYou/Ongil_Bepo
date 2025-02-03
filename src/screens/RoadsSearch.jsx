@@ -1,6 +1,7 @@
 import styles from '../styles/RoadsSearch.module.css';
 import {useState, useEffect} from 'react';
 import useNavigations from "../components/Navigation/Navigations.jsx";
+import locationData from '../data/locations_nested.json';
 import LoadingPage from "../components/spinner/LoadingPage.jsx";
 
 const RoadsSearch = () => {
@@ -8,7 +9,6 @@ const RoadsSearch = () => {
   const [sido, setSido] = useState('');
   const [sigungu, setSigungu] = useState('');
   const [eupmyeondong, setEupmyeondong] = useState('');
-  const locationData = '/data/polygon.json';
 
   // 기존 가중치 관련 state (기본 값 20으로 설정)
   const [icingWeight, setIcingWeight] = useState(20);

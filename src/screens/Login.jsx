@@ -134,7 +134,7 @@ const Login = () => {
               className={`${styles.container__form} ${styles["container--signup"]}`}
           >
             <form className={styles.form} onSubmit={handleSignUpSubmit}>
-              <img src="public/images/login_logo.png"
+              <img src="/images/login_logo.png"
                    className={styles.form__title}/>
               <input
                   type="text"
@@ -211,7 +211,7 @@ const Login = () => {
               className={`${styles.container__form} ${styles["container--signin"]}`}
           >
             <form className={styles.form} onSubmit={handleSignInSubmit}>
-              <img src="public/images/login_logo.png"
+              <img src="/images/login_logo.png"
                    className={styles.form__title}/>
               <input
                   type="email"
