@@ -1,3 +1,4 @@
+//"../Navigation/Navigations.jsx";
 import {useNavigate} from 'react-router-dom';
 
 function useNavigations() {
@@ -9,7 +10,7 @@ function useNavigations() {
         navigate('/home');
         break;
       case "Login":
-        navigate('/', {replace: true});
+        navigate('/');
         break;
       case "Findpwd":
         navigate('/find-pwd');
