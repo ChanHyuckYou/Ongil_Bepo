@@ -3,13 +3,13 @@ import {useNavigate} from 'react-router-dom';
 function useNavigations() {
   const navigate = useNavigate();
 
-   return (page, params) => {
+  return (page, params) => {
     switch (page) {
       case "Home":
         navigate('/home');
         break;
       case "Login":
-        navigate('/');
+        navigate('/', {replace: true});
         break;
       case "Findpwd":
         navigate('/find-pwd');

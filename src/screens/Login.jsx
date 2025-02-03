@@ -6,7 +6,6 @@ import {useState} from "react";
 import {
   checkEmail,
   sendSignupCode,
-  completeSignup,
   loginUser
 } from '../components/ApiRoute/auth.jsx';
 
