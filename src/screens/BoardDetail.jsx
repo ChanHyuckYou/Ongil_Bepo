@@ -1,230 +1,261 @@
-// src/components/BoardDetail.jsx
-import {useState, useEffect, useRef} from "react";
+import React, {useState, useEffect} from "react";
 import {useParams, useNavigate} from "react-router-dom";
-import {getSocket} from "../components/ApiRoute/board.jsx"; // getSocket() 사용
+import {
+  getPostDetail,
+  addComment,
+  addAnswer,
+  getPostFiles,
+  deleteFile,
+  downloadFile,
+  deletePost,
+} from "../components/ApiRoute/board.jsx";
+
 import styles from "../styles/BoardDetail.module.css";
 
 const BoardDetail = () => {
   const {postId} = useParams();
   const navigate = useNavigate();
-  const [postDetail, setPostDetail] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [comments, setComments] = useState([]);
-  const [newComment, setNewComment] = useState("");
 
-  // socket 인스턴스를 저장할 ref
-  const socketRef = useRef(null);
+  const [postDetail, setPostDetail] = useState(null);
+  const [files, setFiles] = useState([]);
+  const [comments, setComments] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  const [newComment, setNewComment] = useState("");
+  const [adminAnswer, setAdminAnswer] = useState("");
+
+  const currentUser = localStorage.getItem("user") || "사용자";
+  const isAdmin = localStorage.getItem("isAdmin") === "true";
 
   useEffect(() => {
-    // BoardDetail 페이지에 진입 시 소켓 연결 생성
-    socketRef.current = getSocket();
-    const socket = socketRef.current;
+    const fetchData = async () => {
+      try {
+        const data = await getPostDetail(postId);
+        const postData = data.post;
+        setPostDetail(postData);
 
-    // 게시글 상세정보 요청
-    socket.emit("getPostDetail", Number(postId), (response) => {
-      if (response.success) {
-        setPostDetail(response.data);
-        setComments(response.data.comments || []);
-      } else {
-        console.error(response.message);
-      }
-      setLoading(false);
-    });
-
-    // 새 댓글 이벤트 수신
-    socket.on("newComment", (comment) => {
-      setComments((prev) => [...prev, comment]);
-    });
-
-    // 삭제된 댓글 이벤트 수신
-    socket.on("deletedComment", ({postId: deletedPostId, commentDate}) => {
-      if (deletedPostId === Number(postId)) {
-        setComments((prev) =>
-            prev.filter(
-                (comment) =>
-                    new Date(comment.date).toISOString() !== new Date(
-                        commentDate).toISOString()
-            )
-        );
-      }
-    });
-
-    // 컴포넌트 언마운트 시 socket 연결 해제
-    return () => {
-      if (socketRef.current) {
-        socketRef.current.off("newComment");
-        socketRef.current.off("deletedComment");
-        socketRef.current.disconnect();
-        socketRef.current = null;
-      }
-    };
-  }, [postId]);
-
-  // 수정 버튼 클릭 시 BoardCreate 페이지로 이동 (수정 시 현재 게시글 데이터를 전달)
-  const handleEditPost = () => {
-    navigate(`/board-create`, {state: {postDetail}});
-  };
-
-  // 게시글 삭제
-  const handleDeletePost = () => {
-    const currentUser = "사용자"; // 실제 로그인한 사용자 정보로 대체 필요
-    if (postDetail.author !== currentUser) {
-      alert("본인이 작성한 게시글만 삭제할 수 있습니다.");
-      return;
-    }
-    if (!window.confirm("게시글을 삭제하시겠습니까?")) {
-      return;
-    }
-    if (socketRef.current) {
-      socketRef.current.emit("deletePost",
-          {postId: Number(postId), author: currentUser}, (response) => {
-            if (response.success) {
-              alert("게시글이 삭제되었습니다.");
-              navigate("/board-main");
-            } else {
-              console.error("게시글 삭제 실패:", response.message);
-            }
-          });
-    }
-  };
-
-  // 댓글 등록
-  const handleAddComment = () => {
-    if (!newComment.trim()) {
-      return;
-    }
-    const comment = {
-      postId: Number(postId),
-      author: "사용자", // 실제 로그인 사용자 정보로 대체 필요
-      content: newComment,
-      date: new Date().toISOString(),
-    };
-    if (socketRef.current) {
-      socketRef.current.emit("createComment", comment, (response) => {
-        if (response.success) {
-          setNewComment("");
-        } else {
-          console.error("댓글 등록 실패:", response.message);
+        if (postData.comments) {
+          setComments(postData.comments);
         }
-      });
-    }
-  };
 
-  // 댓글 삭제
-  const handleDeleteComment = (commentDate, author) => {
-    const currentUser = "사용자"; // 실제 로그인 사용자 정보로 대체 필요
-    if (author !== currentUser) {
-      alert("본인 댓글만 삭제할 수 있습니다.");
-      return;
-    }
-    if (socketRef.current) {
-      socketRef.current.emit(
-          "deleteComment",
-          {postId: Number(postId), commentDate, author},
-          (response) => {
-            if (response.success) {
-              alert("댓글이 삭제되었습니다.");
-              setComments((prev) =>
-                  prev.filter(
-                      (comment) =>
-                          new Date(comment.date).toISOString() !== new Date(
-                              commentDate).toISOString()
-                  )
-              );
-            } else {
-              console.error("댓글 삭제 실패:", response.message);
-            }
+        try {
+          const filesData = await getPostFiles(postId);
+          setFiles(filesData.files);
+        } catch (err) {
+          if (err.message.includes("No files found")) {
+            setFiles([]);
+          } else {
+            alert(err.message);
           }
-      );
-    }
-  };
+        }
+      } catch (error) {
+        console.error("게시글 조회 오류:", error);
+        navigate("/not-found");
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [postId, navigate]);
 
   if (loading) {
     return <div>Loading...</div>;
   }
+
   if (!postDetail) {
-    return <div>게시글을 찾을 수 없습니다.</div>;
+    return null;
   }
+
+  // 댓글 작성
+  const handleAddComment = async () => {
+    if (!newComment.trim()) {
+      return;
+    }
+    try {
+      await addComment(postId, newComment);
+      alert("댓글이 등록되었습니다.");
+
+      const newComm = {
+        author: currentUser,
+        content: newComment,
+        date: new Date().toISOString(),
+      };
+      setComments((prev) => [...prev, newComm]);
+      setNewComment("");
+    } catch (error) {
+      console.error("댓글 작성 오류:", error);
+      alert(error.message);
+    }
+  };
+
+  // 게시글 삭제
+  const handleDelete = async () => {
+    if (!window.confirm("정말로 게시글을 삭제하시겠습니까?")) {
+      return;
+    }
+    try {
+      await deletePost(postId);
+      alert("게시글이 삭제되었습니다.");
+      navigate("/board-main");
+    } catch (error) {
+      console.error("게시글 삭제 오류:", error);
+      alert(error.message);
+    }
+  };
+
+  // 관리자 답변 작성
+  const handleAdminAnswer = async () => {
+    if (!adminAnswer.trim()) {
+      return;
+    }
+    try {
+      await addAnswer(postId, adminAnswer);
+      alert("관리자 답변이 등록되었습니다.");
+      setAdminAnswer("");
+    } catch (error) {
+      console.error("관리자 답변 작성 오류:", error);
+      alert(error.message);
+    }
+  };
+
+  // 파일 다운로드
+  const handleDownloadFile = (fileId) => {
+    downloadFile(fileId);
+  };
+
+  // 파일 삭제
+  const handleDeleteFile = async (fileId) => {
+    if (!window.confirm("파일을 삭제하시겠습니까?")) {
+      return;
+    }
+    try {
+      await deleteFile(fileId);
+      alert("파일이 삭제되었습니다.");
+
+      try {
+        const updatedFiles = await getPostFiles(postId);
+        setFiles(updatedFiles.files);
+      } catch (err) {
+        if (err.message.includes("No files found")) {
+          setFiles([]);
+        } else {
+          alert(err.message);
+        }
+      }
+    } catch (error) {
+      console.error("파일 삭제 오류:", error);
+      alert(error.message);
+    }
+  };
+
+  // 게시글 수정 페이지 이동
+  const goToEditPage = () => {
+    navigate(`/board-create/${postId}`);
+  };
+
+  // "T" → 공백 으로 대체해 출력
+  const displayTime = postDetail.post_time ? postDetail.post_time.replace("T",
+      " ") : "";
 
   return (
       <div className={styles.boarddetail}>
-        {/* 수정 및 삭제 버튼: 작성자와 로그인한 사용자가 같을 때만 표시 */}
-        {postDetail.author === "사용자" && (
-            <div className={styles.buttonInput}>
-              <button className={styles.editButton} onClick={handleEditPost}>
-                수정
-              </button>
-              <button className={styles.deleteButton}
-                      onClick={handleDeletePost}>
-                게시글 삭제
-              </button>
-            </div>
-        )}
         <div className={styles.board}>
-          <h2 className={styles.titleForm}>{postDetail.title}</h2>
+          {/* 제목 */}
+          <div className={styles.titleForm}>{postDetail.post_title}</div>
+
+          {/* 메타 정보 */}
           <div className={styles.metaInfo}>
-            <p>작성자: {postDetail.author}</p>
-            <p>카테고리: {postDetail.category}</p>
+            <p>작성자: {postDetail.user_email}</p>
+            <p>카테고리: {postDetail.post_category}</p>
             <p>조회수: {postDetail.views}</p>
-            <p>작성일: {postDetail.date}</p>
+            {/* 작성일: T를 공백으로 치환 */}
+            <p>작성일: {displayTime}</p>
           </div>
-          <div className={styles.line}/>
-          <div className={styles.contentForm}
-               dangerouslySetInnerHTML={{__html: postDetail.content}}/>
-          <div className={styles.line}/>
-          {postDetail.files?.length > 0 ? (
-              <div className={styles.fileList}>
-                {postDetail.files.map((file, index) => (
-                    <div key={index} className={styles.fileItem}>
-                      <span className={styles.fileName}>{file.name}</span>
-                      {file.downloadUrl && (
-                          <a href={file.downloadUrl} download>
-                            다운로드
-                          </a>
-                      )}
-                    </div>
-                ))}
-              </div>
-          ) : (
-              <p>파일이 없습니다.</p>
-          )}
-        </div>
-        <div className={styles.commentsView}>
-          <h3>댓글</h3>
-          <div className={styles.commentInput}>
-            <input
-                type="text"
-                value={newComment}
-                onChange={(e) => setNewComment(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    e.preventDefault();
-                    handleAddComment();
-                  }
-                }}
-                placeholder="댓글을 입력하세요"
-            />
-            <button onClick={handleAddComment}>등록</button>
-          </div>
-          <ul className={styles.commentList}>
-            {comments.map((comment, index) => (
-                <li key={index} className={styles.commentItem}>
-                  <strong>{comment.author}</strong>
-                  <p className={styles.commentContent}>{comment.content}</p>
-                  <span className={styles.commentDate}>{new Date(
-                      comment.date).toLocaleString()}</span>
-                  {comment.author === "사용자" && (
+
+          <div className={styles.line}></div>
+
+          {/* 내용 */}
+          <div className={styles.contentForm}>{postDetail.post_text}</div>
+
+          <div className={styles.line}></div>
+
+          {/* 파일 목록 */}
+          <div className={styles.fileList}>
+            <h3>파일 목록</h3>
+            {files && files.length > 0 ? (
+                files.map((file) => (
+                    <div key={file.file_id}>
+                      <span>{file.file_name}</span>
                       <button
-                          className={styles.deleteButton}
-                          onClick={() => handleDeleteComment(comment.date,
-                              comment.author)}
-                      >
-                        삭제
+                          onClick={() => handleDownloadFile(file.file_id)}>다운로드
                       </button>
-                  )}
-                </li>
-            ))}
-          </ul>
+                      <button
+                          onClick={() => handleDeleteFile(file.file_id)}>삭제
+                      </button>
+                    </div>
+                ))
+            ) : (
+                <p>파일이 없습니다.</p>
+            )}
+          </div>
+
+          {/* 댓글 영역 */}
+          <div className={styles.commentsView}>
+            <h3>댓글</h3>
+            <ul className={styles.commentList}>
+              {comments.map((comment, idx) => (
+                  <li key={idx} className={styles.commentItem}>
+                    <strong>{comment.author}</strong>
+                    <span className="commentContent">{comment.content}</span>
+                    <span className="commentDate">
+                  {new Date(comment.date).toLocaleString()}
+                </span>
+                  </li>
+              ))}
+            </ul>
+
+            <div className={styles.commentInput}>
+              <input
+                  type="text"
+                  value={newComment}
+                  placeholder="댓글 입력"
+                  onChange={(e) => setNewComment(e.target.value)}
+              />
+              <button onClick={handleAddComment}>등록</button>
+            </div>
+          </div>
+
+          {/* 관리자 답변 (관리자만 노출) */}
+          {isAdmin && (
+              <div className={styles.adminAnswer}>
+                <h3>관리자 답변</h3>
+                <div className={styles.commentInput}>
+                  <input
+                      type="text"
+                      value={adminAnswer}
+                      placeholder="답변 입력"
+                      onChange={(e) => setAdminAnswer(e.target.value)}
+                  />
+                  <button onClick={handleAdminAnswer}>답변 등록</button>
+                </div>
+              </div>
+          )}
+
+          {/* 수정/삭제 버튼을 .board 내부로 배치 */}
+          <div className={styles.buttonInput}>
+            {postDetail.user_email === currentUser && (
+                <div>
+                  <button className={styles.editButton} onClick={goToEditPage}>
+                    수정
+                  </button>
+                  <button className={styles.deleteButton}
+                          onClick={handleDelete}>
+                    삭제
+                  </button>
+                </div>
+            )}
+          </div>
         </div>
       </div>
   );

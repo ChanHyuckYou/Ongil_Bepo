@@ -1,23 +1,30 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import {useState, useEffect} from 'react';
+import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import styles from '../styles/Mypage.module.css';
-import Token from "../token/Token";
-import { loadUserInfo, checkPassword, updateUserInfo, deleteUser } from '../components/ApiRoute/mypage';
+//import Token from "../token/Token";
+import {
+  loadUserInfo,
+  checkPassword,
+  updateUserInfo,
+  deleteUser
+} from '../components/ApiRoute/mypage';
 
 const Mypage = () => {
-  const { accessToken, refreshToken, isAdmin } = Token(); // 공통 훅 사용
+  const {accessToken, refreshToken, isAdmin} = Token(); // 공통 훅 사용
   const navigate = useNavigate();
   const [showEditInfo, setShowEditInfo] = useState(false);
   const [password, setPassword] = useState("");  // 비밀번호 상태
-  const [userInfo, setUserInfo] = useState({ user_email: "", user_name: "", user_dept: "", jurisdiction: "" });
+  const [userInfo, setUserInfo] = useState(
+      {user_email: "", user_name: "", user_dept: "", jurisdiction: ""});
 
   // 유저 정보 불러오기
   const fetchUserInfo = async () => {
     try {
-      const response = await axios.get("http://127.0.0.1:8000/mypage/mypage_load", {
-        headers: { token: accessToken },
-      });
+      const response = await axios.get(
+          "http://127.0.0.1:8000/mypage/mypage_load", {
+            headers: {token: accessToken},
+          });
 
       if (response.status === 200) {
         setUserInfo(response.data.user_info[0]);
@@ -27,7 +34,6 @@ const Mypage = () => {
       alert(error.response?.data?.detail || '사용자 정보를 불러오는데 실패했습니다.');
     }
   };
-
 
   // 비밀번호 확인
   const handleOkClick = async () => {
@@ -61,7 +67,9 @@ const Mypage = () => {
 
   // 회원 탈퇴
   const handleDeleteAccount = async () => {
-    if (!window.confirm("정말로 회원 탈퇴하시겠습니까? 🥲")) return;
+    if (!window.confirm("정말로 회원 탈퇴하시겠습니까? 🥲")) {
+      return;
+    }
 
     try {
       const data = await deleteUser();  // api.js의 deleteUser 호출
@@ -84,88 +92,94 @@ const Mypage = () => {
   };
 
   return (
-    <div className={styles.mypage}>
-      <div className={styles.mypageForm}>
-        <div className={styles.form}>
-          {/* 기존 비밀번호 확인 섹션 */}
-          {!showEditInfo && (
-            <div className={styles.mypageinput}>
-              <div className={styles.mypageImgIcon} />
-              <div className={styles.inputform}>
-                <div className={styles.pwdcheckTxt}>기존 비밀번호 확인</div>
-                <input
-                  type="password"
-                  className={styles.pwdInput}
-                  value={password}
-                  onChange={(e) => setPassword(e.target.value)} // 비밀번호 상태 업데이트
-                  onKeyDown={(e) => e.key === "Enter" && handleOkClick()} // Enter 키 입력 시 실행
-                />
-                <div className={styles.okBtn1} onClick={handleOkClick}>
-                  확인
+      <div className={styles.mypage}>
+        <div className={styles.mypageForm}>
+          <div className={styles.form}>
+            {/* 기존 비밀번호 확인 섹션 */}
+            {!showEditInfo && (
+                <div className={styles.mypageinput}>
+                  <div className={styles.mypageImgIcon}/>
+                  <div className={styles.inputform}>
+                    <div className={styles.pwdcheckTxt}>기존 비밀번호 확인</div>
+                    <input
+                        type="password"
+                        className={styles.pwdInput}
+                        value={password}
+                        onChange={(e) => setPassword(
+                            e.target.value)} // 비밀번호 상태 업데이트
+                        onKeyDown={(e) => e.key === "Enter"
+                            && handleOkClick()} // Enter 키 입력 시 실행
+                    />
+                    <div className={styles.okBtn1} onClick={handleOkClick}>
+                      확인
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          )}
-          {/* 회원 정보 수정 섹션 */}
-          {showEditInfo && (
-            <div className={styles.editmyinfo}>
-              <div className={styles.editform}>
-                <input
-                  type="text"
-                  name="user_name"
-                  value={userInfo.user_name}
-                  placeholder="Name"
-                  className={styles.input}
-                  onChange={handleChange}
-                />
-                <input
-                  type="email"
-                  name="user_email"
-                  value={userInfo.user_email}
-                  placeholder="Email"
-                  className={styles.input}
-                  disabled // 이메일은 수정 불가
-                  style={{ backgroundColor: "#f0f0f0"}}
-                />
-                <input
-                  type="password"
-                  name="user_ps"
-                  placeholder="New Password"
-                  className={styles.input}
-                  onChange={handleChange}
-                />
-                <input
-                  type="password"
-                  name="user_ps_confirm"
-                  placeholder="Re-enter Password"
-                  className={styles.input}
-                  onChange={handleChange}
-                />
-                <input
-                  type="text"
-                  name="user_dept"
-                  value={userInfo.user_dept}
-                  placeholder="Department"
-                  className={styles.input}
-                  onChange={handleChange}
-                />
-                <input
-                  type="text"
-                  name="jurisdiction"
-                  value={userInfo.jurisdiction}
-                  placeholder="Jurisdiction"
-                  className={styles.input}
-                  onChange={handleChange}
-                />
-                <button className={styles.okBtn2} onClick={handleUpdateUserInfo}>확인</button>
-                {/* 회원탈퇴 버튼 추가 */}
-                <div className={styles.Withdraw} onClick={handleDeleteAccount}>회원탈퇴</div>
-              </div>
-            </div>
-          )}
+            )}
+            {/* 회원 정보 수정 섹션 */}
+            {showEditInfo && (
+                <div className={styles.editmyinfo}>
+                  <div className={styles.editform}>
+                    <input
+                        type="text"
+                        name="user_name"
+                        value={userInfo.user_name}
+                        placeholder="Name"
+                        className={styles.input}
+                        onChange={handleChange}
+                    />
+                    <input
+                        type="email"
+                        name="user_email"
+                        value={userInfo.user_email}
+                        placeholder="Email"
+                        className={styles.input}
+                        disabled // 이메일은 수정 불가
+                        style={{backgroundColor: "#f0f0f0"}}
+                    />
+                    <input
+                        type="password"
+                        name="user_ps"
+                        placeholder="New Password"
+                        className={styles.input}
+                        onChange={handleChange}
+                    />
+                    <input
+                        type="password"
+                        name="user_ps_confirm"
+                        placeholder="Re-enter Password"
+                        className={styles.input}
+                        onChange={handleChange}
+                    />
+                    <input
+                        type="text"
+                        name="user_dept"
+                        value={userInfo.user_dept}
+                        placeholder="Department"
+                        className={styles.input}
+                        onChange={handleChange}
+                    />
+                    <input
+                        type="text"
+                        name="jurisdiction"
+                        value={userInfo.jurisdiction}
+                        placeholder="Jurisdiction"
+                        className={styles.input}
+                        onChange={handleChange}
+                    />
+                    <button className={styles.okBtn2}
+                            onClick={handleUpdateUserInfo}>확인
+                    </button>
+                    {/* 회원탈퇴 버튼 추가 */}
+                    <div className={styles.Withdraw}
+                         onClick={handleDeleteAccount}>회원탈퇴
+                    </div>
+                  </div>
+                </div>
+            )}
+          </div>
         </div>
       </div>
-    </div>
   );
 };
 

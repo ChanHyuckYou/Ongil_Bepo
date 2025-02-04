@@ -461,7 +461,7 @@ const RoadsRecommend = () => {
                   className={styles.categoryButton}
                   onClick={handleFetchPolygonData}
               >
-                폴리곤 데이터 불러오기
+                결빙 사고 다발지역 폴리곤 생성
               </button>
 
               {/* 다발지역 폴리곤 표시/숨기기 버튼 */}

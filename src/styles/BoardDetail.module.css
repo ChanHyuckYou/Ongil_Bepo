@@ -22,19 +22,6 @@
   box-sizing: border-box;
 }
 
-/* 게시글 영역 */
-.board {
-  margin: 20px auto;
-  width: 100%;
-  height: auto;
-  border: 1px solid rgba(0, 0, 0, 0.36);
-  border-radius: 9px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  background-color: #fff;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
 /* 제목 영역 */
 .titleForm {
   font-size: 24px;
@@ -193,39 +180,6 @@
 }
 
 
-.buttonInput {
-  text-align: right;
-}
-
-/* 수정 버튼, 삭제 버튼 */
-.editButton,
-.deleteButton {
-  margin-left: auto;
-  margin-top: 5px;
-  font-size: 12px;
-  background-color: transparent;
-  color: #d9534f;
-  padding: 10px 15px;
-  border-radius: 5px;
-  border: none;
-  cursor: pointer;
-}
-
-.editButton:hover,
-.deleteButton:hover {
-  text-decoration: underline;
-  background-color: darkred;
-}
-
-.editButton {
-  background-color: transparent;
-  color: #93A9EB;
-}
-
-.editButton:hover {
-  background-color: darkblue;
-}
-
 /* 반응형 스타일 */
 /* 태블릿 */
 @media (max-width: 768px) {
@@ -366,4 +320,58 @@
 
 .fileItem a:active {
   background-color: #0056b3;
+}
+
+/* 수정/삭제 버튼 */
+.buttonInput {
+  text-align: right;
+  margin-top: 20px;
+  z-index: 1000; /* 다른 요소 위로 올리기 */
+  display: block; /* 버튼을 블록 요소로 설정하여 한 줄에 하나씩 나오게 */
+}
+
+/* 수정 버튼 */
+.editButton,
+.deleteButton {
+  font-size: 14px;
+  padding: 8px 15px;
+  margin-left: 10px; /* 버튼 간 간격 */
+  border-radius: 5px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* 수정 버튼 스타일 */
+.editButton {
+  background-color: transparent;
+  color: #93A9EB;
+}
+
+.editButton:hover {
+  background-color: darkblue;
+  color: white;
+}
+
+/* 삭제 버튼 스타일 */
+.deleteButton {
+  background-color: transparent;
+  color: #d9534f;
+}
+
+.deleteButton:hover {
+  text-decoration: underline;
+  background-color: darkred;
+  color: white;
+}
+
+/* 수정/삭제 버튼 hover 및 active 상태 */
+.editButton:hover,
+.deleteButton:hover {
+  transform: scale(1.05); /* Hover 시 버튼 크기 증가 */
+}
+
+.editButton:active,
+.deleteButton:active {
+  transform: scale(0.95); /* 클릭 시 버튼 크기 감소 */
 }

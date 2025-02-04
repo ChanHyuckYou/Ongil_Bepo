@@ -6,7 +6,6 @@ import AdminPage from "../screens/Adminpage.jsx";
 import BoardDetail from "../screens/BoardDetail.jsx";
 import BoardCreate from "../screens/BoardCreate.jsx";
 import BoardMain from "../screens/Board.jsx";
-import Inquire from "../screens/Inquire.jsx";
 import RoadsRecommend from "../screens/RoadsRecommend.jsx";
 import RoadsSearch from "../screens/RoadsSearch.jsx";
 import Mypage from "../screens/Mypage.jsx";
@@ -128,8 +127,6 @@ function Router() {
           {/*<Route path="/board/:id" element={<BoardId/>}/>  동적 경로 */}
           <Route path="/mypage"
                  element={<ProtectedRoute><Mypage/></ProtectedRoute>}/>
-          <Route path="/inquire"
-                 element={<ProtectedRoute><Inquire/></ProtectedRoute>}/>
         </Route>
 
         {/* 레이아웃이 필요 없는 경로들 */}

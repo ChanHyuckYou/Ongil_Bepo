@@ -71,13 +71,6 @@ const SideNavigation = () => {
       icon: '/images/sign-out_img.png',
       path: '/'
     },
-    {
-      id: 6,
-      label: '문의하기',
-      page: 'Inquire',
-      icon: '/images/help_img.png',
-      path: '/inquire'
-    },
   ];
 
   // 경로에서 끝의 슬래시 제거

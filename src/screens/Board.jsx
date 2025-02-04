@@ -3,7 +3,7 @@ import {useState, useEffect, useRef} from "react";
 import {useNavigate} from "react-router-dom";
 import styles from "../styles/Board.module.css";
 import useNavigations from "../components/Navigation/Navigations.jsx";
-import {getAllPosts, getSocket} from "../components/ApiRoute/board.jsx"; // getSocket() 사용
+import {getAllPosts, getSocket} from "../components/ApiRoute/board.jsx";
 
 const ITEMS_PER_PAGE = 10; // 페이지당 게시글 수
 
@@ -15,14 +15,49 @@ const Board = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchType, setSearchType] = useState("title");
   const [searchQuery, setSearchQuery] = useState("");
+
+  // 페이지네이션 계산용
   const totalPages = Math.ceil(boardItems.length / ITEMS_PER_PAGE);
 
-  // (1) 초기 게시글 데이터 불러오기
+  // 날짜 포맷 함수
+  const formatDateTime = (dateStr) => {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diff = now - date; // 밀리초 차이
+    const diffSec = diff / 1000; // 초
+    const diffMin = diffSec / 60; // 분
+    const diffHour = diffMin / 60; // 시간
+
+    // 24시간 이내 => "방금 전 / X분 전 / X시간 전"
+    if (diffHour < 24) {
+      if (diffMin < 1) {
+        return "방금 전"; // 1분 미만
+      } else if (diffMin < 60) {
+        return `${Math.floor(diffMin)}분 전`;
+      } else {
+        return `${Math.floor(diffHour)}시간 전`;
+      }
+    }
+    // 24시간 이상 => YYYY-MM-DD
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  // (1) 초기 게시글 데이터 불러오기 + 최신순 정렬
   useEffect(() => {
     getAllPosts()
     .then((data) => {
-      console.log("Initial posts:", data.posts);
-      setBoardItems(data.posts);
+      if (!data.posts) {
+        return;
+      }
+      // 최신순 내림차순 정렬
+      const sorted = data.posts.sort(
+          (a, b) => new Date(b.post_time) - new Date(a.post_time)
+      );
+      console.log("Initial posts(sorted):", sorted);
+      setBoardItems(sorted);
     })
     .catch((err) => {
       console.error("Error fetching posts:", err);
@@ -31,18 +66,22 @@ const Board = () => {
 
   // (2) board 페이지에서만 socket 연결 생성 및 이벤트 처리
   useEffect(() => {
-    // getSocket()를 통해 기존 소켓이 있으면 재사용하고, 없으면 새로 생성합니다.
     socketRef.current = getSocket();
     const socket = socketRef.current;
 
     const handleNewPost = (newPost) => {
       console.log("New post received:", newPost);
+      // 가장 위로 추가 (최신글 맨 앞)
       setBoardItems((prevItems) => [newPost, ...prevItems]);
     };
 
     const handleSearchResults = (filteredPosts) => {
       console.log("Search results:", filteredPosts);
-      setBoardItems(filteredPosts);
+      // 검색 결과도 최신순 정렬해주고 싶다면:
+      const sortedResults = filteredPosts.sort(
+          (a, b) => new Date(b.post_time) - new Date(a.post_time)
+      );
+      setBoardItems(sortedResults);
       setCurrentPage(1); // 검색 후 페이지 초기화
     };
 
@@ -58,11 +97,7 @@ const Board = () => {
     };
   }, []);
 
-  const handleNavigation = (page, params = {}) => {
-    navigateTo(page, params);
-  };
-
-  // 페이지 변경 핸들러
+  // 페이지 이동
   const goToPage = (page) => {
     if (page < 1 || page > totalPages) {
       return;
@@ -70,23 +105,30 @@ const Board = () => {
     setCurrentPage(page);
   };
 
-  // 검색 핸들러 (소켓 연결은 socketRef.current를 사용)
+  // 검색 핸들러 (소켓 연결)
   const handleSearch = () => {
     if (socketRef.current) {
-      socketRef.current.emit("searchPosts",
-          {type: searchType, query: searchQuery});
+      socketRef.current.emit("searchPosts", {
+        type: searchType,
+        query: searchQuery,
+      });
     }
   };
 
-  // 현재 페이지에 해당하는 게시글 추출
+  // 현재 페이지 게시글만 잘라서 보여주기
   const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
   const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
   const currentItems = boardItems.slice(indexOfFirstItem, indexOfLastItem);
 
+  // 게시글 작성 페이지 이동
+  const handleCreate = () => {
+    navigateTo("BoardCreate");
+  };
+
   return (
       <div className="container">
         <div className={styles.board}>
-          {/* 검색 및 필터 영역 */}
+          {/* 검색 영역 */}
           <div className={styles.boardHeader}>
             <select
                 className={styles.searchTypeSelect}
@@ -96,6 +138,7 @@ const Board = () => {
               <option value="title">제목</option>
               <option value="content">내용</option>
             </select>
+
             <input
                 type="text"
                 placeholder="검색어를 입력하세요"
@@ -108,13 +151,17 @@ const Board = () => {
                   }
                 }}
             />
+
             <button className={styles.searchBtn} onClick={handleSearch}>
               검색
             </button>
-            <button className={styles.createBtn}
-                    onClick={() => handleNavigation("BoardCreate")}>
-              <img className={styles.plusIcon} src="/images/plus_icon.png"
-                   alt="추가 아이콘"/>
+
+            <button className={styles.createBtn} onClick={handleCreate}>
+              <img
+                  className={styles.plusIcon}
+                  src="/images/plus_icon.png"
+                  alt="추가 아이콘"
+              />
               작성
             </button>
           </div>
@@ -122,6 +169,7 @@ const Board = () => {
           {/* 게시글 목록 */}
           <div className={styles.boardListView}>
             <div className={styles.boardListHeader}>
+              <span>공개여부</span>
               <span>카테고리</span>
               <span>제목</span>
               <span>작성자</span>
@@ -137,6 +185,10 @@ const Board = () => {
                           {postId: item.post_id})}
                       style={{cursor: "pointer"}}
                   >
+                    {/* 공개여부: board_id 0 -> 비공개, 1 -> 공개 */}
+                    <span className={styles.boardCategory}>
+                  {item.board_id === 1 ? "공개" : "비공개"}
+                </span>
                     <span
                         className={styles.boardCategory}>{item.post_category}</span>
                     <span className={styles.boardTitle}>{item.post_title}</span>
@@ -144,7 +196,7 @@ const Board = () => {
                         className={styles.boardAuthor}>{item.user_email}</span>
                     <span className={styles.boardViews}>{item.views}</span>
                     <span className={styles.boardDate}>
-                  {new Date(item.post_time).toLocaleDateString()}
+                  {formatDateTime(item.post_time)}
                 </span>
                   </div>
               ))}
@@ -154,16 +206,20 @@ const Board = () => {
           {/* 페이지네이션 */}
           {totalPages > 1 && (
               <div className={styles.pagination}>
-                <button onClick={() => goToPage(currentPage - 1)}
-                        disabled={currentPage === 1} className={styles.pageBtn}>
+                <button
+                    onClick={() => goToPage(currentPage - 1)}
+                    disabled={currentPage === 1}
+                    className={styles.pageBtn}
+                >
                   이전
                 </button>
                 {Array.from({length: totalPages}, (_, index) => (
                     <button
                         key={index + 1}
                         onClick={() => goToPage(index + 1)}
-                        className={`${styles.pageBtn} ${currentPage === index
-                        + 1 ? styles.activePage : ""}`}
+                        className={`${styles.pageBtn} ${
+                            currentPage === index + 1 ? styles.activePage : ""
+                        }`}
                     >
                       {index + 1}
                     </button>

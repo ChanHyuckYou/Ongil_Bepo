@@ -1,112 +1,169 @@
-// src/components/BoardCreate.jsx
 import {useState, useEffect, useRef} from "react";
+import {useParams, useNavigate} from "react-router-dom";
+import {
+  getPostDetail,
+  createPost,
+  updatePost,
+  deletePost,
+  uploadFile,
+  deleteFile, getSocket
+} from "../components/ApiRoute/board.jsx";
 import styles from "../styles/BoardCreate.module.css";
-import useNavigations from "../components/Navigation/Navigations.jsx";
-import {getSocket} from "../components/ApiRoute/board.jsx"; // getSocket() 사용
 
 const BoardCreate = () => {
+  const {postId} = useParams();
+  const navigate = useNavigate();
+
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [category, setCategory] = useState("데이터 문의");
-  const [files, setFiles] = useState([]);
-  const navigateTo = useNavigations();
+  const [isPublic, setIsPublic] = useState(true);
+  const [newFiles, setNewFiles] = useState([]);
+  const isEdit = !!postId;
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
   const socketRef = useRef(null);
-
-  // 페이지 마운트 시 소켓 연결 생성
+  // (2) board 페이지에서만 socket 연결 생성 및 이벤트 처리
   useEffect(() => {
     socketRef.current = getSocket();
+    const socket = socketRef.current;
+    // 페이지 언마운트 시 소켓 연결 해제
     return () => {
-      if (socketRef.current) {
-        socketRef.current.disconnect();
-        socketRef.current = null;
-      }
+      socket.disconnect();
+      socketRef.current = null;
     };
   }, []);
 
-  const handleFileChange = async (e) => {
-    if (e.target.files) {
-      const newFiles = Array.from(e.target.files);
-      setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-
-      // 파일 업로드 API 호출 예시 (필요 시 활성화)
-      /*
-      const formData = new FormData();
-      newFiles.forEach(file => {
-        formData.append('files', file);
-      });
-      try {
-        const response = await fetch('http://localhost:3000/upload', {
-          method: 'POST',
-          body: formData,
-        });
-        const data = await response.json();
-        if (data.success) {
-          setFiles(prevFiles => prevFiles.map((file, index) => ({
-            ...file,
-            downloadUrl: data.fileUrls[index],
-          })));
-        } else {
-          throw new Error('파일 업로드 실패');
+  useEffect(() => {
+    if (isEdit) {
+      (async () => {
+        try {
+          const data = await getPostDetail(postId);
+          const postData = data.post;
+          setTitle(postData.post_title);
+          setContent(postData.post_text);
+          setCategory(postData.post_category || "데이터 문의");
+          setIsPublic(postData.board_id === 1);
+        } catch (error) {
+          console.error("게시글 불러오기 오류:", error);
+          alert(error.message);
         }
-      } catch (error) {
-        console.error('Error uploading files:', error);
-        alert('파일 업로드에 실패했습니다. 다시 시도해주세요.');
-      }
-      */
+      })();
+    }
+  }, [isEdit, postId]);
+
+  const handleFileChange = (e) => {
+    if (e.target.files) {
+      const filesArray = Array.from(e.target.files);
+      setNewFiles((prev) => [...prev, ...filesArray]);
     }
   };
 
   const handleRemoveFile = (index) => {
-    setFiles((prevFiles) => prevFiles.filter((_, i) => i !== index));
+    setNewFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const handleNavigation = (page) => {
-    navigateTo(page);
-  };
-
-  const handleCreate = () => {
+  const handleSubmit = async () => {
     if (!title || !content) {
-      alert("제목과 내용을 입력해주세요.");
+      setErrorMessage("제목과 내용을 입력해주세요.");
       return;
     }
 
-    // BoardMain 페이지로 이동하기 전에 게시글 생성 이벤트 emit
-    const newPost = {
-      // id는 서버에서 생성되거나, 임시로 Date.now()로 처리
-      id: Date.now(),
-      category,
-      title,
-      content,
-      author: "사용자", // 실제 로그인 사용자 정보로 대체 필요
-      views: 0,
-      date: new Date().toISOString().split("T")[0],
-      files,
-    };
+    setIsSubmitting(true);
+    setErrorMessage("");
 
-    // 소켓을 통해 createPost 이벤트 전송 (응답 처리는 서버에 따라 구현)
-    if (socketRef.current) {
-      socketRef.current.emit("createPost", newPost, (response) => {
-        if (response.success) {
-          alert("게시글이 작성되었습니다!");
-          setTitle("");
-          setContent("");
-          setFiles([]);
-          handleNavigation("BoardMain");
-        } else {
-          console.error("게시글 작성 실패:", response.message);
+    try {
+      let postIdResult;
+      if (!isEdit) {
+        const payload = {
+          board_id: isPublic ? 1 : 0,
+          post_title: title,
+          post_category: category,
+          post_text: content,
+        };
+
+        const createResult = await createPost(payload);
+        const newPost = createResult.post;
+        if (!newPost || !newPost.post_id) {
+          throw new Error("게시글 ID를 확인할 수 없습니다.");
         }
-      });
+        postIdResult = newPost.post_id;
+      } else {
+        const payload = {
+          post_title: title,
+          post_category: category,
+          post_text: content,
+        };
+
+        await updatePost(postId, payload);
+        postIdResult = postId;
+      }
+
+      for (const file of newFiles) {
+        await uploadFile(postIdResult, file);
+      }
+
+      alert(isEdit ? "게시글이 수정되었습니다." : "게시글이 작성되었습니다.");
+      navigate("/board-main");
+    } catch (error) {
+      console.error(isEdit ? "게시글 수정 오류:" : "게시글 작성 오류:", error);
+      setErrorMessage(error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!window.confirm("정말로 게시글을 삭제하시겠습니까?")) {
+      return;
+    }
+    try {
+      await deletePost(postId);
+      alert("게시글이 삭제되었습니다.");
+      navigate("/board-main");
+    } catch (error) {
+      console.error("게시글 삭제 오류:", error);
+      alert(error.message);
+    }
+  };
+
+  const handleDeleteFileServer = async (fileId) => {
+    if (!window.confirm("파일을 삭제하시겠습니까?")) {
+      return;
+    }
+    try {
+      await deleteFile(fileId);
+      alert("파일이 삭제되었습니다.");
+    } catch (error) {
+      console.error("파일 삭제 오류:", error);
+      alert(error.message);
     }
   };
 
   return (
       <div className={styles.boardcreate}>
         <div className={styles.boardForm}>
+          <h2>{isEdit ? "게시글 수정" : "게시글 작성"}</h2>
+
           <div className={styles.formGroup}>
-            <h2>게시판 글쓰기</h2>
+            <label>공개 여부</label>
+            <select
+                className={styles.select}
+                value={isPublic ? "1" : "0"}
+                onChange={(e) => setIsPublic(e.target.value === "1")}
+            >
+              <option value="1">공개글</option>
+              <option value="0">비밀글</option>
+            </select>
+          </div>
+
+          <div className={styles.formGroup}>
             <label>게시글 유형</label>
-            <select className={styles.select} value={category}
-                    onChange={(e) => setCategory(e.target.value)}>
+            <select
+                className={styles.select}
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+            >
               <option value="데이터 문의">데이터 문의</option>
               <option value="기술관련 문의">기술관련 문의</option>
               <option value="서비스 추가 문의">서비스 추가 문의</option>
@@ -114,6 +171,7 @@ const BoardCreate = () => {
               <option value="기타">기타</option>
             </select>
           </div>
+
           <div className={styles.postForm}>
             <label>제목</label>
             <input
@@ -124,6 +182,7 @@ const BoardCreate = () => {
                 className={styles.inputField}
             />
           </div>
+
           <div className={styles.contentForm}>
             <label>내용</label>
             <textarea
@@ -133,10 +192,10 @@ const BoardCreate = () => {
                 className={styles.textArea}
             ></textarea>
           </div>
+
           <div className={styles.fileForm}>
-            <label htmlFor="file_input" className={styles.file_label}>
-              파일업로드
-            </label>
+            <label htmlFor="file_input"
+                   className={styles.file_label}>파일업로드</label>
             <input
                 type="file"
                 id="file_input"
@@ -145,7 +204,7 @@ const BoardCreate = () => {
                 multiple
             />
             <div className={styles.fileList}>
-              {files.map((file, index) => (
+              {newFiles.map((file, index) => (
                   <div key={index} className={styles.fileItem}>
                     <span className={styles.fileName}>{file.name}</span>
                     <button type="button" className={styles.removeButton}
@@ -156,10 +215,24 @@ const BoardCreate = () => {
               ))}
             </div>
           </div>
+
+          {errorMessage && <div
+              className={styles.errorMessage}>{errorMessage}</div>}
+
           <div className={styles.createBtnWrapper}>
-            <button className={styles.createBtn} onClick={handleCreate}>
-              작성
+            <button
+                className={styles.createBtn}
+                onClick={handleSubmit}
+                disabled={isSubmitting}
+            >
+              {isEdit ? "수정" : "작성"}
             </button>
+
+            {isEdit && (
+                <button className={styles.deleteBtn} onClick={handleDelete}>
+                  삭제
+                </button>
+            )}
           </div>
         </div>
       </div>
