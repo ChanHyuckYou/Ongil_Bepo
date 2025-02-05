@@ -1,91 +1,109 @@
-import {useState, useEffect} from 'react';
+import { useState, useEffect } from 'react';
 import styles from '../styles/Adminpage.module.css';
+import { fetchFileRequests, approveFileRequest, rejectFileRequest } from '../components/ApiRoute/admin.jsx';
 
 const Adminpage = () => {
   const [data, setData] = useState([]);
 
-  // 서버에서 데이터 가져오기
-  useEffect(() => {
-    const testData = [
-      {
-        id: 1,
-        region: '부천시청',
-        department: '도시안전관리부',
-        status: '승인 대기',
-        dateTime: '2025-01-09 03:11:26',
-      },
-      {
-        id: 2,
-        region: '서울시청',
-        department: '환경관리부',
-        status: '승인 대기',
-        dateTime: '2025-01-10 14:22:45',
-      },
-      {
-        id: 3,
-        region: '인천시청',
-        department: '교통운영부',
-        status: '승인 대기',
-        dateTime: '2025-01-11 09:00:00',
-      },
-    ];
-    setData(testData); // 테스트 데이터를 상태에 설정
-  }, []);
-
-  // 승인/거부 처리
-  const handleApprove = (id) => {
-    console.log(`Approved request ID: ${id}`);
-    // 서버에 승인 요청 전송 로직 추가
+  // 데이터 가져오기
+  const getData = async () => {
+    try {
+      const result = await fetchFileRequests();
+      const formattedData = result.file_requests.map(item => ({
+        id: item.log_id,
+        email: item.user_email,
+        department: item.user_dept,
+        region: item.jurisdiction,
+        dateTime: item.c_date,
+        status: '승인 대기', // 기본 상태
+      }));
+      setData(formattedData);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
   };
 
-  const handleReject = (id) => {
-    console.log(`Rejected request ID: ${id}`);
-    // 서버에 거부 요청 전송 로직 추가
+  useEffect(() => {
+    getData();
+  }, []);
+
+  // 승인 처리
+  const handleApprove = async (logId) => {
+    try {
+      const response = await approveFileRequest(logId);
+      alert(response.message); // FastAPI에서 받은 메시지 표시
+      setData(prevData => prevData.map(item =>
+        item.id === logId ? { ...item, status: '승인 완료' } : item
+      ));
+    } catch (error) {
+      console.error('Error approving request:', error);
+      alert("승인 중 오류가 발생했습니다.");
+    }
+  };
+
+  // 거부 처리
+  const handleReject = async (logId) => {
+    try {
+      await rejectFileRequest(logId);
+      alert("요청이 거부되었습니다.");
+      setData(prevData => prevData.map(item =>
+        item.id === logId ? { ...item, status: '거부됨' } : item
+      ));
+    } catch (error) {
+      console.error('Error rejecting request:', error);
+      alert("거부 중 오류가 발생했습니다.");
+    }
   };
 
   return (
-      <div className={styles.adminpage}>
-        <div className={styles.adminContent}>
-          <h1>승인 요청 목록</h1>
+    <div className={styles.adminpage}>
+      <h1>승인 요청 목록</h1>
+      <div className={styles.adminContent}>
           <table className={styles.table}>
             <thead>
-            <tr>
-              <th>ID</th>
-              <th>관할 구역</th>
-              <th>부서</th>
-              <th>승인 여부</th>
-              <th>날짜 및 시간</th>
-              <th>액션</th>
-            </tr>
+              <tr>
+                <th>ID</th>
+                <th>이메일</th>
+                <th>부서</th>
+                <th>관할 구역</th>
+                <th>날짜 및 시간</th>
+                <th>승인 여부</th>
+                <th>승인 선택</th>
+              </tr>
             </thead>
             <tbody>
-            {data.map((item) => (
+              {data.map((item) => (
                 <tr key={item.id}>
                   <td>{item.id}</td>
-                  <td>{item.region}</td>
+                  <td>{item.email}</td>
                   <td>{item.department}</td>
-                  <td>{item.status}</td>
+                  <td>{item.region}</td>
                   <td>{item.dateTime}</td>
+                  <td>{item.status}</td>
                   <td>
-                    <button
-                        className={styles.approveBtn}
-                        onClick={() => handleApprove(item.id)}
-                    >
-                      승인
-                    </button>
-                    <button
-                        className={styles.rejectBtn}
-                        onClick={() => handleReject(item.id)}
-                    >
-                      거부
-                    </button>
+                    {item.status === '승인 대기' && (
+                      <>
+                        <button
+                          className={styles.approveBtn}
+                          onClick={() => handleApprove(item.id)}
+                        >
+                          승인
+                        </button>
+                        <button
+                          className={styles.rejectBtn}
+                          onClick={() => handleReject(item.id)}
+                        >
+                          거부
+                        </button>
+                      </>
+                    )}
                   </td>
                 </tr>
-            ))}
+              ))}
             </tbody>
           </table>
-        </div>
-      </div>
+       </div>
+    </div>
   );
 };
 

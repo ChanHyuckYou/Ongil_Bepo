@@ -11,7 +11,7 @@ const SideNavigation = () => {
   const [topStart, setTopStart] = useState(0); // 상단 아이템의 시작 위치
   const [bottomStart, setBottomStart] = useState(0); // 하단 아이템의 시작 위치
   const [isAdmin, setIsAdmin] = useState(
-      localStorage.getItem('is_admin') === 'true'); // 어드민 여부 상태
+      localStorage.getItem('is_admin') === '1'); // 어드민 여부 상태
 
   const topContainerRef = useRef(null);
   const bottomContainerRef = useRef(null);
@@ -77,15 +77,15 @@ const SideNavigation = () => {
   const currentPath = location.pathname.replace(/\/$/, '');
 
   // 어드민 메뉴 필터링
-  const renderTopItems = topItems.filter((item) => {
-    if (item.isAdminItem && !isAdmin) {
-      return false; // 어드민 메뉴는 어드민일 때만 보이도록 필터링
-    }
-    if (item.onlyOn) {
-      return currentPath === item.onlyOn.replace(/\/$/, ''); // 정확히 일치하는 경로만 필터링
-    }
-    return true;
-  });
+    const renderTopItems = topItems.filter((item) => {
+      if (item.isAdminItem && !isAdmin) {
+        return false;
+      }
+      if (item.onlyOn) {
+        return currentPath === item.onlyOn.replace(/\/$/, ''); // 정확히 일치하는 경로만 필터링
+      }
+      return true;
+    });
 
   const updateLayout = () => {
     const rootStyle = getComputedStyle(document.documentElement);
@@ -108,7 +108,7 @@ const SideNavigation = () => {
     const path = location.pathname;
     const topIndex = topItems.findIndex(item => item.path === path);
     const bottomIndex = bottomItems.findIndex(item => item.path === path);
-
+    console.log("isAdmin 상태:", isAdmin);
     if (topIndex !== -1) {
       setSelectedIndex({group: 'top', index: topIndex});
     } else if (bottomIndex !== -1) {
