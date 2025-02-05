@@ -2,7 +2,7 @@ import {useState, useEffect} from 'react';
 import {useNavigate} from 'react-router-dom';
 import axios from 'axios';
 import styles from '../styles/Mypage.module.css';
-//import Token from "../token/Token";
+
 import {
   loadUserInfo,
   checkPassword,
@@ -11,7 +11,7 @@ import {
 } from '../components/ApiRoute/mypage';
 
 const Mypage = () => {
-  const {accessToken, refreshToken, isAdmin} = Token(); // 공통 훅 사용
+  const accessToken = localStorage.getItem("access_token");
   const navigate = useNavigate();
   const [showEditInfo, setShowEditInfo] = useState(false);
   const [password, setPassword] = useState("");  // 비밀번호 상태
@@ -38,7 +38,7 @@ const Mypage = () => {
   // 비밀번호 확인
   const handleOkClick = async () => {
     try {
-      const data = await checkPassword(password, refreshToken);  // api.js의 checkPassword 호출
+      const data = await checkPassword(password, accessToken);  // api.js의 checkPassword 호출
       alert(data.message);
       await fetchUserInfo();
       setShowEditInfo(true);  // 비밀번호 확인 후 사용자 정보 수정 섹션 보이기
