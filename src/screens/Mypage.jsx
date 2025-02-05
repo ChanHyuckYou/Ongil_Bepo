@@ -8,7 +8,7 @@ import {
   checkPassword,
   updateUserInfo,
   deleteUser
-} from '../components/ApiRoute/mypage';
+} from '../components/ApiRoute/mypage.jsx';
 
 const Mypage = () => {
   const accessToken = localStorage.getItem("access_token");
@@ -20,18 +20,9 @@ const Mypage = () => {
 
   // 유저 정보 불러오기
   const fetchUserInfo = async () => {
-    try {
-      const response = await axios.get(
-          "http://127.0.0.1:8000/mypage/mypage_load", {
-            headers: {token: accessToken},
-          });
-
-      if (response.status === 200) {
-        setUserInfo(response.data.user_info[0]);
-      }
-    } catch (error) {
-      console.error('Error response:', error.response); // 오류에 대한 정보 확인
-      alert(error.response?.data?.detail || '사용자 정보를 불러오는데 실패했습니다.');
+    const data = await loadUserInfo(accessToken);  // loadUserInfo 호출하여 데이터 가져오기
+    if (data) {
+      setUserInfo(data.user_info[0]);  // 데이터 저장
     }
   };
 

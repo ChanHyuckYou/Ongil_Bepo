@@ -114,6 +114,17 @@ export const deletePost = async (postId) => {
   return await response.json();
 };
 
+// 게시글의 댓글 및 관리자 답변 조회 (GET /board/{post_id}/comments-answers)
+export const getCommentsAndAnswers = async (postId) => {
+  const response = await fetch(`${API_BASE_URL}/${postId}/comments-answers`, {
+    headers: getHeaders(),
+  });
+  if (!response.ok) {
+    throw new Error("댓글 및 관리자 답변 조회에 실패하였습니다.");
+  }
+  return await response.json();
+};
+
 // 댓글 작성 (POST /board/{post_id}/comment)
 export const addComment = async (postId, comment) => {
   const response = await fetch(`${API_BASE_URL}/${postId}/comment`, {
@@ -142,6 +153,22 @@ export const addAnswer = async (postId, answer) => {
   return await response.json();
 };
 
+// 댓글 삭제 (DELETE /board/{post_id}/comment/{comment_id})
+export const deleteComment = async (postId, commentId) => {
+  const response = await fetch(`${API_BASE_URL}/${postId}/comment/${commentId}`, {
+    method: "DELETE",
+    headers: getHeaders(),
+  });
+
+  if (!response.ok) {
+    const errData = await response.json();
+    throw new Error(errData.detail || "댓글 삭제에 실패하였습니다.");
+  }
+
+  return await response.json();
+};
+
+
 // 파일 업로드 (POST /board/{post_id}/upload)
 export const uploadFile = async (postId, file) => {
   const formData = new FormData();
@@ -165,9 +192,9 @@ export const getPostFiles = async (postId) => {
   const response = await fetch(`${API_BASE_URL}/${postId}/files`, {
     headers: getHeaders(),
   });
-  if (!response.ok) {
-    throw new Error("파일 목록 조회에 실패하였습니다.");
-  }
+//   if (!response.ok) {
+//     throw new Error("파일 목록 조회에 실패하였습니다.");
+//   }
   return await response.json();
 };
 

@@ -81,7 +81,7 @@ const BoardCreate = () => {
         board_id: isPublic ? 1 : 0,
         post_title: title,
         post_category: category,
-        post_text: content,
+        post_text: content.replace(/\n/g, "<br />"),
       };
 
       // 파일 데이터 (multipart/form-data)
@@ -96,11 +96,9 @@ const BoardCreate = () => {
 //       console.log("fileData 내용 확인:", [...fileData.entries()]);
       if (!isEdit) {
         const file = newFiles[0];
-        const createResult = await createPost(payload, file);  // 토큰 전달
-        postIdResult = createResult.id;
+        await createPost(payload, file);
       } else {
         await updatePost(postId, payload);
-        postIdResult = postId;
       }
 
       alert(isEdit ? "게시글이 수정되었습니다." : "게시글이 작성되었습니다.");
@@ -110,20 +108,6 @@ const BoardCreate = () => {
       setErrorMessage(error.message);
     } finally {
       setIsSubmitting(false);
-    }
-  };
-
-  const handleDelete = async () => {
-    if (!window.confirm("정말로 게시글을 삭제하시겠습니까?")) {
-      return;
-    }
-    try {
-      await deletePost(postId);
-      alert("게시글이 삭제되었습니다.");
-      navigate("/board-main");
-    } catch (error) {
-      console.error("게시글 삭제 오류:", error);
-      alert(error.message);
     }
   };
 
@@ -227,12 +211,6 @@ const BoardCreate = () => {
             >
               {isEdit ? "수정" : "작성"}
             </button>
-
-            {isEdit && (
-                <button className={styles.deleteBtn} onClick={handleDelete}>
-                  삭제
-                </button>
-            )}
           </div>
         </div>
       </div>

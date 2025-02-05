@@ -159,6 +159,7 @@
   padding: 10px 0;
   border-bottom: 1px solid #ddd; /* 아래쪽 경계선 */
   flex-grow: 1; /* 자식 요소가 내용에 맞게 확장되도록 설정 */
+  position: relative;
 }
 
 .commentItem strong {
@@ -374,4 +375,11 @@
 .editButton:active,
 .deleteButton:active {
   transform: scale(0.95); /* 클릭 시 버튼 크기 감소 */
+}
+
+.commentList .deleteButton {
+  width: 70px;
+  position: absolute;
+  right: 10px; /* 오른쪽 끝에 위치시킴 */
+  top: 10px; /* 적당한 위치 조정 */
 }

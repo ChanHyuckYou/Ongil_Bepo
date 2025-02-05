@@ -21,9 +21,10 @@ api.interceptors.request.use(
 );
 
 // 1. 유저 정보 불러오기
-export const loadUserInfo = async () => {
+export const loadUserInfo = async (access_token) => {
   try {
-    const response = await api.get('/mypage_load'); // 'mypage_load' API 호출
+    const response = await api.get('/mypage_load', {
+        headers: { token: access_token }});
     return response.data; // 데이터 반환
   } catch (error) {
     console.error(error.response?.data?.detail || error.message || 'Failed to load user information.');
@@ -33,10 +34,10 @@ export const loadUserInfo = async () => {
 
 
 // 2. 비밀번호 확인
-export const checkPassword = async (password, refresh_token) => {
+export const checkPassword = async (password, access_token) => {
   try {
     const response = await api.get('/check_password', { // api 인스턴스를 사용
-      headers: { token: refresh_token }, // refresh_token을 헤더에 추가
+      headers: { token: access_token }, // access_token 헤더에 추가
       params: { password }, // 비밀번호를 파라미터로 전달
     });
     return response.data; // 데이터 반환

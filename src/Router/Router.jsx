@@ -124,7 +124,8 @@ function Router() {
                  element={<ProtectedRoute><BoardDetail/></ProtectedRoute>}/>
           <Route path="/board-create"
                  element={<ProtectedRoute><BoardCreate/></ProtectedRoute>}/>
-          {/*<Route path="/board/:id" element={<BoardId/>}/>  동적 경로 */}
+          <Route path="/board-create/:postId"
+                 element={<ProtectedRoute>}><BoardCreate/></ProtectedRoute>}/>
           <Route path="/mypage"
                  element={<ProtectedRoute><Mypage/></ProtectedRoute>}/>
         </Route>
