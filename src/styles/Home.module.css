@@ -3,6 +3,168 @@
   width: calc(100% - 250px); /* 네비게이션 바 공간 제외 */
   position: relative;
   margin-left: 250px; /* 네비게이션 바 공간 확보 */
-  top: 200px;
+  top: 150px;
   padding: 20px; /* 내부 여백 */
+
+  display: flex;
+  flex-direction: column; /* 수직으로 정렬 */
+  justify-content: center; /* 세로 방향 가운데 정렬 */
+  align-items: center; /* 가로 방향 가운데 정렬 */
+}
+
+.dup {
+  display: flex;
+  justify-content: space-between; /* 좌우로 요소를 배치 */
+  justify-content: center; /* 중앙 정렬 */
+  margin-bottom: 50px;
+}
+.day5 {
+  margin-left: 50px;
+}
+
+/* 🔍 검색 입력창 */
+.input {
+  width: 1000px;
+  max-width: 1000px;
+  padding: 20px;
+  font-size: 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  outline: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.input:focus {
+  border-color: #007bff;
+  box-shadow: 2px 2px 15px rgba(0, 123, 255, 0.2);
+}
+
+/* 📜 검색 결과 목록 */
+.resultList {
+  position: absolute;
+  background: white;
+  width: 100%;
+  max-width: 1000px;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+  margin-top: 5px;
+  z-index: 10;
+}
+
+.resultList ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.resultItem {
+  padding: 10px;
+  cursor: pointer;
+  transition: background 0.2s ease-in-out;
+  border-bottom: 1px solid #eee;
+}
+
+.resultItem:hover {
+  background: #f0f0f0;
+}
+
+/* 📍 선택된 위치 정보 */
+.current {
+  width: 200px;
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+
+  justify-content: center; /* 가로 방향 가운데 정렬 */
+  align-items: center; /* 세로 방향 가운데 정렬 */
+  text-align: center; /* 텍스트 가로 정렬 */
+}
+
+
+.location {
+  font-size: 18px;
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* 🌤 날씨 정보 카드 */
+.weatherCard {
+  background: #f8f9fa;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 2px 2px 15px rgba(0, 0, 0, 0.1);
+  margin-top: 20px;
+}
+
+.weatherCard h2 {
+  font-size: 20px;
+  margin-bottom: 10px;
+}
+
+.weatherCard img {
+  display: block;
+  margin: 10px auto;
+}
+
+/* 📅 5일 예보 스타일 */
+.list {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 20px;
+  height: 250px;
+}
+
+.item {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+  text-align: center; /* 텍스트를 가로로 중앙 정렬 */
+  width: 100px;
+  display: flex;
+  flex-direction: column; /* 세로 방향으로 배치 */
+  justify-content: center; /* 세로로 중앙 정렬 */
+  height: 100%; /* 원하는 높이 */
+}
+
+.wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.temp {
+  font-size: 18px;
+  font-weight: bold;
+  color: #ff4500;
+}
+
+.label {
+  font-size: 14px;
+  color: #555;
+}
+
+/* 📱 반응형 디자인 */
+@media (max-width: 768px) {
+  .home {
+    width: 100%;
+    margin-left: 0;
+    top: 100px;
+    padding: 10px;
+  }
+
+  .input {
+    width: 100%;
+  }
+
+  .weatherCard {
+    padding: 10px;
+  }
 }
