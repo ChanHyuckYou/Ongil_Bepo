@@ -108,17 +108,28 @@ const Login = () => {
     }
   };
 
-// 로그인 오류 처리에서 같은 방식으로 적용
+  // 이메일 형식 검증 함수
+  const isValidEmail = (email) => {
+    // 이메일 형식 검사용 정규 표현식 (간단한 이메일 형식 체크)
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  // 로그인 처리
   const handleSignInSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // 에러 초기화
 
+    // 이메일 형식이 올바른지 확인
+    if (!isValidEmail(loginData.email)) {
+      alert("잘못된 이메일 형식입니다. 이메일을 다시 확인해주세요.");
+      return; // 이메일 형식이 올바르지 않으면 로그인 진행하지 않음
+    }
     try {
-      await loginUser(loginData.email, loginData.password);
+      const response = await loginUser(loginData.email, loginData.password);
       setLoginData({email: "", password: ""}); // 입력 필드 초기화
-      handleNavigation("Home"); // 홈 페이지로 이동
-    } catch (err) {
-      setError(err.detail || err.message || "로그인에 실패했습니다.");
+      handleNavigation("Home"); // 로그인 후 홈 화면으로 이동
+    } catch (error) {
+      alert(error.message || "로그인 실패하였습니다.");
     }
   };
 
