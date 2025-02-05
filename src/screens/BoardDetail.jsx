@@ -25,7 +25,7 @@ const BoardDetail = () => {
   const [adminAnswer, setAdminAnswer] = useState("");
 
   const currentUser = localStorage.getItem("user") || "사용자";
-  const isAdmin = localStorage.getItem("isAdmin") === "true";
+  const isAdmin = localStorage.getItem('is_admin') === '1';
 
   useEffect(() => {
     const fetchData = async () => {
@@ -33,6 +33,7 @@ const BoardDetail = () => {
         const data = await getPostDetail(postId);
         const postData = data.post;
         setPostDetail(postData);
+        console.log(isAdmin)
 
         if (postData.comments) {
           setComments(postData.comments);
@@ -81,10 +82,32 @@ const BoardDetail = () => {
         content: newComment,
         date: new Date().toISOString(),
       };
-      setComments((prev) => [...prev, newComm]);
+      setComments((prev) => [...prev, newComm]); // 댓글 목록 업데이트
       setNewComment("");
     } catch (error) {
       console.error("댓글 작성 오류:", error);
+      alert(error.message);
+    }
+  };
+
+  // 관리자 답변 작성
+  const handleAdminAnswer = async () => {
+    if (!adminAnswer.trim()) {
+      return;
+    }
+    try {
+      await addAnswer(postId, adminAnswer);
+      alert("관리자 답변이 등록되었습니다.");
+
+      const adminComment = {
+        author: "관리자",
+        content: adminAnswer,
+        date: new Date().toISOString(),
+      };
+      setComments((prev) => [...prev, adminComment]); // 댓글 목록에 관리자 답변 추가
+      setAdminAnswer("");
+    } catch (error) {
+      console.error("관리자 답변 작성 오류:", error);
       alert(error.message);
     }
   };
@@ -100,21 +123,6 @@ const BoardDetail = () => {
       navigate("/board-main");
     } catch (error) {
       console.error("게시글 삭제 오류:", error);
-      alert(error.message);
-    }
-  };
-
-  // 관리자 답변 작성
-  const handleAdminAnswer = async () => {
-    if (!adminAnswer.trim()) {
-      return;
-    }
-    try {
-      await addAnswer(postId, adminAnswer);
-      alert("관리자 답변이 등록되었습니다.");
-      setAdminAnswer("");
-    } catch (error) {
-      console.error("관리자 답변 작성 오류:", error);
       alert(error.message);
     }
   };
@@ -183,6 +191,7 @@ const BoardDetail = () => {
           {/* 파일 목록 */}
           <div className={styles.fileList}>
             <h3>파일 목록</h3>
+
             {files && files.length > 0 ? (
                 files.map((file) => (
                     <div key={file.file_id}>
@@ -215,32 +224,29 @@ const BoardDetail = () => {
               ))}
             </ul>
 
-            <div className={styles.commentInput}>
-              <input
-                  type="text"
-                  value={newComment}
-                  placeholder="댓글 입력"
-                  onChange={(e) => setNewComment(e.target.value)}
-              />
-              <button onClick={handleAddComment}>등록</button>
-            </div>
-          </div>
-
-          {/* 관리자 답변 (관리자만 노출) */}
-          {isAdmin && (
-              <div className={styles.adminAnswer}>
-                <h3>관리자 답변</h3>
+              {!isAdmin && (
                 <div className={styles.commentInput}>
                   <input
+                    type="text"
+                    value={newComment}
+                    placeholder="댓글 입력"
+                    onChange={(e) => setNewComment(e.target.value)}
+                  />
+                  <button onClick={handleAddComment}>등록</button>
+                </div>
+              )}
+              {isAdmin && (
+                  <div className={styles.commentInput}>
+                    <input
                       type="text"
                       value={adminAnswer}
                       placeholder="답변 입력"
                       onChange={(e) => setAdminAnswer(e.target.value)}
-                  />
-                  <button onClick={handleAdminAnswer}>답변 등록</button>
-                </div>
-              </div>
-          )}
+                    />
+                    <button onClick={handleAdminAnswer}>답변 등록</button>
+                  </div>
+              )}
+          </div>
 
           {/* 수정/삭제 버튼을 .board 내부로 배치 */}
           <div className={styles.buttonInput}>

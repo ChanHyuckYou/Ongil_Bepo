@@ -55,7 +55,8 @@ const BoardCreate = () => {
   const handleFileChange = (e) => {
     if (e.target.files) {
       const filesArray = Array.from(e.target.files);
-      setNewFiles((prev) => [...prev, ...filesArray]);
+      console.log("Selected files:", filesArray);  // 선택한 파일을 확인
+      setNewFiles((prevFiles) => [...prevFiles, ...filesArray]);
     }
   };
 
@@ -74,33 +75,32 @@ const BoardCreate = () => {
 
     try {
       let postIdResult;
+
+      // 게시글 데이터 (텍스트만)
+      const payload = {
+        board_id: isPublic ? 1 : 0,
+        post_title: title,
+        post_category: category,
+        post_text: content,
+      };
+
+      // 파일 데이터 (multipart/form-data)
+//       const fileData = new FormData();
+//       if (newFiles.length > 0) {
+//         newFiles.forEach((file) => {
+//           console.log("Appending file:", file);  // 각 파일을 제대로 가져오는지 확인
+//           fileData.append("file", file);
+//         });
+//         console.log(fileData)
+//       }
+//       console.log("fileData 내용 확인:", [...fileData.entries()]);
       if (!isEdit) {
-        const payload = {
-          board_id: isPublic ? 1 : 0,
-          post_title: title,
-          post_category: category,
-          post_text: content,
-        };
-
-        const createResult = await createPost(payload);
-        const newPost = createResult.post;
-        if (!newPost || !newPost.post_id) {
-          throw new Error("게시글 ID를 확인할 수 없습니다.");
-        }
-        postIdResult = newPost.post_id;
+        const file = newFiles[0];
+        const createResult = await createPost(payload, file);  // 토큰 전달
+        postIdResult = createResult.id;
       } else {
-        const payload = {
-          post_title: title,
-          post_category: category,
-          post_text: content,
-        };
-
         await updatePost(postId, payload);
         postIdResult = postId;
-      }
-
-      for (const file of newFiles) {
-        await uploadFile(postIdResult, file);
       }
 
       alert(isEdit ? "게시글이 수정되었습니다." : "게시글이 작성되었습니다.");

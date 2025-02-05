@@ -77,12 +77,14 @@ const SideNavigation = () => {
   const currentPath = location.pathname.replace(/\/$/, '');
 
   // 어드민 메뉴 필터링
-    const renderTopItems = topItems.filter((item) => {
-      if (item.isAdminItem && !isAdmin) {
-        return false;
+  const renderTopItems = topItems.filter((item) => {
+      // 관리자인 경우, 어드민 전용 항목은 항상 보여줍니다.
+      if (item.isAdminItem) {
+        return isAdmin;
       }
+      // 일반 항목 중 onlyOn 조건이 있는 경우 현재 경로와 비교
       if (item.onlyOn) {
-        return currentPath === item.onlyOn.replace(/\/$/, ''); // 정확히 일치하는 경로만 필터링
+        return currentPath === item.onlyOn.replace(/\/$/, '');
       }
       return true;
     });
