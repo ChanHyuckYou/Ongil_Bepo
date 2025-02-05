@@ -41,7 +41,7 @@ const BoardCreate = () => {
           const data = await getPostDetail(postId);
           const postData = data.post;
           setTitle(postData.post_title);
-          setContent(postData.post_text);
+          setContent(postData.post_text.replace(/<br\s*\/?>/g, "\n"));
           setCategory(postData.post_category || "데이터 문의");
           setIsPublic(postData.board_id === 1);
         } catch (error) {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getPostDetail, getCommentsAndAnswers, deleteComment, getPostFiles, deletePost, addComment } from "../components/ApiRoute/board.jsx";
+import { getPostDetail, getCommentsAndAnswers, deleteComment, getPostFiles, deletePost, addComment, addAnswer, deleteAnswer } from "../components/ApiRoute/board.jsx";
 import {loadUserInfo} from '../components/ApiRoute/mypage.jsx';
 import styles from "../styles/BoardDetail.module.css";
 import axios from 'axios';
@@ -12,7 +12,9 @@ const BoardDetail = () => {
   const [postDetail, setPostDetail] = useState(null);
   const [files, setFiles] = useState([]);
   const [comments, setComments] = useState([]);
+  const [adminAnswers, setAdminAnswers] = useState([]);  // 관리자 답변 상태 추가
   const [loading, setLoading] = useState(true);
+  const [adminAnswer, setAdminAnswer] = useState("");  // 관리자 답변 상태 추가
   const [newComment, setNewComment] = useState("");
     const [userInfo, setUserInfo] = useState(
         {user_email: "", user_name: "", user_dept: "", jurisdiction: ""});
@@ -39,6 +41,8 @@ const BoardDetail = () => {
         // 댓글과 답변 불러오기
         const commentsData = await getCommentsAndAnswers(postId);
         setComments(commentsData.comments || []);
+        const answersData = await getCommentsAndAnswers(postId);
+        setAdminAnswers(answersData.admin_answers || []);
 
         // 파일 데이터 불러오기
         const filesData = await getPostFiles(postId);
@@ -62,6 +66,7 @@ const BoardDetail = () => {
     return null;
   }
 
+  // 댓글 작성
   const handleAddComment = async () => {
     if (!newComment.trim()) {
       return;
@@ -79,6 +84,25 @@ const BoardDetail = () => {
     }
   };
 
+  // 관리자 답변 등록
+  const handleAdminAnswer = async () => {
+    if (!adminAnswer.trim()) {
+      return;
+    }
+    try {
+      await addAnswer(postId, adminAnswer);
+      alert("관리자 답변이 등록되었습니다.");
+      setAdminAnswer("");
+      // 댓글 목록 갱신
+      const answersData = await getCommentsAndAnswers(postId);
+      setAdminAnswers(answersData.admin_answers || []);
+    } catch (error) {
+      console.error("관리자 답변 작성 오류:", error);
+      alert(error.message);
+    }
+  };
+
+  // 게시글 삭제
   const handleDelete = async () => {
     if (!window.confirm("정말로 게시글을 삭제하시겠습니까?")) {
       return;
@@ -109,6 +133,23 @@ const BoardDetail = () => {
         console.error("댓글 삭제 오류:", error);
         alert(error.message);
       }
+    }
+  };
+
+  // 관리자 답변 삭제
+  const handleDeleteAnswer = async (answerId) => {
+    if (!window.confirm("정말로 이 답변을 삭제하시겠습니까?")) {
+      return;
+    }
+    try {
+      await deleteAnswer(postId, answerId);
+      alert("답변이 삭제되었습니다.");
+
+      // 삭제된 답변을 제외한 나머지 답변만 남기기
+      setAdminAnswers((prev) => prev.filter((answer) => answer.answer_id !== answerId));
+    } catch (error) {
+      console.error("답변 삭제 오류:", error);
+      alert(error.message);
     }
   };
 
@@ -170,20 +211,42 @@ const BoardDetail = () => {
               <button onClick={handleAddComment}>등록</button>
             </div>
           )}
-
           {isAdmin && (
             <div className={styles.commentInput}>
               <input
                 type="text"
                 value={adminAnswer}
-                placeholder="답변 입력"
+                placeholder="관리자 답변 입력"
                 onChange={(e) => setAdminAnswer(e.target.value)}
               />
               <button onClick={handleAdminAnswer}>답변 등록</button>
             </div>
           )}
-        {/* 추가되는 댓글 폼 */}
-        <ul className={styles.commentList}>
+          <h3>관리자 답변</h3>
+          {adminAnswers.length > 0 ? (
+            <ul className={styles.commentList}>
+              {adminAnswers.map((answer) => (
+                <li key={answer.answer_id} className={styles.answerItem}>
+                  <strong>관리자</strong>
+                  <p>{answer.answer_text}</p>
+                  <span className="answerDate">
+                    {new Date(answer.answer_date).toLocaleString()}
+                  </span>
+                  {isAdmin && (
+                    <button
+                      className={styles.deleteButton}
+                      onClick={() => handleDeleteAnswer(answer.answer_id)}
+                    >
+                      삭제
+                    </button>
+                  )}
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p>등록된 답변이 없습니다.</p>
+          )}
+          <ul className={styles.commentList}>
             {comments.map((comment) => (
               <li key={comment.comment_id} className={styles.commentItem}>
                 <strong>{comment.user_name} ({comment.jurisdiction}-{comment.user_dept}) </strong>
@@ -191,8 +254,7 @@ const BoardDetail = () => {
                 <span className="commentDate">
                   {new Date(comment.comment_date).toLocaleString()}
                 </span>
-                {/* 삭제 버튼 */}
-                { (comment.user_email === userInfo.user_email || isAdmin) && (
+                {(comment.user_email === userInfo.user_email || isAdmin) && (
                   <button
                     className={styles.deleteButton}
                     onClick={() => handleDeleteComment(comment.comment_id)}
@@ -200,9 +262,9 @@ const BoardDetail = () => {
                     삭제
                   </button>
                 )}
-            </li>
-          ))}
-        </ul>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
     </div>

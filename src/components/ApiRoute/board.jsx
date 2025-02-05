@@ -153,6 +153,7 @@ export const addAnswer = async (postId, answer) => {
   return await response.json();
 };
 
+
 // 댓글 삭제 (DELETE /board/{post_id}/comment/{comment_id})
 export const deleteComment = async (postId, commentId) => {
   const response = await fetch(`${API_BASE_URL}/${postId}/comment/${commentId}`, {
@@ -168,6 +169,20 @@ export const deleteComment = async (postId, commentId) => {
   return await response.json();
 };
 
+// 관리자 답변 삭제 (DELETE /board/{post_id}/answer/{answer_id})
+export const deleteAnswer = async (postId, answerId) => {
+  const response = await fetch(`${API_BASE_URL}/${postId}/answer/${answerId}`, {
+    method: "DELETE",
+    headers: getHeaders(),
+  });
+
+  if (!response.ok) {
+    const errData = await response.json();
+    throw new Error(errData.detail || "답변 삭제에 실패하였습니다.");
+  }
+
+  return await response.json();
+};
 
 // 파일 업로드 (POST /board/{post_id}/upload)
 export const uploadFile = async (postId, file) => {
