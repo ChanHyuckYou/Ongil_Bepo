@@ -1,24 +1,26 @@
 /* RoadsSearch.module.css */
 
 .roadssearch {
-  width: 100%;
-  position: relative;
+  width: 80%; /* SideNavigation 제외 */
+  top: 130px;
+  left: 10px;
+  height: 100vh;
   background-color: #fff;
-  height: 110vh;
+  padding: 20px 40px; /* 좌우 여백 */
+  position: relative;
+  box-sizing: border-box; /* 패딩 포함 계산 */
   overflow: hidden;
-  margin-left: 370px; /* .leftNavi의 너비에 맞춤 */
-  padding-top: 150px; /* .topNavi의 높이에 맞춤 */
 }
 
 /* 기존 controls 클래스 제거, roadsSearchForm 내부에 있는 form 클래스 중심으로 스타일링 */
 
 .roadsSearchForm {
-  position: absolute;
-  top: 160px;
-  left: 100px;
-  width: 80%;
-  height: 70%;
-  overflow: hidden;
+    margin-left: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    height: 75%; /* 부모 요소 높이를 기준으로 */
 }
 
 .form {
@@ -102,50 +104,6 @@
   transform: scale(0.95); /* 클릭 시 축소 효과 */
 }
 
-/* 반응형 스타일 */
-
-/* 큰 화면 (기본) */
-@media (min-width: 1200px) {
-  .roadssearch {
-    margin-left: 270px; /* .leftNavi의 기본 너비 */
-  }
-}
-
-/* 중간 화면 (태블릿) */
-@media (max-width: 1199px) and (min-width: 768px) {
-  .roadsSearchForm {
-    left: 220px; /* .leftNavi의 너비 조정 */
-    width: 75%;
-  }
-
-  .roadtable {
-    width: 35%;
-  }
-
-  .select {
-    width: 180px;
-  }
-
-  .guideTxt {
-    font-size: 16px;
-  }
-
-  .inputTxt {
-    width: 90px;
-    font-size: 14px;
-  }
-
-  .dup {
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-  }
-
-  .select {
-    width: 100%;
-  }
-}
-
 /* 가중치 섹션 */
 .weightContainer {
   display: flex;
@@ -192,111 +150,59 @@
 }
 
 
-/* 작은 화면 (모바일) */
-@media (max-width: 767px) {
+
+/* 반응형 스타일 */
+
+/* 기본 스타일 - 큰 화면 (데스크탑) */
+.roadssearch {
+  margin-left: 270px; /* 좌측 공백 고정 */
+}
+
+/* 중간 화면 (태블릿) */
+@media (max-width: 1280px) {
   .roadssearch {
-    margin-left: 180px; /* .leftNavi의 너비 조정 */
+    margin-left: 270px; /* 좌측 공백 유지 */
+  }
+  .roadsSearchForm {
+    left: 220px;
+    width: 75%;
+  }
+  .roadtable {
+    width: 35%;
+  }
+  .select {
+    width: 180px;
+  }
+}
+
+/* 작은 화면 (모바일) */
+@media (max-width: 1024px) {
+  .roadssearch {
+    margin-left: 270px; /* 모바일에서도 좌측 공백 유지 */
     padding-top: 80px;
     padding: 10px;
   }
-
   .roadsSearchForm {
     left: 10px;
     width: calc(100% - 20px);
   }
-
-  .header {
-    flex-direction: column;
-    align-items: flex-start;
-  }
-
-  .form {
-    padding: 15px;
-  }
-
-  .dup {
-    flex-direction: column;
-    align-items: flex-start;
-    justify-content: flex-start;
-    gap: 5px;
-    width: 100%;
-  }
-
-  .select {
-    width: 100%;
-    height: 40px;
-    padding: 0.5rem 0.5rem;
-  }
-
-  .guideTxt {
-    font-size: 16px;
-    margin-bottom: 10px;
-  }
-
-  .inputTxt {
-    width: 100%;
-    font-size: 14px;
-  }
-
-  .searchBtn {
-    width: 100%;
-    margin-top: 15px;
-    font-size: 14px;
-  }
-
-  .weightContainer {
-    flex-direction: column; /* 모바일에서는 세로로 쌓이도록 */
-    gap: 10px;
-  }
-
-  .weightItem {
-    width: 100%;
-    margin-bottom: 10px;
-  }
-
-  .weightInput {
-    width: 100%;
-  }
 }
 
-/* 추가 반응형 조정 (필요 시) */
-@media (max-width: 480px) {
+/* 추가 반응형 조정 (모바일 768px 이하) */
+@media (max-width: 768px) {
   .roadssearch {
-    margin-left: 180px; /* .leftNavi의 너비 조정 */
-    padding-top: 60px; /* .topNavi의 높이 조정 */
+    margin-left: 270px; /* 좌측 공백 고정 */
   }
-
   .roadsSearchForm {
     width: calc(100% - 20px);
   }
+}
 
-  .form {
-    padding: 10px;
-  }
-
-  .guideTxt {
-    font-size: 14px;
-    margin-bottom: 10px;
-  }
-
-  .inputTxt {
-    font-size: 12px;
-  }
-
-  .select {
-    width: 100%;
-    height: 40px;
-    padding: 0.5rem 0.5rem;
-    font-size: 14px;
-  }
-
-  .searchBtn {
-    font-size: 12px;
-    padding: 4px 8px;
-  }
-
-  .categoryButton {
-    font-size: 12px;
-    padding: 6px 8px;
+/* 아주 작은 화면 (모바일 480px 이하) */
+@media (max-width: 480px) {
+  .roadssearch {
+    margin-left: 270px; /* 작은 화면에서도 동일한 좌측 공백 유지 */
+    padding-top: 60px;
   }
 }
+
