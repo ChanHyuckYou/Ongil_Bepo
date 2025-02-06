@@ -4,6 +4,7 @@ import {useNavigate} from "react-router-dom";
 import styles from "../styles/Board.module.css";
 import useNavigations from "../components/Navigation/Navigations.jsx";
 import {getAllPosts, getSocket} from "../components/ApiRoute/board.jsx";
+import {loadUserInfo} from '../components/ApiRoute/mypage.jsx';
 
 const ITEMS_PER_PAGE = 10; // 페이지당 게시글 수
 
@@ -15,7 +16,19 @@ const Board = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchType, setSearchType] = useState("title");
   const [searchQuery, setSearchQuery] = useState("");
+
+  const accessToken = localStorage.getItem("access_token");
   const isAdmin = localStorage.getItem('is_admin') === '1';
+  const [userInfo, setUserInfo] = useState(
+          {user_email: "", user_name: "", user_dept: "", jurisdiction: ""});
+
+  // 유저 정보 불러오기
+  const fetchUserInfo = async () => {
+    const data = await loadUserInfo(accessToken);  // loadUserInfo 호출하여 데이터 가져오기
+    if (data) {
+      setUserInfo(data.user_info[0]);  // 데이터 저장
+    }
+  };
 
   // 페이지네이션 계산용
   const totalPages = Math.ceil(boardItems.length / ITEMS_PER_PAGE);
@@ -48,6 +61,7 @@ const Board = () => {
 
   // (1) 초기 게시글 데이터 불러오기 + 최신순 정렬
   useEffect(() => {
+    fetchUserInfo();
     getAllPosts()
     .then((data) => {
       if (!data.posts) {
@@ -69,7 +83,6 @@ const Board = () => {
   useEffect(() => {
     socketRef.current = getSocket();
     const socket = socketRef.current;
-
     const handleNewPost = (newPost) => {
       console.log("New post received:", newPost);
       // 가장 위로 추가 (최신글 맨 앞)
@@ -116,9 +129,13 @@ const Board = () => {
     }
   };
 
-  // ✅ 비공개 게시글 필터링 (user일 경우 공개 게시글만 표시)
+  // ✅ 비공개 게시글 필터링 (user일 경우 자신의 글이 비공개거나 공개 게시글만 표시)
   const filteredItems = boardItems.filter((item) => {
-    return isAdmin || item.board_id === 1;
+    return (
+      isAdmin ||
+      item.board_id === 1 ||
+      item.user_email === userInfo.user_email // 본인 글이면 허용
+    );
   });
 
   // 현재 페이지 게시글만 잘라서 보여주기

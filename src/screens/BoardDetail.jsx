@@ -16,7 +16,7 @@ const BoardDetail = () => {
   const [loading, setLoading] = useState(true);
   const [adminAnswer, setAdminAnswer] = useState("");  // 관리자 답변 상태 추가
   const [newComment, setNewComment] = useState("");
-    const [userInfo, setUserInfo] = useState(
+  const [userInfo, setUserInfo] = useState(
         {user_email: "", user_name: "", user_dept: "", jurisdiction: ""});
 
   const accessToken = localStorage.getItem("access_token");
