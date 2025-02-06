@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { getPostDetail, getCommentsAndAnswers, deleteComment, getPostFiles, deletePost, addComment, addAnswer, deleteAnswer } from "../components/ApiRoute/board.jsx";
+import { deleteFile, downloadFile, getPostDetail, getCommentsAndAnswers, deleteComment, getPostFiles, deletePost, addComment, addAnswer, deleteAnswer } from "../components/ApiRoute/board.jsx";
 import {loadUserInfo} from '../components/ApiRoute/mypage.jsx';
 import styles from "../styles/BoardDetail.module.css";
 import axios from 'axios';
@@ -66,6 +66,22 @@ const BoardDetail = () => {
     return null;
   }
 
+  // -- 유저 기능 --
+  // 게시글 삭제
+  const handleDelete = async () => {
+        if (!window.confirm("정말로 게시글을 삭제하시겠습니까?")) {
+          return;
+        }
+        try {
+          await deletePost(postId);
+          alert("게시글이 삭제되었습니다.");
+          navigate("/board-main");
+        } catch (error) {
+          console.error("게시글 삭제 오류:", error);
+          alert(error.message);
+        }
+      };
+
   // 댓글 작성
   const handleAddComment = async () => {
     if (!newComment.trim()) {
@@ -80,39 +96,6 @@ const BoardDetail = () => {
       setComments(commentsData.comments || []);
     } catch (error) {
       console.error("댓글 작성 오류:", error);
-      alert(error.message);
-    }
-  };
-
-  // 관리자 답변 등록
-  const handleAdminAnswer = async () => {
-    if (!adminAnswer.trim()) {
-      return;
-    }
-    try {
-      await addAnswer(postId, adminAnswer);
-      alert("관리자 답변이 등록되었습니다.");
-      setAdminAnswer("");
-      // 댓글 목록 갱신
-      const answersData = await getCommentsAndAnswers(postId);
-      setAdminAnswers(answersData.admin_answers || []);
-    } catch (error) {
-      console.error("관리자 답변 작성 오류:", error);
-      alert(error.message);
-    }
-  };
-
-  // 게시글 삭제
-  const handleDelete = async () => {
-    if (!window.confirm("정말로 게시글을 삭제하시겠습니까?")) {
-      return;
-    }
-    try {
-      await deletePost(postId);
-      alert("게시글이 삭제되었습니다.");
-      navigate("/board-main");
-    } catch (error) {
-      console.error("게시글 삭제 오류:", error);
       alert(error.message);
     }
   };
@@ -133,6 +116,55 @@ const BoardDetail = () => {
         console.error("댓글 삭제 오류:", error);
         alert(error.message);
       }
+    }
+  };
+
+  // -- 관리자 기능 --
+  // 파일 다운로드
+  const handleDownloadFile = (fileId) => {
+    downloadFile(fileId);
+  };
+
+  // 파일 삭제
+  const handleDeleteFile = async (fileId) => {
+    if (!window.confirm("파일을 삭제하시겠습니까?")) {
+      return;
+    }
+    try {
+      await deleteFile(fileId);
+      alert("파일이 삭제되었습니다.");
+
+      try {
+        const updatedFiles = await getPostFiles(postId);
+        setFiles(updatedFiles.files);
+      } catch (err) {
+        if (err.message.includes("No files found")) {
+          setFiles([]);
+        } else {
+          alert(err.message);
+        }
+      }
+    } catch (error) {
+      console.error("파일 삭제 오류:", error);
+      alert(error.message);
+    }
+  };
+
+  // 관리자 답변 등록
+  const handleAdminAnswer = async () => {
+    if (!adminAnswer.trim()) {
+      return;
+    }
+    try {
+      await addAnswer(postId, adminAnswer);
+      alert("관리자 답변이 등록되었습니다.");
+      setAdminAnswer("");
+      // 댓글 목록 갱신
+      const answersData = await getCommentsAndAnswers(postId);
+      setAdminAnswers(answersData.admin_answers || []);
+    } catch (error) {
+      console.error("관리자 답변 작성 오류:", error);
+      alert(error.message);
     }
   };
 
@@ -160,12 +192,17 @@ const BoardDetail = () => {
       <div className={styles.buttonInput}>
         {(postDetail.user_email === userInfo.user_email || isAdmin) && (
           <div>
-            <button className={styles.editButton} onClick={() => navigate(`/board-create/${postId}`)}>
-              수정
-            </button>
-            <button className={styles.deleteButton} onClick={handleDelete}>
-              삭제
-            </button>
+          {postDetail.user_email === userInfo.user_email && (
+              <button className={styles.editButton} onClick={() => navigate(`/board-create/${postId}`)}>
+                수정
+              </button>
+          )}
+
+          {(postDetail.user_email === userInfo.user_email || isAdmin) && (
+              <button className={styles.deleteButton} onClick={handleDelete}>
+                삭제
+              </button>
+          )}
           </div>
         )}
       </div>
@@ -189,8 +226,8 @@ const BoardDetail = () => {
             files.map((file) => (
               <div key={file.file_id}>
                 <span>{file.file_name}</span>
-                <button onClick={() => downloadFile(file.file_id)}>다운로드</button>
-                <button onClick={() => handleDeleteFile(file.file_id)}>삭제</button>
+                <button onClick={() => handleDownloadFile(file.file_id)}>다운로드</button>
+                {isAdmin && <button onClick={() => handleDeleteFile(file.file_id)}>삭제</button>}
               </div>
             ))
           ) : (

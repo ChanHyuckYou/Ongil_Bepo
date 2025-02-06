@@ -15,6 +15,7 @@ const Board = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchType, setSearchType] = useState("title");
   const [searchQuery, setSearchQuery] = useState("");
+  const isAdmin = localStorage.getItem('is_admin') === '1';
 
   // 페이지네이션 계산용
   const totalPages = Math.ceil(boardItems.length / ITEMS_PER_PAGE);
@@ -115,10 +116,15 @@ const Board = () => {
     }
   };
 
+  // ✅ 비공개 게시글 필터링 (user일 경우 공개 게시글만 표시)
+  const filteredItems = boardItems.filter((item) => {
+    return isAdmin || item.board_id === 1;
+  });
+
   // 현재 페이지 게시글만 잘라서 보여주기
   const indexOfLastItem = currentPage * ITEMS_PER_PAGE;
   const indexOfFirstItem = indexOfLastItem - ITEMS_PER_PAGE;
-  const currentItems = boardItems.slice(indexOfFirstItem, indexOfLastItem);
+  const currentItems = filteredItems.slice(indexOfFirstItem, indexOfLastItem);
 
   // 게시글 작성 페이지 이동
   const handleCreate = () => {
@@ -172,7 +178,8 @@ const Board = () => {
               <span>공개여부</span>
               <span>카테고리</span>
               <span>제목</span>
-              <span>작성자</span>
+              <span>이메일</span>
+              <span>관할구혁-부서명</span>
               <span>조회수</span>
               <span>게시일</span>
             </div>
@@ -189,11 +196,10 @@ const Board = () => {
                     <span className={styles.boardCategory}>
                   {item.board_id === 1 ? "공개" : "비공개"}
                 </span>
-                    <span
-                        className={styles.boardCategory}>{item.post_category}</span>
+                    <span className={styles.boardCategory}>{item.post_category}</span>
                     <span className={styles.boardTitle}>{item.post_title}</span>
-                    <span
-                        className={styles.boardAuthor}>{item.user_email}</span>
+                    <span className={styles.boardAuthor}>{item.user_email}</span>
+                    <span className={styles.boardDept}>{item.jurisdiction}-{item.user_dept}</span>
                     <span className={styles.boardViews}>{item.views}</span>
                     <span className={styles.boardDate}>
                   {formatDateTime(item.post_time)}

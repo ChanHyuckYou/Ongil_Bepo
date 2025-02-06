@@ -59,30 +59,25 @@ export const getPostDetail = async (postId) => {
   return await response.json();
 };
 
-export const createPost = async (payload, file) => {
-    const formData = new FormData();
-    formData.append("file", file);
-  // 쿼리 파라미터로 보내는 데이터
-  const queryParams = new URLSearchParams({
-    board_id: payload.board_id,
-    post_title: payload.post_title,
-    post_category: payload.post_category,
-    post_text: payload.post_text,
-  }).toString();
-
-  // POST 요청 보내기
-  const response = await fetch(`${API_BASE_URL}/?${queryParams}`, {
-    method: "POST",
-    headers: getHeaders(),
-    body: formData,  // 파일과 함께 폼 데이터 전송
-  });
-
-  if (!response.ok) {
-    const errData = await response.json();
-    throw new Error(errData.detail || "게시글 작성에 실패하였습니다.");
-  }
-
-  return await response.json();
+export const createPost = async (payload, formData) => {
+    // 쿼리 파라미터 구성
+    const queryParams = new URLSearchParams({
+        board_id: payload.board_id,
+        post_title: payload.post_title,
+        post_category: payload.post_category,
+        post_text: payload.post_text,
+    }).toString();
+    const headers = getHeaders(false);
+    const response = await fetch(`${API_BASE_URL}/?${queryParams}`, {
+        method: "POST",
+        headers,
+        body: formData,  // 파일 포함 데이터 전송
+    });
+    if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.detail || "게시글 작성에 실패하였습니다.");
+    }
+    return await response.json();
 };
 
 

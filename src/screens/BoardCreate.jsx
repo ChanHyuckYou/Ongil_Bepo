@@ -2,10 +2,10 @@ import {useState, useEffect, useRef} from "react";
 import {useParams, useNavigate} from "react-router-dom";
 import {
   getPostDetail,
+  getPostFiles,
   createPost,
   updatePost,
   deletePost,
-  uploadFile,
   deleteFile, getSocket
 } from "../components/ApiRoute/board.jsx";
 import styles from "../styles/BoardCreate.module.css";
@@ -39,11 +39,22 @@ const BoardCreate = () => {
       (async () => {
         try {
           const data = await getPostDetail(postId);
+          const filesData = await getPostFiles(postId);
+
+          // 기존 파일 데이터를 file.name으로 변환하여 처리
+          const filesWithNames = filesData.files.map(file => ({
+            ...file,
+            name: file.file_name, // 기존 file_name을 name으로 변환
+          }));
+
+          setNewFiles(filesWithNames || []);
+
           const postData = data.post;
           setTitle(postData.post_title);
           setContent(postData.post_text.replace(/<br\s*\/?>/g, "\n"));
           setCategory(postData.post_category || "데이터 문의");
           setIsPublic(postData.board_id === 1);
+
         } catch (error) {
           console.error("게시글 불러오기 오류:", error);
           alert(error.message);
@@ -69,7 +80,6 @@ const BoardCreate = () => {
       setErrorMessage("제목과 내용을 입력해주세요.");
       return;
     }
-
     setIsSubmitting(true);
     setErrorMessage("");
 
@@ -84,19 +94,16 @@ const BoardCreate = () => {
         post_text: content.replace(/\n/g, "<br />"),
       };
 
-      // 파일 데이터 (multipart/form-data)
-//       const fileData = new FormData();
-//       if (newFiles.length > 0) {
-//         newFiles.forEach((file) => {
-//           console.log("Appending file:", file);  // 각 파일을 제대로 가져오는지 확인
-//           fileData.append("file", file);
-//         });
-//         console.log(fileData)
-//       }
-//       console.log("fileData 내용 확인:", [...fileData.entries()]);
+      const fileData = new FormData();
+      if (newFiles.length > 0) {
+        newFiles.forEach((file) => {
+          console.log("Appending file:", file);  // 각 파일을 제대로 가져오는지 확인
+          fileData.append("files", file);
+        });
+      }
+
       if (!isEdit) {
-        const file = newFiles[0];
-        await createPost(payload, file);
+        await createPost(payload, fileData);
       } else {
         await updatePost(postId, payload);
       }
@@ -190,7 +197,8 @@ const BoardCreate = () => {
             <div className={styles.fileList}>
               {newFiles.map((file, index) => (
                   <div key={index} className={styles.fileItem}>
-                    <span className={styles.fileName}>{file.name}</span>
+                  <span className={styles.fileName}>{file.name}
+                  </span>
                     <button type="button" className={styles.removeButton}
                             onClick={() => handleRemoveFile(index)}>
                       X
