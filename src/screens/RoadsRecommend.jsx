@@ -14,6 +14,8 @@ import {
 // polygon.json을 직접 import
 import polygonData from "../data/polygon.json";
 
+/* const RoadsRecommend = ({ location, recommendedRoads }) => {
+  const [roads, setRoads] = useState(recommendedRoads || []); // 추천 도로 데이터 */
 const RoadsRecommend = () => {
   // ------------------------------
   // 기존 도로 데이터 예시

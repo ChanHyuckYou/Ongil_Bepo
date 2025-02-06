@@ -3,7 +3,21 @@ import {useState, useEffect} from 'react';
 import useNavigations from "../components/Navigation/Navigations.jsx";
 import locationData from '../data/locations_nested.json';
 import LoadingPage from "../components/spinner/LoadingPage.jsx";
+import { getDistrict, recommendRoads } from "../components/ApiRoute/roads.jsx";
+const handleEupmyeondongChange = (e) => {
+  const selectedEupmyeondong = e.target.value;
+  setEupmyeondong(selectedEupmyeondong);
 
+  if (selectedEupmyeondong) {
+    getDistrict(selectedEupmyeondong) // 읍면동 이름을 그대로 전달
+      .then(response => {
+        alert('응답 받은 데이터: ' + JSON.stringify(response));
+      })
+      .catch(error => {
+        console.error("API 호출 실패:", error);
+      });
+  }
+};
 const RoadsSearch = () => {
   const [data, setData] = useState([]);
   const [sido, setSido] = useState('');
@@ -128,6 +142,24 @@ const RoadsSearch = () => {
     setAccidentCount(value);
   };
 
+  // 읍면동
+  const handleEupmyeondongChange = (e) => {
+     const selectedEupmyeondong = e.target.value;
+     setEupmyeondong(selectedEupmyeondong);
+
+     if (selectedEupmyeondong) {
+       getDistrict(selectedEupmyeondong) // 읍면동 이름을 그대로 전달
+         .then(responseMessage => {
+           // 메시지를 받아서 처리 (예: 읍면동이 DB에 존재한다면 성공 처리)
+           alert(responseMessage); // 서버에서 받은 메시지 표시
+         })
+         .catch(error => {
+           // 오류 처리 (예: 읍면동이 DB에 없다거나, API 호출 실패 시)
+           console.error("API 호출 실패:", error);
+         });
+     }
+   };
+
   const handleAccidentRateChange = (e) => {
     const value = parseInt(e.target.value || "0", 10);
     if (value < 0 || value > 100) {
@@ -137,30 +169,112 @@ const RoadsSearch = () => {
   };
 
   const navigateTo = useNavigations();
+  /* const handleNavigation = () => {
+    if (sido && sigungu && eupmyeondong) {
+      if (!updateWeights()) {
+        return;
+      }
+
+      // 사용자 가중치 데이터 준비
+      const userWeights = {
+        region: `${sido} ${sigungu} ${eupmyeondong}`,
+        rd_slope_weight: slopeWeight,
+        acc_occ_weight: accidentCount,
+        acc_sc_weight: accidentRate,
+      };
+
+      // 로딩 상태 시작
+      setIsLoading(true);
+
+      // 추천 도로 API 호출
+      recommendRoads(userWeights)
+        .then((response) => {
+          // 도로 추천 데이터 처리
+          console.log("추천 도로 데이터:", response);
+
+          setIsLoading(false); // 로딩 종료
+          // 결과를 다루는 로직 (예: 추천 도로를 새로운 페이지에서 보여주거나, 현재 페이지에서 업데이트)
+          navigateTo('RoadsRecommend', {
+            sido,
+            sigungu,
+            eupmyeondong,
+            icingWeight,
+            slopeWeight,
+            trafficWeight,
+            accidentCount,
+            accidentRate,
+            recommendedRoads: response.recommended_roads, // 추천 도로 데이터 넘기기
+          });
+        })
+        .catch((error) => {
+          setIsLoading(false); // 로딩 종료
+          console.error("도로 추천 실패:", error);
+          alert('도로 추천에 실패했습니다. 다시 시도해주세요.');
+        });
+    } else {
+      alert("모든 주소 필드를 선택해주세요.");
+    }
+  }; */
   const handleNavigation = () => {
     if (sido && sigungu && eupmyeondong) {
       if (!updateWeights()) {
         return;
       }
 
+      // 사용자 가중치 데이터 준비
+      const userWeights = {
+        region: `${sido} ${sigungu} ${eupmyeondong}`,
+        rd_slope_weight: slopeWeight,
+        acc_occ_weight: accidentCount,
+        acc_sc_weight: accidentRate,
+      };
+
+      // 로딩 상태 시작
       setIsLoading(true);
-      setTimeout(() => {
-        setIsLoading(false);
-        navigateTo('RoadsRecommend', {
-          sido,
-          sigungu,
-          eupmyeondong,
-          icingWeight,
-          slopeWeight,
-          trafficWeight,
-          accidentCount,
-          accidentRate
-        });
-      }, 5000);
+
+      // 임시로 추천 도로 데이터를 넣어주는 코드 (테스트용)
+      const recommendedRoads = [
+        {
+          rank: "1순위",
+          location: "원미구 원미1동 원미로321312321312",
+          freezingIndex: 1342,
+          slope: "10%",
+          trafficVolume: 93480,
+        },
+        {
+          rank: "2순위",
+          location: "다른 도로 이름",
+          freezingIndex: 1200,
+          slope: "8%",
+          trafficVolume: 75400,
+        },
+        {
+          rank: "3순위",
+          location: "다른 도로 이름",
+          freezingIndex: 1200,
+          slope: "6%",
+          trafficVolume: 75400,
+        },
+      ];
+
+      // 로딩 종료 후 페이지 이동
+      setIsLoading(false); // 로딩 종료
+      navigateTo('RoadsRecommend', {
+        sido,
+        sigungu,
+        eupmyeondong,
+        icingWeight,
+        slopeWeight,
+        trafficWeight,
+        accidentCount,
+        accidentRate,
+        recommendedRoads, // 임시로 넣은 추천 도로 데이터
+      });
     } else {
       alert("모든 주소 필드를 선택해주세요.");
     }
   };
+
 
   const increments = Array.from({length: 21}, (_, i) => i * 5);
 
@@ -217,16 +331,16 @@ const RoadsSearch = () => {
                 <div className={styles.dup}>
                   <label className={styles.inputTxt}>읍면동명:</label>
                   <select
-                      className={styles.select}
-                      value={eupmyeondong}
-                      onChange={(e) => setEupmyeondong(e.target.value)}
-                      disabled={!sigungu}
+                    className={styles.select}
+                    value={eupmyeondong}
+                    onChange={(e) => handleEupmyeondongChange(e)} // 이벤트 핸들러 호출
+                    disabled={!sigungu} // 시군구가 선택되지 않으면 읍면동을 선택할 수 없도록 비활성화
                   >
                     <option value="">선택하세요</option>
                     {eupmyeondongOptions.map((dongItem, index) => (
-                        <option key={index} value={dongItem}>
-                          {dongItem}
-                        </option>
+                      <option key={index} value={dongItem}>
+                        {dongItem}
+                      </option>
                     ))}
                   </select>
                 </div>
