@@ -225,7 +225,7 @@ const BoardDetail = () => {
           {files.length > 0 ? (
             files.map((file) => (
               <div key={file.file_id}>
-                <span>{file.file_name}</span>
+                <span>{file.file_name} </span>
                 <button onClick={() => handleDownloadFile(file.file_id)}>다운로드</button>
                 {isAdmin && <button onClick={() => handleDeleteFile(file.file_id)}>삭제</button>}
               </div>

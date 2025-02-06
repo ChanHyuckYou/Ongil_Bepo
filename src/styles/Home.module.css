@@ -1,11 +1,12 @@
 /* 홈 페이지 컨테이너 */
 .home {
-  width: calc(100% - 250px); /* 네비게이션 바 공간 제외 */
+  width: 80%; /* SideNavigation 제외 */
+  background-color: #fff;
+  padding: 20px 40px; /* 좌우 여백 */
   position: relative;
-  margin-left: 250px; /* 네비게이션 바 공간 확보 */
-  top: 150px;
-  padding: 20px; /* 내부 여백 */
-
+  top: 200px;
+  left: 330px;
+  box-sizing: border-box; /* 패딩 포함 계산 */
   display: flex;
   flex-direction: column; /* 수직으로 정렬 */
   justify-content: center; /* 세로 방향 가운데 정렬 */

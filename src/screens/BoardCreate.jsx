@@ -1,6 +1,8 @@
 import {useState, useEffect, useRef} from "react";
 import {useParams, useNavigate} from "react-router-dom";
 import {
+  getPostDetailForEdit,
+  downloadFileAsBlob,
   getPostDetail,
   getPostFiles,
   createPost,
@@ -35,87 +37,83 @@ const BoardCreate = () => {
   }, []);
 
   useEffect(() => {
-    if (isEdit) {
-      (async () => {
-        try {
-          const data = await getPostDetail(postId);
-          const filesData = await getPostFiles(postId);
+      if (isEdit) {
+          (async () => {
+              try {
+                  const data = await getPostDetailForEdit(postId);  // 게시글과 파일을 한번에 가져오기
 
-          // 기존 파일 데이터를 file.name으로 변환하여 처리
-          const filesWithNames = filesData.files.map(file => ({
-            ...file,
-            name: file.file_name, // 기존 file_name을 name으로 변환
-          }));
+                  const filesWithNames = await Promise.all(
+                      data.files.map(async (file) => {
+                          return await downloadFileAsBlob(file.file_id, file.file_name);
+                      })
+                  );
 
-          setNewFiles(filesWithNames || []);
+                  setNewFiles(filesWithNames || []); // 파일을 File 객체로 변환 후 state에 저장
+                  setTitle(data.post.post_title);
+                  setContent(data.post.post_text.replace(/<br\s*\/?>/g, "\n"));
+                  setCategory(data.post.post_category || "데이터 문의");
+                  setIsPublic(data.post.board_id === 1);
 
-          const postData = data.post;
-          setTitle(postData.post_title);
-          setContent(postData.post_text.replace(/<br\s*\/?>/g, "\n"));
-          setCategory(postData.post_category || "데이터 문의");
-          setIsPublic(postData.board_id === 1);
-
-        } catch (error) {
-          console.error("게시글 불러오기 오류:", error);
-          alert(error.message);
-        }
-      })();
-    }
+              } catch (error) {
+                  console.error("게시글 불러오기 오류:", error);
+                  setErrorMessage(error.message);  // error handling
+              }
+          })();
+      }
   }, [isEdit, postId]);
 
+  // 파일 선택
   const handleFileChange = (e) => {
     if (e.target.files) {
       const filesArray = Array.from(e.target.files);
-      console.log("Selected files:", filesArray);  // 선택한 파일을 확인
       setNewFiles((prevFiles) => [...prevFiles, ...filesArray]);
     }
   };
 
+  // 파일 선택 취소
   const handleRemoveFile = (index) => {
     setNewFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
+  // 게시글 작성
   const handleSubmit = async () => {
-    if (!title || !content) {
-      setErrorMessage("제목과 내용을 입력해주세요.");
-      return;
-    }
-    setIsSubmitting(true);
-    setErrorMessage("");
-
-    try {
-      let postIdResult;
-
-      // 게시글 데이터 (텍스트만)
-      const payload = {
-        board_id: isPublic ? 1 : 0,
-        post_title: title,
-        post_category: category,
-        post_text: content.replace(/\n/g, "<br />"),
-      };
-
-      const fileData = new FormData();
-      if (newFiles.length > 0) {
-        newFiles.forEach((file) => {
-          console.log("Appending file:", file);  // 각 파일을 제대로 가져오는지 확인
-          fileData.append("files", file);
-        });
+      if (!title || !content) {
+          setErrorMessage("제목과 내용을 입력해주세요.");
+          return;
       }
+      setIsSubmitting(true);
+      setErrorMessage("");
 
-      if (!isEdit) {
-        await createPost(payload, fileData);
-      } else {
-        await updatePost(postId, payload);
+      try {
+          // FormData 생성
+          const formData = new FormData();
+          formData.append("board_id", isPublic ? 1 : 0);
+          formData.append("post_title", title);
+          formData.append("post_category", category);
+          formData.append("post_text", content.replace(/\n/g, "<br />"));
+
+          // 파일 추가
+          if (newFiles.length > 0) {
+              newFiles.forEach((file) => {
+                  console.log("Appending file:", file);
+                  formData.append("files", file);
+              });
+          }
+
+          if (!isEdit) {
+              await createPost(formData);
+          } else {
+              await updatePost(postId, formData);
+          }
+
+          alert(isEdit ? "게시글이 수정되었습니다." : "게시글이 작성되었습니다.");
+          navigate("/board-main");
+      } catch (error) {
+          console.error(isEdit ? "게시글 수정 오류:" : "게시글 작성 오류:", error);
+          setErrorMessage(error.message);
+      } finally {
+          setIsSubmitting(false);
       }
-
-      alert(isEdit ? "게시글이 수정되었습니다." : "게시글이 작성되었습니다.");
-      navigate("/board-main");
-    } catch (error) {
-      console.error(isEdit ? "게시글 수정 오류:" : "게시글 작성 오류:", error);
-      setErrorMessage(error.message);
-    } finally {
-      setIsSubmitting(false);
-    }
   };
 
   const handleDeleteFileServer = async (fileId) => {

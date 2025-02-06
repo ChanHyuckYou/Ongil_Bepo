@@ -59,19 +59,25 @@ export const getPostDetail = async (postId) => {
   return await response.json();
 };
 
-export const createPost = async (payload, formData) => {
-    // 쿼리 파라미터 구성
-    const queryParams = new URLSearchParams({
-        board_id: payload.board_id,
-        post_title: payload.post_title,
-        post_category: payload.post_category,
-        post_text: payload.post_text,
-    }).toString();
+// 게시글 수정 시 데이터, 파일 조회 (GET /board/{post_id}/edit)
+export const getPostDetailForEdit = async (postId) => {
+  const response = await fetch(`${API_BASE_URL}/${postId}/edit`, {
+    method: "GET",
+    headers: getHeaders(),
+  });
+  if (!response.ok) {
+    throw new Error("게시글 및 파일 불러오기 실패");
+  }
+  return await response.json();
+};
+
+// 게시글 작성 (POST /board/)
+export const createPost = async (formData) => {
     const headers = getHeaders(false);
-    const response = await fetch(`${API_BASE_URL}/?${queryParams}`, {
+    const response = await fetch(`${API_BASE_URL}/`, {
         method: "POST",
         headers,
-        body: formData,  // 파일 포함 데이터 전송
+        body: formData, // FormData 직접 전송
     });
     if (!response.ok) {
         const errData = await response.json();
@@ -80,20 +86,19 @@ export const createPost = async (payload, formData) => {
     return await response.json();
 };
 
-
-
 // 게시글 수정 (PUT /board/{post_id})
-export const updatePost = async (postId, payload) => {
-  const response = await fetch(`${API_BASE_URL}/${postId}`, {
-    method: "PUT",
-    headers: getHeaders(),
-    body: JSON.stringify(payload),
-  });
-  if (!response.ok) {
-    const errData = await response.json();
-    throw new Error(errData.detail || "게시글 수정에 실패하였습니다.");
-  }
-  return await response.json();
+export const updatePost = async (postId, formData) => {
+    const headers = getHeaders(false);
+    const response = await fetch(`${API_BASE_URL}/${postId}`, {
+        method: "PUT",
+        headers,
+        body: formData,
+    });
+    if (!response.ok) {
+        const errData = await response.json();
+        throw new Error(errData.detail || "게시글 수정에 실패하였습니다.");
+    }
+    return await response.json();
 };
 
 // 게시글 삭제 (DELETE /board/{post_id})
@@ -212,6 +217,17 @@ export const getPostFiles = async (postId) => {
 // 다운로드의 경우 브라우저에서 직접 URL 이동 방식 사용
 export const downloadFile = (fileId) => {
   window.location.href = `${API_BASE_URL}/files/${fileId}/download`;
+};
+
+// 파일 가져오기
+export const downloadFileAsBlob = async (fileId, fileName) => {
+    const fileUrl = `${API_BASE_URL}/files/${fileId}/download`;
+    const response = await fetch(fileUrl);
+    if (!response.ok) {
+        throw new Error(`파일 불러오기 실패: ${response.statusText}`);
+    }
+    const blob = await response.blob();
+    return new File([blob], fileName, { type: blob.type });
 };
 
 // 파일 삭제 (DELETE /board/files/{file_id})
