@@ -194,9 +194,7 @@ const RoadsSearch = () => {
           console.log("추천 도로 데이터:", response);
 
           setIsLoading(false); // 로딩 종료
-          navigateTo('RoadsRecommend', {
-            recommendedRoads: response, // 추천 도로 데이터 넘기기
-          });
+          navigateTo('RoadsRecommend', { recommendedRoads: response.recommended_roads });
         })
         .catch((error) => {
           setIsLoading(false); // 로딩 종료

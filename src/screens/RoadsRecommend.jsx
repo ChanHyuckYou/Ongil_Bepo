@@ -1,5 +1,6 @@
 // RoadsRecommend.js
 import {useState, useEffect} from "react";
+import { useLocation } from 'react-router-dom';
 import styles from "../styles/RoadsRecommend.module.css";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {
@@ -14,7 +15,10 @@ import {requestRoadFile} from "../components/ApiRoute/roads.jsx"
 // polygon.json을 직접 import
 import polygonData from "../data/polygon.json";
 
-const RoadsRecommend = ({ location, recommendedRoads }) => {
+
+const RoadsRecommend = () => {
+      const location = useLocation();
+      const recommendedRoads = location.state?.recommendedRoads || [];
   const [roads, setRoads] = useState(recommendedRoads || []); // 추천 도로 데이터
 // const RoadsRecommend = () => {
 //   // ------------------------------
@@ -304,11 +308,16 @@ const RoadsRecommend = ({ location, recommendedRoads }) => {
     });
   }, [activeCategories, map, ps, searchRadius]);
 
+useEffect(() => {
+  console.log("추천 도로 데이터 업데이트됨:", recommendedRoads);
+  setRoads(recommendedRoads);
+}, [recommendedRoads]);
+
   // ------------------------------
   // 카테고리별 아이콘 설정
   // ------------------------------
   const getCategoryIcon = (category) => {
-    const iconSize = new window.kakao.maps.Size(24, 35);
+    const iconSize = new window.kakao.maps.Size(40, 40);
     let imageSrc = "";
 
     switch (category) {
@@ -397,17 +406,18 @@ const RoadsRecommend = ({ location, recommendedRoads }) => {
               <button onClick={handleFileRequest}>파일 요청</button>
             </div>
             <div className={styles.ListItems}>
-              {roads.map((road, index) => (
+              {recommendedRoads.map((road, index) => (
                   <div key={index} className={styles.item}>
                     <div className={styles.itemContent}>
                       <p>
-                        {road.rank} : {road.location}
+                        {index+1}순위 : {road.road_name}
                       </p>
                       <button className={styles.itemButton}>상세보기</button>
                     </div>
-                    <div>결빙예측지수 : {road.freezingIndex}</div>
-                    <div>경사도 : {road.slope}</div>
-                    <div>교통량 : {road.trafficVolume.toLocaleString()}</div>
+                    <div>결빙예측지수 : {road.pred_idx}</div>
+                    <div>경사도 : {road.rd_slope}</div>
+                    <div>사고발생건수 : {road.acc_occ}</div>
+                    <div>사고 심각도 : {road.acc_sc}</div>
                   </div>
               ))}
             </div>
@@ -474,14 +484,6 @@ const RoadsRecommend = ({ location, recommendedRoads }) => {
                   <FontAwesomeIcon icon={faLandmark}/> 관광명소
                 </button>
               </div>
-
-              {/* 다발지역 폴리곤 데이터 불러오기 버튼 */}
-              <button
-                  className={styles.categoryButton}
-                  onClick={handleFetchPolygonData}
-              >
-                결빙 사고 다발지역 폴리곤 생성
-              </button>
 
               {/* 다발지역 폴리곤 표시/숨기기 버튼 */}
               <button

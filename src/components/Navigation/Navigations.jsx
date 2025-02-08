@@ -42,7 +42,7 @@ function useNavigations() {
         navigate('/inquire');
         break;
       case "RoadsRecommend":
-        navigate('/roads-recommend');
+        navigate('/roads-recommend', {state: params});
         break;
       case "RoadsSearch":
         navigate('/roads-search');
