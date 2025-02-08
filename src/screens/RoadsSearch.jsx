@@ -23,11 +23,11 @@ const RoadsSearch = () => {
   const [sido, setSido] = useState('');
   const [sigungu, setSigungu] = useState('');
   const [eupmyeondong, setEupmyeondong] = useState('');
+  const [sigunguCode, setSigunguCode] = useState(0);
 
   // 기존 가중치 관련 state (기본 값 20으로 설정)
   const [icingWeight, setIcingWeight] = useState(20);
   const [slopeWeight, setSlopeWeight] = useState(20);
-  const [trafficWeight, setTrafficWeight] = useState(20);
 
   // 사고 관련 state (기본 값 20으로 설정)
   const [accidentCount, setAccidentCount] = useState(20); // 사고발생건수
@@ -46,7 +46,6 @@ const RoadsSearch = () => {
   const resetWeights = () => {
     setIcingWeight(0);  // 0으로 초기화
     setSlopeWeight(0);  // 0으로 초기화
-    setTrafficWeight(0); // 0으로 초기화
     setAccidentCount(0); // 0으로 초기화
     setAccidentRate(0);  // 0으로 초기화
   };
@@ -100,7 +99,7 @@ const RoadsSearch = () => {
 
   // 가중치의 합이 100을 초과하지 않도록 처리하는 로직
   const updateWeights = () => {
-    const sum = icingWeight + slopeWeight + trafficWeight + accidentCount
+    const sum = icingWeight + slopeWeight + accidentCount
         + accidentRate;
     if (sum > 100) {
       alert("가중치의 합이 100을 초과했습니다.");
@@ -126,14 +125,6 @@ const RoadsSearch = () => {
     setSlopeWeight(value);
   };
 
-  const handleTrafficChange = (e) => {
-    const value = parseInt(e.target.value || "0", 10);
-    if (value < 0 || value > 100) {
-      return;
-    }
-    setTrafficWeight(value);
-  };
-
   const handleAccidentCountChange = (e) => {
     const value = parseInt(e.target.value || "0", 10);
     if (value < 0 || value > 100) {
@@ -144,21 +135,29 @@ const RoadsSearch = () => {
 
   // 읍면동
   const handleEupmyeondongChange = (e) => {
-     const selectedEupmyeondong = e.target.value;
-     setEupmyeondong(selectedEupmyeondong);
+    const selectedEupmyeondong = e.target.value;
+    setEupmyeondong(selectedEupmyeondong);
 
-     if (selectedEupmyeondong) {
-       getDistrict(selectedEupmyeondong) // 읍면동 이름을 그대로 전달
-         .then(responseMessage => {
-           // 메시지를 받아서 처리 (예: 읍면동이 DB에 존재한다면 성공 처리)
-           alert(responseMessage); // 서버에서 받은 메시지 표시
-         })
-         .catch(error => {
-           // 오류 처리 (예: 읍면동이 DB에 없다거나, API 호출 실패 시)
-           console.error("API 호출 실패:", error);
-         });
-     }
-   };
+    if (selectedEupmyeondong && sigungu) {
+      // 선택된 시군구에서 sigungu_code 찾기
+      const selectedSido = data.find(item => item.sido === sido);
+      const selectedSigungu = selectedSido?.sigungu.find(item => item.sigungu === sigungu);
+      const sigunguCode = selectedSigungu?.sigungu_code; // 시군구 코드
+      setSigunguCode(selectedSigungu?.sigungu_code);
+
+      if (sigunguCode) {
+        getDistrict(selectedEupmyeondong, sigunguCode) // 읍면동 + 시군구 코드 전달
+          .then(responseMessage => {
+            alert(responseMessage);
+          })
+          .catch(error => {
+            console.error("API 호출 실패:", error);
+          });
+      } else {
+        alert("시군구 코드 정보를 찾을 수 없습니다.");
+      }
+    }
+  };
 
   const handleAccidentRateChange = (e) => {
     const value = parseInt(e.target.value || "0", 10);
@@ -169,7 +168,7 @@ const RoadsSearch = () => {
   };
 
   const navigateTo = useNavigations();
-  /* const handleNavigation = () => {
+  const handleNavigation = () => {
     if (sido && sigungu && eupmyeondong) {
       if (!updateWeights()) {
         return;
@@ -177,7 +176,9 @@ const RoadsSearch = () => {
 
       // 사용자 가중치 데이터 준비
       const userWeights = {
-        region: `${sido} ${sigungu} ${eupmyeondong}`,
+        sigungu: sigunguCode,
+        region: `${eupmyeondong}`,
+        freezing_weight: icingWeight,
         rd_slope_weight: slopeWeight,
         acc_occ_weight: accidentCount,
         acc_sc_weight: accidentRate,
@@ -193,17 +194,8 @@ const RoadsSearch = () => {
           console.log("추천 도로 데이터:", response);
 
           setIsLoading(false); // 로딩 종료
-          // 결과를 다루는 로직 (예: 추천 도로를 새로운 페이지에서 보여주거나, 현재 페이지에서 업데이트)
           navigateTo('RoadsRecommend', {
-            sido,
-            sigungu,
-            eupmyeondong,
-            icingWeight,
-            slopeWeight,
-            trafficWeight,
-            accidentCount,
-            accidentRate,
-            recommendedRoads: response.recommended_roads, // 추천 도로 데이터 넘기기
+            recommendedRoads: response, // 추천 도로 데이터 넘기기
           });
         })
         .catch((error) => {
@@ -214,72 +206,12 @@ const RoadsSearch = () => {
     } else {
       alert("모든 주소 필드를 선택해주세요.");
     }
-  }; */
-  const handleNavigation = () => {
-    if (sido && sigungu && eupmyeondong) {
-      if (!updateWeights()) {
-        return;
-      }
-
-      // 사용자 가중치 데이터 준비
-      const userWeights = {
-        region: `${sido} ${sigungu} ${eupmyeondong}`,
-        rd_slope_weight: slopeWeight,
-        acc_occ_weight: accidentCount,
-        acc_sc_weight: accidentRate,
-      };
-
-      // 로딩 상태 시작
-      setIsLoading(true);
-
-      // 임시로 추천 도로 데이터를 넣어주는 코드 (테스트용)
-      const recommendedRoads = [
-        {
-          rank: "1순위",
-          location: "원미구 원미1동 원미로321312321312",
-          freezingIndex: 1342,
-          slope: "10%",
-          trafficVolume: 93480,
-        },
-        {
-          rank: "2순위",
-          location: "다른 도로 이름",
-          freezingIndex: 1200,
-          slope: "8%",
-          trafficVolume: 75400,
-        },
-        {
-          rank: "3순위",
-          location: "다른 도로 이름",
-          freezingIndex: 1200,
-          slope: "6%",
-          trafficVolume: 75400,
-        },
-      ];
-
-      // 로딩 종료 후 페이지 이동
-      setIsLoading(false); // 로딩 종료
-      navigateTo('RoadsRecommend', {
-        sido,
-        sigungu,
-        eupmyeondong,
-        icingWeight,
-        slopeWeight,
-        trafficWeight,
-        accidentCount,
-        accidentRate,
-        recommendedRoads, // 임시로 넣은 추천 도로 데이터
-      });
-    } else {
-      alert("모든 주소 필드를 선택해주세요.");
-    }
   };
 
 
   const increments = Array.from({length: 21}, (_, i) => i * 5);
 
-  const remain = 100 - (icingWeight + slopeWeight + trafficWeight
-      + accidentCount + accidentRate);
+  const remain = 100 - (icingWeight + slopeWeight + accidentCount + accidentRate);
 
   return (
       <div className={styles.roadssearch}>
@@ -381,20 +313,6 @@ const RoadsSearch = () => {
                         className={styles.weightInput}
                         value={slopeWeight === 0 ? '' : slopeWeight} // 0이면 빈 값
                         onChange={handleSlopeChange}
-                    />
-                  </div>
-                  <div className={styles.weightItem}>
-                    <label className={styles.weightLabel}>교통량 데이터</label>
-                    <input
-                        type="number"
-                        step="5"
-                        min="0"
-                        max="100"
-                        list="increments"
-                        className={styles.weightInput}
-                        value={trafficWeight === 0 ? ''
-                            : trafficWeight} // 0이면 빈 값
-                        onChange={handleTrafficChange}
                     />
                   </div>
 

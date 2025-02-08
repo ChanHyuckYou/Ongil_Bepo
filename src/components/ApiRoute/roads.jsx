@@ -14,7 +14,6 @@ api.interceptors.request.use(
     const token = localStorage.getItem('access_token'); // 토큰 가져오기
     if (token) {
       config.headers['token'] = `${token}`; // Authorization 헤더에 Bearer 토큰 추가
-      console.log(config.headers);
     }
 
     return config;
@@ -23,15 +22,14 @@ api.interceptors.request.use(
 );
 
 // ✅ 지역 지정 (읍면동 확인)
-export const getDistrict = async (district) => {
+export const getDistrict = async (district, sigunguCode) => {
   try {
     const response = await api.get(`/get_district`, {
-      params: { district },
+      params: { district, sigungu: sigunguCode }, // sigungu_code 추가
     });
     return response.data.message;
   } catch (error) {
     if (error.response) {
-      // 서버에서 보내는 오류 응답 처리
       console.error("서버 응답 오류:", error.response);
       alert(`${error.response.data.detail || error.response.statusText}`);
     } else if (error.request) {
@@ -41,9 +39,10 @@ export const getDistrict = async (district) => {
       console.error("오류 발생:", error.message);
       alert(`오류 발생: ${error.message}`);
     }
-    throw error; // 필요에 따라 error를 다시 던져서 호출한 곳에서 처리할 수도 있습니다.
+    throw error;
   }
 };
+
 
 // ✅ 열선 도로 추천
 export const recommendRoads = async (userWeights) => {
@@ -68,9 +67,9 @@ export const getRecommendationLogs = async () => {
 };
 
 // ✅ 파일 요청
-export const requestRoadFile = async (logId) => {
+export const requestRoadFile = async () => {
   try {
-    const response = await api.post(`/file-request/${logId}`);
+    const response = await api.post(`/file-request`);
     return response.data;
   } catch (error) {
     console.error("파일 요청 실패:", error);
