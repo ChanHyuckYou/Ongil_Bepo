@@ -15,7 +15,7 @@ const Adminpage = () => {
         department: item.user_dept,
         region: item.jurisdiction,
         dateTime: item.c_date,
-        status: '승인 대기', // 기본 상태
+        status: item.approve, // 기본 상태
       }));
       setData(formattedData);
     } catch (error) {
@@ -33,7 +33,7 @@ const Adminpage = () => {
       const response = await approveFileRequest(logId);
       alert(response.message); // FastAPI에서 받은 메시지 표시
       setData(prevData => prevData.map(item =>
-        item.id === logId ? { ...item, status: '승인 완료' } : item
+        item.id === logId ? { ...item, status: 1 } : item // 승인 완료(1)
       ));
     } catch (error) {
       console.error('Error approving request:', error);
@@ -47,7 +47,7 @@ const Adminpage = () => {
       await rejectFileRequest(logId);
       alert("요청이 거부되었습니다.");
       setData(prevData => prevData.map(item =>
-        item.id === logId ? { ...item, status: '거부됨' } : item
+        item.id === logId ? { ...item, status: 0 } : item // 거부됨(0)
       ));
     } catch (error) {
       console.error('Error rejecting request:', error);
@@ -79,9 +79,13 @@ const Adminpage = () => {
                   <td>{item.department}</td>
                   <td>{item.region}</td>
                   <td>{item.dateTime}</td>
-                  <td>{item.status}</td>
                   <td>
-                    {item.status === '승인 대기' && (
+                    {item.status === null ? '승인 대기' :
+                     item.status === 1 ? '승인 완료' :
+                     item.status === 0 ? '승인 거부' : ''}
+                  </td>
+                  <td>
+                    {item.status === null && (
                       <>
                         <button
                           className={styles.approveBtn}
