@@ -26,12 +26,12 @@ const RoadsSearch = () => {
   const [sigunguCode, setSigunguCode] = useState(0);
 
   // 기존 가중치 관련 state (기본 값 20으로 설정)
-  const [icingWeight, setIcingWeight] = useState(20);
-  const [slopeWeight, setSlopeWeight] = useState(20);
+  const [icingWeight, setIcingWeight] = useState(50);
+  const [slopeWeight, setSlopeWeight] = useState(50);
 
   // 사고 관련 state (기본 값 20으로 설정)
-  const [accidentCount, setAccidentCount] = useState(20); // 사고발생건수
-  const [accidentRate, setAccidentRate] = useState(20); // 사고율
+  const [accidentCount, setAccidentCount] = useState(50); // 사고발생건수
+  const [accidentRate, setAccidentRate] = useState(50); // 사고율
 
   const [sigunguOptions, setSigunguOptions] = useState([]);
   const [eupmyeondongOptions, setEupmyeondongOptions] = useState([]);
@@ -97,40 +97,13 @@ const RoadsSearch = () => {
     }
   }, [sigungu, sido, data]);
 
-  // 가중치의 합이 100을 초과하지 않도록 처리하는 로직
-  const updateWeights = () => {
-    const sum = icingWeight + slopeWeight + accidentCount
-        + accidentRate;
-    if (sum > 100) {
-      alert("가중치의 합이 100을 초과했습니다.");
-      return false;
-    }
-    return true;
-  };
-
   // 각 가중치 값의 범위를 0~100으로 제한
-  const handleIcingChange = (e) => {
+  const handleWeightChange = (setter) => (e) => {
     const value = parseInt(e.target.value || "0", 10);
     if (value < 0 || value > 100) {
       return;
     }
-    setIcingWeight(value);
-  };
-
-  const handleSlopeChange = (e) => {
-    const value = parseInt(e.target.value || "0", 10);
-    if (value < 0 || value > 100) {
-      return;
-    }
-    setSlopeWeight(value);
-  };
-
-  const handleAccidentCountChange = (e) => {
-    const value = parseInt(e.target.value || "0", 10);
-    if (value < 0 || value > 100) {
-      return;
-    }
-    setAccidentCount(value);
+    setter(value);
   };
 
   // 읍면동
@@ -159,42 +132,53 @@ const RoadsSearch = () => {
     }
   };
 
-  const handleAccidentRateChange = (e) => {
-    const value = parseInt(e.target.value || "0", 10);
-    if (value < 0 || value > 100) {
-      return;
-    }
-    setAccidentRate(value);
-  };
 
   const navigateTo = useNavigations();
   const handleNavigation = () => {
     if (sido && sigungu && eupmyeondong) {
-      if (!updateWeights()) {
-        return;
-      }
 
+      // 모든 값이 0일 경우 25씩 할당하여 100 만들기
+      let weights = [icingWeight, slopeWeight, accidentCount, accidentRate];
+      const allZero = weights.every(weight => weight === 0);
+
+      let newIcingWeight = icingWeight;
+      let newSlopeWeight = slopeWeight;
+      let newAccidentCount = accidentCount;
+      let newAccidentRate = accidentRate;
+
+      if (allZero) {
+        newIcingWeight = 25;
+        newSlopeWeight = 25;
+        newAccidentCount = 25;
+        newAccidentRate = 25;
+      } else {
+        const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
+        if (totalWeight > 0) {
+          const scale = 100 / totalWeight;
+          newIcingWeight = icingWeight * scale;
+          newSlopeWeight = slopeWeight * scale;
+          newAccidentCount = accidentCount * scale;
+          newAccidentRate = accidentRate * scale;
+        }
+      }
       // 사용자 가중치 데이터 준비
       const userWeights = {
         sigungu: sigunguCode,
         region: `${eupmyeondong}`,
-        freezing_weight: icingWeight,
-        rd_slope_weight: slopeWeight,
-        acc_occ_weight: accidentCount,
-        acc_sc_weight: accidentRate,
+        freezing_weight: newIcingWeight,
+        rd_slope_weight: newSlopeWeight,
+        acc_occ_weight: newAccidentCount,
+        acc_sc_weight: newAccidentRate,
       };
-
       // 로딩 상태 시작
       setIsLoading(true);
 
       // 추천 도로 API 호출
       recommendRoads(userWeights)
         .then((response) => {
-          // 도로 추천 데이터 처리
-          console.log("추천 도로 데이터:", response);
-
           setIsLoading(false); // 로딩 종료
-          navigateTo('RoadsRecommend', { recommendedRoads: response.recommended_roads });
+          console.log(response)
+          navigateTo('RoadsRecommend', { sido: sido, sigungu: sigungu, eupmyeondong: eupmyeondong, recommendedRoads: response });
         })
         .catch((error) => {
           setIsLoading(false); // 로딩 종료
@@ -208,8 +192,6 @@ const RoadsSearch = () => {
 
 
   const increments = Array.from({length: 21}, (_, i) => i * 5);
-
-  const remain = 100 - (icingWeight + slopeWeight + accidentCount + accidentRate);
 
   return (
       <div className={styles.roadssearch}>
@@ -275,73 +257,61 @@ const RoadsSearch = () => {
                   </select>
                 </div>
 
-                <p style={{opacity: 0.9}}>
-                  * 선택하신 읍면동의 가중치를 적용하여 열선도로를 추천합니다.
-                  <span style={{color: 'red'}}>     현재 남은 가중치 : {remain}</span>
+                <p style={{opacity: 0.9 }}>
+                  * 중요도 비율을 지정하신대로 열선도로를 추천합니다.
+                  <span style={{color: 'red'}}></span>
                 </p>
-                {/* 5단위로 선택할 수 있는 리스트(datalist) */}
-                <datalist id="increments">
-                  {increments.map((val) => (
-                      <option key={val} value={val}/>
-                  ))}
-                </datalist>
-                {/* 기존 가중치 필드 (결빙 가능성, 경사도, 교통량) */}
+                {/* 0~100 사이의 숫자를 바 형태로 늘리며 선택할 수 있는 필드 */}
                 <div className={styles.weightContainer}>
                   <div className={styles.weightItem}>
                     <label className={styles.weightLabel}>결빙 가능성 지수</label>
                     <input
-                        type="number"
-                        step="5"
-                        min="0"
-                        max="100"
-                        list="increments"
-                        className={styles.weightInput}
-                        value={icingWeight === 0 ? '' : icingWeight} // 0이면 빈 값
-                        onChange={handleIcingChange}
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={icingWeight || 0} // 0이면 가장 왼쪽에 위치하도록 설정
+                      onChange={handleWeightChange(setIcingWeight)}
+                      className={styles.weightRange}
                     />
+                    <span>{icingWeight || 0}</span> {/* 선택된 숫자 표시 */}
                   </div>
                   <div className={styles.weightItem}>
                     <label className={styles.weightLabel}>도로별 경사도</label>
                     <input
-                        type="number"
-                        step="5"
-                        min="0"
-                        max="100"
-                        list="increments"
-                        className={styles.weightInput}
-                        value={slopeWeight === 0 ? '' : slopeWeight} // 0이면 빈 값
-                        onChange={handleSlopeChange}
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={slopeWeight || 0} // 0이면 가장 왼쪽에 위치하도록 설정
+                      onChange={handleWeightChange(setSlopeWeight)}
+                      className={styles.weightRange}
                     />
+                    <span>{slopeWeight || 0}</span> {/* 선택된 숫자 표시 */}
                   </div>
 
                   {/* 사고발생건수와 사고율 입력 필드 */}
                   <div className={styles.weightItem}>
                     <label className={styles.weightLabel}>사고발생건수</label>
                     <input
-                        type="number"
-                        step="5"
-                        min="0"
-                        max="100"
-                        list="increments"
-                        className={styles.weightInput}
-                        value={accidentCount === 0 ? ''
-                            : accidentCount} // 0이면 빈 값
-                        onChange={handleAccidentCountChange}
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={accidentCount || 0} // 0이면 가장 왼쪽에 위치하도록 설정
+                      onChange={handleWeightChange(setAccidentCount)}
+                      className={styles.weightRange}
                     />
+                    <span>{accidentCount || 0}</span> {/* 선택된 숫자 표시 */}
                   </div>
                   <div className={styles.weightItem}>
-                    <label className={styles.weightLabel}>사고율</label>
+                    <label className={styles.weightLabel}>사고심각도</label>
                     <input
-                        type="number"
-                        step="5"
-                        min="0"
-                        max="100"
-                        list="increments"
-                        className={styles.weightInput}
-                        value={accidentRate === 0 ? ''
-                            : accidentRate} // 0이면 빈 값
-                        onChange={handleAccidentRateChange}
+                      type="range"
+                      min="0"
+                      max="100"
+                      value={accidentRate || 0} // 0이면 가장 왼쪽에 위치하도록 설정
+                      onChange={handleWeightChange(setAccidentRate)}
+                      className={styles.weightRange}
                     />
+                    <span>{accidentRate || 0}</span> {/* 선택된 숫자 표시 */}
                   </div>
                 </div>
 
@@ -349,6 +319,8 @@ const RoadsSearch = () => {
                 <button className={styles.searchBtn} onClick={resetWeights}>
                   가중치 초기화
                 </button>
+
+
 
                 {/* 검색 버튼 */}
                 <div className={styles.searchBtn} onClick={handleNavigation}>

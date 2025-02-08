@@ -17,37 +17,12 @@ import polygonData from "../data/polygon.json";
 
 
 const RoadsRecommend = () => {
-      const location = useLocation();
-      const recommendedRoads = location.state?.recommendedRoads || [];
-  const [roads, setRoads] = useState(recommendedRoads || []); // 추천 도로 데이터
-// const RoadsRecommend = () => {
-//   // ------------------------------
-//   // 기존 도로 데이터 예시
-//   // ------------------------------
-//
-//   const [roads, setRoads] = useState([
-//     {
-//       rank: "1순위",
-//       location: "원미구 원미1동 원미로321312321312",
-//       freezingIndex: 1342,
-//       slope: "10%",
-//       trafficVolume: 93480,
-//     },
-//     {
-//       rank: "2순위",
-//       location: "다른 도로 이름",
-//       freezingIndex: 1200,
-//       slope: "8%",
-//       trafficVolume: 75400,
-//     },
-//     {
-//       rank: "3순위",
-//       location: "다른 도로 이름",
-//       freezingIndex: 1200,
-//       slope: "6%",
-//       trafficVolume: 75400,
-//     },
-//   ]);
+  const location = useLocation();
+  const sido = location.state?.sido || "";
+  const sigungu = location.state?.sigungu || "";
+  const eupmyeondong = location.state?.eupmyeondong || "";
+  const log = location.state?.recommendedRoads || [];
+  const [roads, setRoads] = useState(log.recommended_roads  || []); // 추천 도로 데이터
 
   // ------------------------------
   // 결빙사고 다발지역(폴리곤) 데이터
@@ -85,9 +60,13 @@ const RoadsRecommend = () => {
   // ------------------------------
   // 지도 생성 useEffect
   // ------------------------------
-  useEffect(() => {
+ useEffect(() => {
+    if (roads.length === 0) return;
+
+    const firstRoad = roads[0];
+    const [lat, lng] = firstRoad.rep.split(", ").map(Number); // 첫 번째 도로 중심
+
     const script = document.createElement("script");
-    // 실제 발급받은 AppKey를 사용해야 합니다.
     script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=08b03f93523dfa3e040fac4f08ce8934&libraries=services&autoload=false`;
     script.async = true;
     document.head.appendChild(script);
@@ -96,14 +75,11 @@ const RoadsRecommend = () => {
       window.kakao.maps.load(() => {
         const mapContainer = document.getElementById("map");
         const mapOptions = {
-          center: new window.kakao.maps.LatLng(37.469055190532536,
-              126.80784397139458),
+          center: new window.kakao.maps.LatLng(lat, lng),
           level: 3,
         };
 
         const mapInstance = new window.kakao.maps.Map(mapContainer, mapOptions);
-
-        // 교통 정보 오버레이 제거
         mapInstance.removeOverlayMapTypeId(window.kakao.maps.MapTypeId.TRAFFIC);
 
         // 로드뷰 설정
@@ -115,16 +91,60 @@ const RoadsRecommend = () => {
         setRoadview(roadviewInstance);
         setRvClient(rvClientInstance);
 
-        // 테스트용 도로 마커 생성
+        // 랜덤한 파스텔 색상을 생성하는 함수
+        const getRandomPastelColor = () => {
+          const r = Math.floor(Math.random() * 128 + 127); // 127~255
+          const g = Math.floor(Math.random() * 128 + 127);
+          const b = Math.floor(Math.random() * 128 + 127);
+          return `rgb(${r}, ${g}, ${b})`;
+        };
+
+        // 도로 마커 및 폴리라인 생성
         roads.forEach((road) => {
+          // 시점 및 종점 좌표 추출
+          const [startLat, startLng] = road.rbp.split(", ").map(Number);
+          const [endLat, endLng] = road.rep.split(", ").map(Number);
+
+          // 마커 생성 (대표 좌표)
           const marker = new window.kakao.maps.Marker({
-            position: new window.kakao.maps.LatLng(37.469055190532536,
-                126.80784397139458),
+            position: new window.kakao.maps.LatLng(endLat, endLng),
             map: mapInstance,
           });
+
+          // 마커 클릭 이벤트 추가
           window.kakao.maps.event.addListener(marker, "click", () => {
-            alert(`${road.rank}: ${road.location}`);
+            alert(`도로명: ${road.road_name}\n기울기: ${road.rd_slope}`);
           });
+
+          const roadColor = getRandomPastelColor();
+
+          // 테두리 (검은색) - 더 두꺼운 선
+          const borderPolyline = new window.kakao.maps.Polyline({
+            path: [
+              new window.kakao.maps.LatLng(startLat, startLng),
+              new window.kakao.maps.LatLng(endLat, endLng),
+            ],
+            strokeWeight: 7, // 테두리 두께
+            strokeColor: "#000000", // 검은색
+            strokeOpacity: 1, // 불투명
+            strokeStyle: "solid",
+          });
+
+          // 실제 도로 (파스텔 색상) - 위에 덮어씌움
+          const roadPolyline = new window.kakao.maps.Polyline({
+            path: [
+              new window.kakao.maps.LatLng(startLat, startLng),
+              new window.kakao.maps.LatLng(endLat, endLng),
+            ],
+            strokeWeight: 5, // 도로 두께
+            strokeColor: roadColor, // 랜덤 파스텔 색
+            strokeOpacity: 1, // 불투명
+            strokeStyle: "solid",
+          });
+
+          // 지도에 추가
+          borderPolyline.setMap(mapInstance);
+          roadPolyline.setMap(mapInstance);
         });
       });
     };
@@ -309,9 +329,8 @@ const RoadsRecommend = () => {
   }, [activeCategories, map, ps, searchRadius]);
 
 useEffect(() => {
-  console.log("추천 도로 데이터 업데이트됨:", recommendedRoads);
-  setRoads(recommendedRoads);
-}, [recommendedRoads]);
+  setRoads(roads);
+}, [roads]);
 
   // ------------------------------
   // 카테고리별 아이콘 설정
@@ -398,6 +417,7 @@ useEffect(() => {
   // ------------------------------
   return (
       <div className={styles.roadsrecommend}>
+          <h1>"{sido} {sigungu} {eupmyeondong}" 추천 결과</h1>
         <div className={styles.content}>
           {/* 도로 목록 */}
           <div className={styles.roadtable}>
@@ -406,21 +426,30 @@ useEffect(() => {
               <button onClick={handleFileRequest}>파일 요청</button>
             </div>
             <div className={styles.ListItems}>
-              {recommendedRoads.map((road, index) => (
-                  <div key={index} className={styles.item}>
-                    <div className={styles.itemContent}>
-                      <p>
-                        {index+1}순위 : {road.road_name}
-                      </p>
-                      <button className={styles.itemButton}>상세보기</button>
-                    </div>
-                    <div>결빙예측지수 : {road.pred_idx}</div>
-                    <div>경사도 : {road.rd_slope}</div>
-                    <div>사고발생건수 : {road.acc_occ}</div>
-                    <div>사고 심각도 : {road.acc_sc}</div>
+              {roads.map((road, index) => (
+                <div
+                  key={index}
+                  className={styles.item}
+                  onClick={() => {
+                    if (!map) return;
+                    const [startLat, startLng] = road.rbp.split(", ").map(Number);
+                    const moveLatLng = new window.kakao.maps.LatLng(startLat, startLng);
+                    map.setCenter(moveLatLng);
+                  }}
+                  style={{ cursor: "pointer" }} // 클릭 가능하게 스타일 추가
+                >
+                  <div className={styles.itemContent}>
+                    <p>
+                      {index + 1}순위 : {road.road_name}
+                    </p>
                   </div>
+                  <div>결빙예측지수 : {road.pred_idx}</div>
+                  <div>경사도 : {road.rd_slope}</div>
+                  <div>사고발생건수 : {road.acc_occ}</div>
+                  <div>사고심각도 : {road.acc_sc}</div>
+                </div>
               ))}
-            </div>
+            </div>;
           </div>
 
           {/* 지도 컨테이너 */}
@@ -484,7 +513,13 @@ useEffect(() => {
                   <FontAwesomeIcon icon={faLandmark}/> 관광명소
                 </button>
               </div>
-
+              {/* 다발지역 폴리곤 데이터 불러오기 버튼 */}
+              <button
+                  className={styles.categoryButton}
+                  onClick={handleFetchPolygonData}
+              >
+                결빙 사고 다발지역 폴리곤 생성
+              </button>
               {/* 다발지역 폴리곤 표시/숨기기 버튼 */}
               <button
                   className={styles.categoryButton}

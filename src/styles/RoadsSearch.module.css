@@ -21,6 +21,7 @@
     justify-content: space-between;
     margin-bottom: 20px;
     height: 75%; /* 부모 요소 높이를 기준으로 */
+    overflow: hidden;
 }
 
 .form {

@@ -11,7 +11,9 @@
   padding-top: 150px; /* .topNavi의 높이에 맞춤 */
   box-sizing: border-box;
 }
-
+.roadsrecommend h1{
+  margin-left: 100px;
+}
 
 /* Content Section */
 .content {
@@ -26,7 +28,7 @@
 
 /* 도로 목록 */
 .roadtable {
-  width: 30%;
+  width: 25%;
   height: 100%;
   box-sizing: border-box;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
@@ -35,6 +37,7 @@
   overflow: hidden;
   display: flex;
   flex-direction: column;
+  margin-left: 80px;
 }
 
 .ListHeader {
@@ -50,6 +53,14 @@
   position: sticky;
   top: 0;
   z-index: 1;
+}
+
+.ListHeader button {
+  padding: 10px 20px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f5f5f5;
+  cursor: pointer;
 }
 
 .ListItems {
@@ -118,6 +129,8 @@
   width: 55%;
   height: 100%;
   flex-shrink: 0;
+  margin-left: 10px;
+  margin-right: 350px;
 }
 
 /* Controls Section */
