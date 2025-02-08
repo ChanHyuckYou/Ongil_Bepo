@@ -47,113 +47,116 @@ const Home = () => {
     }
   };
 
-useEffect(() => {
-  fetchWeather(selectedLocation.lat, selectedLocation.lon);
-  fetch5Weather(selectedLocation.lat, selectedLocation.lon);
+  useEffect(() => {
+    fetchWeather(selectedLocation.lat, selectedLocation.lon);
+    fetch5Weather(selectedLocation.lat, selectedLocation.lon);
 
-  const script = document.createElement("script");
-  script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=08b03f93523dfa3e040fac4f08ce8934&libraries=services&autoload=false`;
-  script.async = true;
-  script.onload = () => {
-    window.kakao.maps.load(() => {
-      const container = document.getElementById("kakao-map");
-      const options = {
-        center: new window.kakao.maps.LatLng(selectedLocation.lat, selectedLocation.lon),
-        level: 3,
-      };
-      const map = new window.kakao.maps.Map(container, options);
+    const script = document.createElement("script");
+    script.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=08b03f93523dfa3e040fac4f08ce8934&libraries=services&autoload=false`;
+    script.async = true;
+    script.onload = () => {
+      window.kakao.maps.load(() => {
+        const container = document.getElementById("kakao-map");
+        const options = {
+          center: new window.kakao.maps.LatLng(selectedLocation.lat, selectedLocation.lon),
+          level: 5,
+        };
 
-      let activeInfoWindow = null; // 현재 열려 있는 InfoWindow 저장 변수
+        const map = new window.kakao.maps.Map(container, options);
 
-      jsonData.forEach((item) => {
-        if (item["경로"] && item["경로"].length > 0) {
-          const roadPath = item["경로"].map(([lng, lat]) => new window.kakao.maps.LatLng(lat, lng));
+        let activeInfoWindow = null; // 현재 열려 있는 InfoWindow 저장 변수
 
-          // 파스텔 색상 생성 함수
-          const getPastelColor = () => {
-            const r = Math.floor(Math.random() * 128 + 127);
-            const g = Math.floor(Math.random() * 128 + 127);
-            const b = Math.floor(Math.random() * 128 + 127);
-            return `rgb(${r}, ${g}, ${b})`;
-          };
+        jsonData.forEach((item) => {
+          if (item["경로"] && item["경로"].length > 0) {
+            const roadPath = item["경로"].map(([lng, lat]) => new window.kakao.maps.LatLng(lat, lng));
 
-          // Polyline을 추가하기 전에 두 개의 Polyline을 설정하여 테두리 효과
-          const polylineOuter = new window.kakao.maps.Polyline({
-            path: roadPath,
-            strokeWeight: 8,
-            strokeColor: 'black',
-            strokeOpacity: 0.7,
-            strokeStyle: "solid",
-          });
+            // 파스텔 색상 생성 함수
+            const getPastelColor = () => {
+              const r = Math.floor(Math.random() * 128 + 127);
+              const g = Math.floor(Math.random() * 128 + 127);
+              const b = Math.floor(Math.random() * 128 + 127);
+              return `rgb(${r}, ${g}, ${b})`;
+            };
 
-          const polylineInner = new window.kakao.maps.Polyline({
-            path: roadPath,
-            strokeWeight: 5,
-            strokeColor: getPastelColor(),
-            strokeOpacity: 0.9,
-            strokeStyle: "solid",
-          });
-
-          // Polyline을 지도에 추가
-          polylineOuter.setMap(map);
-          polylineInner.setMap(map);
-
-          // 중간 지점 찾기
-          const midIndex = Math.floor(roadPath.length / 2);
-          const midPoint = roadPath[midIndex];
-
-          // 클릭 이벤트 추가
-          window.kakao.maps.event.addListener(polylineInner, 'click', () => {
-            if (activeInfoWindow) {
-              activeInfoWindow.close(); // 기존 창 닫기
-            }
-
-            const infoWindowContent = `
-              <div style="padding:10px; font-size:14px; line-height:1.5;">
-                <h4 style="margin:0 0 5px 0; font-size:16px; font-weight:bold;">${item["도로(노선)명"]}</h4>
-                <p><strong>대표지역:</strong> ${item["대표지역"]}</p>
-                <p><strong>관리청</strong> ${item["관리청"]}</p>
-                <p><strong>도로길이:</strong> ${item["총길이(km)"]} km</p>
-              </div>
-            `;
-
-            const infoWindow = new window.kakao.maps.InfoWindow({
-              content: infoWindowContent,
-              removable: true,
-            });
-
-            infoWindow.open(map, new window.kakao.maps.Marker({ position: midPoint }));
-            activeInfoWindow = infoWindow; // 현재 열린 창 저장
-          });
-
-          // 마우스 올렸을 때 선 스타일 변경
-          window.kakao.maps.event.addListener(polylineInner, 'mouseover', () => {
-            polylineOuter.setOptions({
-              strokeWeight: 10,
-              strokeColor: 'black',
-              strokeOpacity: 1,
-            });
-          });
-
-          // 마우스 벗어났을 때 선 스타일 원래대로
-          window.kakao.maps.event.addListener(polylineInner, 'mouseout', () => {
-            polylineOuter.setOptions({
-              strokeWeight: 8,
+            // Polyline을 추가하기 전에 두 개의 Polyline을 설정하여 테두리 효과
+            const polylineOuter = new window.kakao.maps.Polyline({
+              path: roadPath,
+              strokeWeight: 6,
               strokeColor: 'black',
               strokeOpacity: 0.7,
+              strokeStyle: "solid",
             });
-          });
-        }
+
+            const polylineInner = new window.kakao.maps.Polyline({
+              path: roadPath,
+              strokeWeight: 3,
+              strokeColor: getPastelColor(),
+              strokeOpacity: 0.9,
+              strokeStyle: "solid",
+            });
+
+            // Polyline을 지도에 추가
+            polylineOuter.setMap(map);
+            polylineInner.setMap(map);
+
+            // 중간 지점 찾기
+            const midIndex = Math.floor(roadPath.length / 2);
+            const midPoint = roadPath[midIndex];
+
+            // 클릭 이벤트 추가
+            window.kakao.maps.event.addListener(polylineInner, 'click', () => {
+              if (activeInfoWindow) {
+                activeInfoWindow.close(); // 기존 창 닫기
+              }
+
+              const infoWindowContent = `
+                <div style="padding:10px; font-size:14px; line-height:1.5; margin-top:10px;">
+                  <h4 style="margin:0 0 5px 0; font-size:16px; font-weight:bold;">${item["도로(노선)명"]}</h4>
+                  <p><strong>대표지역:</strong> ${item["대표지역"]}</p>
+                  <p><strong>관리청</strong> ${item["관리청"]}</p>
+                  <p><strong>도로길이:</strong> ${item["총길이(km)"]} km</p>
+                </div>
+              `;
+
+              const infoWindow = new window.kakao.maps.InfoWindow({
+                position: new window.kakao.maps.LatLng(midPoint.getLat(), midPoint.getLng()),
+                content: infoWindowContent,
+                removable: true,
+              });
+
+              infoWindow.open(map); // 마커 기준으로 InfoWindow 열기
+              activeInfoWindow = infoWindow; // 현재 열린 창 저장
+
+            });
+
+
+            // 마우스 올렸을 때 선 스타일 변경
+            window.kakao.maps.event.addListener(polylineInner, 'mouseover', () => {
+              polylineOuter.setOptions({
+                strokeWeight: 8,
+                strokeColor: 'black',
+                strokeOpacity: 1,
+              });
+            });
+
+            // 마우스 벗어났을 때 선 스타일 원래대로
+            window.kakao.maps.event.addListener(polylineInner, 'mouseout', () => {
+              polylineOuter.setOptions({
+                strokeWeight: 6,
+                strokeColor: 'black',
+                strokeOpacity: 0.7,
+              });
+            });
+          }
+        });
       });
-    });
-  };
+    };
+    document.body.appendChild(script);
 
-  document.body.appendChild(script);
-
-  return () => {
-    document.body.removeChild(script);
-  };
-}, [jsonData, selectedLocation]);
+    return () => {
+      document.body.removeChild(script);
+    };
+  }, [jsonData, selectedLocation]);
 
 
 
@@ -252,6 +255,7 @@ useEffect(() => {
       </div>
 
       {/* 지도 표시 영역 */}
+      <h2 className="text-xl font-bold">지역별 상습 결빙 도로</h2>
       <div id="kakao-map" style={{ width: '100%', height: '500px' }}></div>
     </div>
   );
