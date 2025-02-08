@@ -10,40 +10,40 @@ import {
   faSchool,
   faUserFriends,
 } from "@fortawesome/free-solid-svg-icons";
-
+import {requestRoadFile} from "../components/ApiRoute/roads.jsx"
 // polygon.json을 직접 import
 import polygonData from "../data/polygon.json";
 
-/* const RoadsRecommend = ({ location, recommendedRoads }) => {
-  const [roads, setRoads] = useState(recommendedRoads || []); // 추천 도로 데이터 */
-const RoadsRecommend = () => {
-  // ------------------------------
-  // 기존 도로 데이터 예시
-  // ------------------------------
-
-  const [roads, setRoads] = useState([
-    {
-      rank: "1순위",
-      location: "원미구 원미1동 원미로321312321312",
-      freezingIndex: 1342,
-      slope: "10%",
-      trafficVolume: 93480,
-    },
-    {
-      rank: "2순위",
-      location: "다른 도로 이름",
-      freezingIndex: 1200,
-      slope: "8%",
-      trafficVolume: 75400,
-    },
-    {
-      rank: "3순위",
-      location: "다른 도로 이름",
-      freezingIndex: 1200,
-      slope: "6%",
-      trafficVolume: 75400,
-    },
-  ]);
+const RoadsRecommend = ({ location, recommendedRoads }) => {
+  const [roads, setRoads] = useState(recommendedRoads || []); // 추천 도로 데이터
+// const RoadsRecommend = () => {
+//   // ------------------------------
+//   // 기존 도로 데이터 예시
+//   // ------------------------------
+//
+//   const [roads, setRoads] = useState([
+//     {
+//       rank: "1순위",
+//       location: "원미구 원미1동 원미로321312321312",
+//       freezingIndex: 1342,
+//       slope: "10%",
+//       trafficVolume: 93480,
+//     },
+//     {
+//       rank: "2순위",
+//       location: "다른 도로 이름",
+//       freezingIndex: 1200,
+//       slope: "8%",
+//       trafficVolume: 75400,
+//     },
+//     {
+//       rank: "3순위",
+//       location: "다른 도로 이름",
+//       freezingIndex: 1200,
+//       slope: "6%",
+//       trafficVolume: 75400,
+//     },
+//   ]);
 
   // ------------------------------
   // 결빙사고 다발지역(폴리곤) 데이터
@@ -367,6 +367,23 @@ const RoadsRecommend = () => {
     setShowAccidentPolygons((prev) => !prev);
   };
 
+  // 파일 요청 함수
+  const handleFileRequest = async () => {
+    try {
+      const result = await requestRoadFile(); // api에서 파일 요청 실행
+      alert('파일 요청이 성공적으로 처리되었습니다!'); // 성공 메시지 표시
+      console.log(result); // 파일 요청 응답 결과 확인 (필요 시 활용)
+    } catch (error) {
+      console.error('파일 요청 중 오류 발생:', error);
+      // 오류가 발생하면 alert로 에러 메시지 표시
+      if (error.response && error.response.data && error.response.data.detail) {
+        alert(error.response.data.detail);
+      } else {
+        alert('파일 요청 중 오류가 발생했습니다.');
+      }
+    }
+  };
+
   // ------------------------------
   // 렌더링
   // ------------------------------
@@ -377,7 +394,7 @@ const RoadsRecommend = () => {
           <div className={styles.roadtable}>
             <div className={styles.ListHeader}>
               <span>열선 도로 추천 목록</span>
-              <button>파일요청</button>
+              <button onClick={handleFileRequest}>파일 요청</button>
             </div>
             <div className={styles.ListItems}>
               {roads.map((road, index) => (
