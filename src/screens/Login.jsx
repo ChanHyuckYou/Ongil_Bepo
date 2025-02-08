@@ -29,18 +29,15 @@ const Login = () => {
     email: "",
     password: "",
   });
-  const [error, setError] = useState(""); // 오류 메시지 상태
 
   // 이벤트 핸들러: Sign Up 버튼 클릭
   const handleSignUpClick = () => {
     setIsSignUpActive(true);
-    setError("");
   };
 
   // 이벤트 핸들러: Sign In 버튼 클릭
   const handleSignInClick = () => {
     setIsSignUpActive(false);
-    setError("");
   };
 
   // Input 변경 핸들러
@@ -71,11 +68,10 @@ const Login = () => {
 
   const handleSignUpSubmit = async (e) => {
     e.preventDefault();
-    setError(""); // 에러 초기화
 
     // 비밀번호와 확인 비밀번호 일치 여부 확인
     if (formData.password !== formData.confirm_password) {
-      setError("비밀번호가 일치하지 않습니다.");
+      alert("비밀번호가 일치하지 않습니다.");
       return;
     }
 
@@ -99,8 +95,7 @@ const Login = () => {
       } else if (err.message) {
         errorMessage = typeof err.message === "string" ? err.message : JSON.stringify(err.message);
       }
-
-      setError(errorMessage);
+      alert(errorMessage);
     }
   };
 
@@ -254,7 +249,6 @@ const Login = () => {
                   onChange={handleChange}
                   required
                 />
-                {error && <p className={styles.error}>{error}</p>}
                 <button type="submit" className={styles.btn}>
                   회원가입
                 </button>
@@ -285,7 +279,6 @@ const Login = () => {
               onChange={handleChange}
               required
             />
-            {error && <p className={styles.error}>{error}</p>}
             <a
               href="#"
               className={styles.link}
