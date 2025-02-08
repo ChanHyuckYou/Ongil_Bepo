@@ -74,16 +74,25 @@ export const getPostDetailForEdit = async (postId) => {
 // 게시글 작성 (POST /board/)
 export const createPost = async (formData) => {
     const headers = getHeaders(false);
-    const response = await fetch(`${API_BASE_URL}/`, {
-        method: "POST",
-        headers,
-        body: formData, // FormData 직접 전송
-    });
-    if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.detail || "게시글 작성에 실패하였습니다.");
+    try {
+        const response = await fetch(`${API_BASE_URL}/`, {
+            method: "POST",
+            headers,
+            body: formData, // FormData 직접 전송
+        });
+
+        if (!response.ok) {
+            const errData = await response.json();
+            alert(errData.detail || "게시글 작성에 실패하였습니다.");
+            throw new Error(errData.detail || "게시글 작성에 실패하였습니다.");
+        }
+
+        return await response.json();
+    } catch (error) {
+        // 오류를 catch하여 alert로 표시
+        alert(error.message);
+        throw error; // 에러를 다시 던져서 호출한 곳에서 추가 처리가 가능하게 함
     }
-    return await response.json();
 };
 
 // 게시글 수정 (PUT /board/{post_id})
