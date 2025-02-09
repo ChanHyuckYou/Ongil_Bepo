@@ -42,14 +42,6 @@ const RoadsSearch = () => {
     setData(locationData);
   }, []);
 
-  // 사고발생건수와 사고율 초기화
-  const resetWeights = () => {
-    setIcingWeight(0);  // 0으로 초기화
-    setSlopeWeight(0);  // 0으로 초기화
-    setAccidentCount(0); // 0으로 초기화
-    setAccidentRate(0);  // 0으로 초기화
-  };
-
   // 시도명 변경 시 시군구명 옵션 업데이트
   useEffect(() => {
     if (sido) {
@@ -200,9 +192,9 @@ const RoadsSearch = () => {
               <LoadingPage isLoading={isLoading}/>
           ) : (
               <div className={styles.form}>
-                <div className={styles.guideTxt}>
+                <h2>
                   열선 도로를 설치할 자치구별 동을 입력해주세요.
-                </div>
+                </h2>
 
                 {/* 시도명 드롭다운 */}
                 <div className={styles.dup}>
@@ -314,14 +306,6 @@ const RoadsSearch = () => {
                     <span>{accidentRate || 0}</span> {/* 선택된 숫자 표시 */}
                   </div>
                 </div>
-
-                {/* 초기화 버튼 */}
-                <button className={styles.searchBtn} onClick={resetWeights}>
-                  가중치 초기화
-                </button>
-
-
-
                 {/* 검색 버튼 */}
                 <div className={styles.searchBtn} onClick={handleNavigation}>
                   검색
