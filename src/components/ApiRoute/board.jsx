@@ -52,9 +52,10 @@ export const searchPosts = async (searchQuery) => {
 
 // 게시글 상세 조회 (GET /board/{post_id})
 export const getPostDetail = async (postId) => {
-  const response = await fetch(`${API_BASE_URL}/${postId}`, {
-    headers: getHeaders(),
-  });
+  const response = await fetch(
+      `${import.meta.env.VITE_SERVER_ROUTE}/board/${postId}`, {
+        headers: getHeaders(),
+      });
   /*   if (!response.ok) {
       throw new Error("게시글 상세 조회에 실패하였습니다.");
     } */
@@ -239,12 +240,12 @@ export const getPostFiles = async (postId) => {
 // 파일 다운로드 (GET /board/files/{file_id}/download)
 // 다운로드의 경우 브라우저에서 직접 URL 이동 방식 사용
 export const downloadFile = (fileId) => {
-  window.location.href = `${API_BASE_URL}/files/${fileId}/download`;
+  window.location.href = `${import.meta.env.VITE_SERVER_ROUTE}/board/files/${fileId}/download`;
 };
 
 // 파일 가져오기
 export const downloadFileAsBlob = async (fileId, fileName) => {
-  const fileUrl = `${API_BASE_URL}/files/${fileId}/download`;
+  const fileUrl = `${import.meta.env.VITE_SERVER_ROUTE}/board/files/${fileId}/download`;
   const response = await fetch(fileUrl);
   if (!response.ok) {
     throw new Error(`파일 불러오기 실패: ${response.statusText}`);
