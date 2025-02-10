@@ -39,9 +39,11 @@ export const searchPosts = async (searchQuery) => {
   if (searchQuery) {
     params.append("text", searchQuery);
   }
-  const response = await fetch(`${API_BASE_URL}/search/?${params.toString()}`, {
-    headers: getHeaders(),
-  });
+  const response = await fetch(
+      `${import.meta.env.VITE_SERVER_ROUTE}/board/search/?${params.toString()}`,
+      {
+        headers: getHeaders(),
+      });
   if (!response.ok) {
     throw new Error("검색에 실패하였습니다.");
   }
@@ -61,10 +63,11 @@ export const getPostDetail = async (postId) => {
 
 // 게시글 수정 시 데이터, 파일 조회 (GET /board/{post_id}/edit)
 export const getPostDetailForEdit = async (postId) => {
-  const response = await fetch(`${API_BASE_URL}/${postId}/edit`, {
-    method: "GET",
-    headers: getHeaders(),
-  });
+  const response = await fetch(
+      `${import.meta.env.VITE_SERVER_ROUTE}/board/${postId}/edit`, {
+        method: "GET",
+        headers: getHeaders(),
+      });
   if (!response.ok) {
     throw new Error("게시글 및 파일 불러오기 실패");
   }
@@ -75,11 +78,12 @@ export const getPostDetailForEdit = async (postId) => {
 export const createPost = async (formData) => {
   const headers = getHeaders(false);
   try {
-    const response = await fetch(`${API_BASE_URL}/`, {
-      method: "POST",
-      headers,
-      body: formData, // FormData 직접 전송
-    });
+    const response = await fetch(`${import.meta.env.VITE_SERVER_ROUTE}/board/`,
+        {
+          method: "POST",
+          headers,
+          body: formData, // FormData 직접 전송
+        });
 
     if (!response.ok) {
       const errData = await response.json();
@@ -98,11 +102,12 @@ export const createPost = async (formData) => {
 // 게시글 수정 (PUT /board/{post_id})
 export const updatePost = async (postId, formData) => {
   const headers = getHeaders(false);
-  const response = await fetch(`${API_BASE_URL}/${postId}`, {
-    method: "PUT",
-    headers,
-    body: formData,
-  });
+  const response = await fetch(
+      `${import.meta.env.VITE_SERVER_ROUTE}/board/${postId}`, {
+        method: "PUT",
+        headers,
+        body: formData,
+      });
   if (!response.ok) {
     const errData = await response.json();
     throw new Error(errData.detail || "게시글 수정에 실패하였습니다.");
@@ -112,10 +117,11 @@ export const updatePost = async (postId, formData) => {
 
 // 게시글 삭제 (DELETE /board/{post_id})
 export const deletePost = async (postId) => {
-  const response = await fetch(`${API_BASE_URL}/${postId}`, {
-    method: "DELETE",
-    headers: getHeaders(),
-  });
+  const response = await fetch(
+      `${import.meta.env.VITE_SERVER_ROUTE}/board/${postId}`, {
+        method: "DELETE",
+        headers: getHeaders(),
+      });
   if (!response.ok) {
     const errData = await response.json();
     throw new Error(errData.detail || "게시글 삭제에 실패하였습니다.");
@@ -125,9 +131,10 @@ export const deletePost = async (postId) => {
 
 // 게시글의 댓글 및 관리자 답변 조회 (GET /board/{post_id}/comments-answers)
 export const getCommentsAndAnswers = async (postId) => {
-  const response = await fetch(`${API_BASE_URL}/${postId}/comments-answers`, {
-    headers: getHeaders(),
-  });
+  const response = await fetch(
+      `${import.meta.env.VITE_SERVER_ROUTE}/board/${postId}/comments-answers`, {
+        headers: getHeaders(),
+      });
   if (!response.ok) {
     throw new Error("댓글 및 관리자 답변 조회에 실패하였습니다.");
   }
@@ -136,11 +143,12 @@ export const getCommentsAndAnswers = async (postId) => {
 
 // 댓글 작성 (POST /board/{post_id}/comment)
 export const addComment = async (postId, comment) => {
-  const response = await fetch(`${API_BASE_URL}/${postId}/comment`, {
-    method: "POST",
-    headers: getHeaders(),
-    body: JSON.stringify({comment}),
-  });
+  const response = await fetch(
+      `${import.meta.env.VITE_SERVER_ROUTE}/board/${postId}/comment`, {
+        method: "POST",
+        headers: getHeaders(),
+        body: JSON.stringify({comment}),
+      });
   if (!response.ok) {
     const errData = await response.json();
     throw new Error(errData.detail || "댓글 작성에 실패하였습니다.");
@@ -150,11 +158,12 @@ export const addComment = async (postId, comment) => {
 
 // 관리자 답변 작성 (POST /board/{post_id}/answer)
 export const addAnswer = async (postId, answer) => {
-  const response = await fetch(`${API_BASE_URL}/${postId}/answer`, {
-    method: "POST",
-    headers: getHeaders(),
-    body: JSON.stringify({answer}),
-  });
+  const response = await fetch(
+      `${import.meta.env.VITE_SERVER_ROUTE}/board/${postId}/answer`, {
+        method: "POST",
+        headers: getHeaders(),
+        body: JSON.stringify({answer}),
+      });
   if (!response.ok) {
     const errData = await response.json();
     throw new Error(errData.detail || "답변 작성에 실패하였습니다.");
@@ -164,7 +173,8 @@ export const addAnswer = async (postId, answer) => {
 
 // 댓글 삭제 (DELETE /board/{post_id}/comment/{comment_id})
 export const deleteComment = async (postId, commentId) => {
-  const response = await fetch(`${API_BASE_URL}/${postId}/comment/${commentId}`,
+  const response = await fetch(
+      `${import.meta.env.VITE_SERVER_ROUTE}/board/${postId}/comment/${commentId}`,
       {
         method: "DELETE",
         headers: getHeaders(),
@@ -180,10 +190,12 @@ export const deleteComment = async (postId, commentId) => {
 
 // 관리자 답변 삭제 (DELETE /board/{post_id}/answer/{answer_id})
 export const deleteAnswer = async (postId, answerId) => {
-  const response = await fetch(`${API_BASE_URL}/${postId}/answer/${answerId}`, {
-    method: "DELETE",
-    headers: getHeaders(),
-  });
+  const response = await fetch(
+      `${import.meta.env.VITE_SERVER_ROUTE}/board/${postId}/answer/${answerId}`,
+      {
+        method: "DELETE",
+        headers: getHeaders(),
+      });
 
   if (!response.ok) {
     const errData = await response.json();
@@ -197,13 +209,14 @@ export const deleteAnswer = async (postId, answerId) => {
 export const uploadFile = async (postId, file) => {
   const formData = new FormData();
   formData.append("file", file);
-  const response = await fetch(`${API_BASE_URL}/${postId}/upload`, {
-    method: "POST",
-    headers: {
-      "token": getToken(), // multipart/form-data는 Content-Type 자동 설정
-    },
-    body: formData,
-  });
+  const response = await fetch(
+      `${import.meta.env.VITE_SERVER_ROUTE}/board/${postId}/upload`, {
+        method: "POST",
+        headers: {
+          "token": getToken(), // multipart/form-data는 Content-Type 자동 설정
+        },
+        body: formData,
+      });
   if (!response.ok) {
     const errData = await response.json();
     throw new Error(errData.detail || "파일 업로드에 실패하였습니다.");
@@ -213,9 +226,10 @@ export const uploadFile = async (postId, file) => {
 
 // 게시글의 파일 목록 조회 (GET /board/{post_id}/files)
 export const getPostFiles = async (postId) => {
-  const response = await fetch(`${API_BASE_URL}/${postId}/files`, {
-    headers: getHeaders(),
-  });
+  const response = await fetch(
+      `${import.meta.env.VITE_SERVER_ROUTE}/board/${postId}/files`, {
+        headers: getHeaders(),
+      });
 //   if (!response.ok) {
 //     throw new Error("파일 목록 조회에 실패하였습니다.");
 //   }
@@ -241,10 +255,11 @@ export const downloadFileAsBlob = async (fileId, fileName) => {
 
 // 파일 삭제 (DELETE /board/files/{file_id})
 export const deleteFile = async (fileId) => {
-  const response = await fetch(`${API_BASE_URL}/files/${fileId}`, {
-    method: "DELETE",
-    headers: getHeaders(),
-  });
+  const response = await fetch(
+      `${import.meta.env.VITE_SERVER_ROUTE}/board/files/${fileId}`, {
+        method: "DELETE",
+        headers: getHeaders(),
+      });
   if (!response.ok) {
     const errData = await response.json();
     throw new Error(errData.detail || "파일 삭제에 실패하였습니다.");
@@ -255,7 +270,7 @@ export const deleteFile = async (fileId) => {
 // Socket.IO 클라이언트 생성 (연결 시 JWT 토큰을 query 파라미터에 포함)
 export const getSocket = () => {
   const token = getToken() || "";
-  const socket = io("http://localhost:8000", {
+  const socket = io(`${import.meta.env.VITE_SERVER_ROUTE}`, {
     transports: ["websocket"],
     query: {token},
   });
