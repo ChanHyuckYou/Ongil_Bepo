@@ -1,9 +1,8 @@
 import axios from 'axios';
 
-const SERVER_ROUTE = import.meta.env.SERVER_ROUTE;
 // axios 설정
 const api = axios.create({
-  baseURL: `${SERVER_ROUTE}/admin`, // 기본 URL
+  baseURL: `${import.meta.env.VITE_SERVER_ROUTE}/admin`, // 기본 URL
   headers: {
     'Content-Type': 'application/json',
   },
