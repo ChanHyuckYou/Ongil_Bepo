@@ -1,8 +1,9 @@
 import axios from 'axios';
 
+const SERVER_ROUTE = import.meta.env.SERVER_ROUTE;
 // axios 설정
 const api = axios.create({
-  baseURL: "http://localhost:8000/admin", // 기본 URL
+  baseURL: `${SERVER_ROUTE}/admin`, // 기본 URL
   headers: {
     'Content-Type': 'application/json',
   },
@@ -10,14 +11,14 @@ const api = axios.create({
 
 // 요청 인터셉터 설정 (토큰 자동 추가)
 api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('access_token'); // 토큰 가져오기
-    if (token) {
-      config.headers['token'] = token; // 'Authorization'이 아니라 'token' 사용
-    }
-    return config;
-  },
-  (error) => Promise.reject(error)
+    (config) => {
+      const token = localStorage.getItem('access_token'); // 토큰 가져오기
+      if (token) {
+        config.headers['token'] = token; // 'Authorization'이 아니라 'token' 사용
+      }
+      return config;
+    },
+    (error) => Promise.reject(error)
 );
 
 // 파일 요청 목록 가져오기

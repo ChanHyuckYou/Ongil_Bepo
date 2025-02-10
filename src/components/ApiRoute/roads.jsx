@@ -2,7 +2,7 @@ import axios from 'axios';
 
 // axios 설정
 const api = axios.create({
-  baseURL: "http://localhost:8000/roads", // 기본 URL
+  baseURL: `${import.meta.env.VITE_SERVER_ROUTE}/roads`, // 기본 URL
   headers: {
     'Content-Type': 'application/json',
   },
@@ -10,22 +10,22 @@ const api = axios.create({
 
 // 요청 인터셉터 설정 (토큰 자동 추가)
 api.interceptors.request.use(
-  (config) => {
-    const token = localStorage.getItem('access_token'); // 토큰 가져오기
-    if (token) {
-      config.headers['token'] = `${token}`; // Authorization 헤더에 Bearer 토큰 추가
-    }
+    (config) => {
+      const token = localStorage.getItem('access_token'); // 토큰 가져오기
+      if (token) {
+        config.headers['token'] = `${token}`; // Authorization 헤더에 Bearer 토큰 추가
+      }
 
-    return config;
-  },
-  (error) => Promise.reject(error)
+      return config;
+    },
+    (error) => Promise.reject(error)
 );
 
 // ✅ 지역 지정 (읍면동 확인)
 export const getDistrict = async (district, sigunguCode) => {
   try {
     const response = await api.get(`/get_district`, {
-      params: { district, sigungu: sigunguCode }, // sigungu_code 추가
+      params: {district, sigungu: sigunguCode}, // sigungu_code 추가
     });
     return response.data.message;
   } catch (error) {
@@ -42,7 +42,6 @@ export const getDistrict = async (district, sigunguCode) => {
     throw error;
   }
 };
-
 
 // ✅ 열선 도로 추천
 export const recommendRoads = async (userWeights) => {

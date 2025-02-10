@@ -24,7 +24,7 @@ const getHeaders = (isJson = true) => {
 
 // 전체 게시글 조회 API 호출
 export const getAllPosts = async () => {
-  const response = await fetch(`${API_BASE_URL}/`, {
+  const response = await fetch(`${import.meta.env.VITE_SERVER_ROUTE}/board/`, {
     headers: getHeaders(),
   });
   if (!response.ok) {
@@ -53,9 +53,9 @@ export const getPostDetail = async (postId) => {
   const response = await fetch(`${API_BASE_URL}/${postId}`, {
     headers: getHeaders(),
   });
-/*   if (!response.ok) {
-    throw new Error("게시글 상세 조회에 실패하였습니다.");
-  } */
+  /*   if (!response.ok) {
+      throw new Error("게시글 상세 조회에 실패하였습니다.");
+    } */
   return await response.json();
 };
 
@@ -73,41 +73,41 @@ export const getPostDetailForEdit = async (postId) => {
 
 // 게시글 작성 (POST /board/)
 export const createPost = async (formData) => {
-    const headers = getHeaders(false);
-    try {
-        const response = await fetch(`${API_BASE_URL}/`, {
-            method: "POST",
-            headers,
-            body: formData, // FormData 직접 전송
-        });
+  const headers = getHeaders(false);
+  try {
+    const response = await fetch(`${API_BASE_URL}/`, {
+      method: "POST",
+      headers,
+      body: formData, // FormData 직접 전송
+    });
 
-        if (!response.ok) {
-            const errData = await response.json();
-            alert(errData.detail || "게시글 작성에 실패하였습니다.");
-            throw new Error(errData.detail || "게시글 작성에 실패하였습니다.");
-        }
-
-        return await response.json();
-    } catch (error) {
-        // 오류를 catch하여 alert로 표시
-        alert(error.message);
-        throw error; // 에러를 다시 던져서 호출한 곳에서 추가 처리가 가능하게 함
+    if (!response.ok) {
+      const errData = await response.json();
+      alert(errData.detail || "게시글 작성에 실패하였습니다.");
+      throw new Error(errData.detail || "게시글 작성에 실패하였습니다.");
     }
+
+    return await response.json();
+  } catch (error) {
+    // 오류를 catch하여 alert로 표시
+    alert(error.message);
+    throw error; // 에러를 다시 던져서 호출한 곳에서 추가 처리가 가능하게 함
+  }
 };
 
 // 게시글 수정 (PUT /board/{post_id})
 export const updatePost = async (postId, formData) => {
-    const headers = getHeaders(false);
-    const response = await fetch(`${API_BASE_URL}/${postId}`, {
-        method: "PUT",
-        headers,
-        body: formData,
-    });
-    if (!response.ok) {
-        const errData = await response.json();
-        throw new Error(errData.detail || "게시글 수정에 실패하였습니다.");
-    }
-    return await response.json();
+  const headers = getHeaders(false);
+  const response = await fetch(`${API_BASE_URL}/${postId}`, {
+    method: "PUT",
+    headers,
+    body: formData,
+  });
+  if (!response.ok) {
+    const errData = await response.json();
+    throw new Error(errData.detail || "게시글 수정에 실패하였습니다.");
+  }
+  return await response.json();
 };
 
 // 게시글 삭제 (DELETE /board/{post_id})
@@ -162,13 +162,13 @@ export const addAnswer = async (postId, answer) => {
   return await response.json();
 };
 
-
 // 댓글 삭제 (DELETE /board/{post_id}/comment/{comment_id})
 export const deleteComment = async (postId, commentId) => {
-  const response = await fetch(`${API_BASE_URL}/${postId}/comment/${commentId}`, {
-    method: "DELETE",
-    headers: getHeaders(),
-  });
+  const response = await fetch(`${API_BASE_URL}/${postId}/comment/${commentId}`,
+      {
+        method: "DELETE",
+        headers: getHeaders(),
+      });
 
   if (!response.ok) {
     const errData = await response.json();
@@ -230,13 +230,13 @@ export const downloadFile = (fileId) => {
 
 // 파일 가져오기
 export const downloadFileAsBlob = async (fileId, fileName) => {
-    const fileUrl = `${API_BASE_URL}/files/${fileId}/download`;
-    const response = await fetch(fileUrl);
-    if (!response.ok) {
-        throw new Error(`파일 불러오기 실패: ${response.statusText}`);
-    }
-    const blob = await response.blob();
-    return new File([blob], fileName, { type: blob.type });
+  const fileUrl = `${API_BASE_URL}/files/${fileId}/download`;
+  const response = await fetch(fileUrl);
+  if (!response.ok) {
+    throw new Error(`파일 불러오기 실패: ${response.statusText}`);
+  }
+  const blob = await response.blob();
+  return new File([blob], fileName, {type: blob.type});
 };
 
 // 파일 삭제 (DELETE /board/files/{file_id})
