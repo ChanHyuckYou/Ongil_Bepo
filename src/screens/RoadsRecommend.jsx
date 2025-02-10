@@ -63,7 +63,7 @@ const RoadsRecommend = () => {
 
   const getRankedColor = (rank) => {
     // HSL 색상 모델을 사용하여 순위에 따른 색상 값 생성
-    const hue = 350; // 색상(파란색 계열로 설정)
+    const hue = 220; // 색상(파란색 계열로 설정)
     const saturation = 100; // 채도 (100%로 설정하여 진한 색)
     const lightness = (rank - 1) * 7 + 30; // 순위가 높을수록 진하고, 1순위는 가장 연한 색, 10순위는 가장 진한 색
     return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
@@ -86,6 +86,7 @@ const RoadsRecommend = () => {
           level: 3,
         };
         const mapInstance = new window.kakao.maps.Map(mapContainer, mapOptions);
+        mapInstance.setMapTypeId(window.kakao.maps.MapTypeId.SKYVIEW);
         mapInstance.addOverlayMapTypeId(window.kakao.maps.MapTypeId.SKYVIEW); // 위성 지도
         let activeInfoWindow = null;
 
