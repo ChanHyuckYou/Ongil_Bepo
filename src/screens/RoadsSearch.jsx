@@ -4,6 +4,8 @@ import useNavigations from "../components/Navigation/Navigations.jsx";
 import locationData from '../data/locations_nested.json';
 import LoadingPage from "../components/spinner/LoadingPage.jsx";
 import { getDistrict, recommendRoads } from "../components/ApiRoute/roads.jsx";
+import { Tooltip } from "react-tooltip";import "react-tooltip/dist/react-tooltip.css";
+
 const handleEupmyeondongChange = (e) => {
   const selectedEupmyeondong = e.target.value;
   setEupmyeondong(selectedEupmyeondong);
@@ -18,6 +20,7 @@ const handleEupmyeondongChange = (e) => {
       });
   }
 };
+
 const RoadsSearch = () => {
   const [data, setData] = useState([]);
   const [sido, setSido] = useState('');
@@ -26,12 +29,12 @@ const RoadsSearch = () => {
   const [sigunguCode, setSigunguCode] = useState(0);
 
   // 기존 가중치 관련 state (기본 값 20으로 설정)
-  const [icingWeight, setIcingWeight] = useState(50);
-  const [slopeWeight, setSlopeWeight] = useState(50);
+  const [icingWeight, setIcingWeight] = useState(5);
+  const [slopeWeight, setSlopeWeight] = useState(5);
 
   // 사고 관련 state (기본 값 20으로 설정)
-  const [accidentCount, setAccidentCount] = useState(50); // 사고발생건수
-  const [accidentRate, setAccidentRate] = useState(50); // 사고율
+  const [accidentCount, setAccidentCount] = useState(5); // 사고발생건수
+  const [accidentRate, setAccidentRate] = useState(5); // 사고율
 
   const [sigunguOptions, setSigunguOptions] = useState([]);
   const [eupmyeondongOptions, setEupmyeondongOptions] = useState([]);
@@ -92,7 +95,7 @@ const RoadsSearch = () => {
   // 각 가중치 값의 범위를 0~100으로 제한
   const handleWeightChange = (setter) => (e) => {
     const value = parseInt(e.target.value || "0", 10);
-    if (value < 0 || value > 100) {
+    if (value < 0 || value > 10) {
       return;
     }
     setter(value);
@@ -139,14 +142,14 @@ const RoadsSearch = () => {
       let newAccidentRate = accidentRate;
 
       if (allZero) {
-        newIcingWeight = 25;
-        newSlopeWeight = 25;
-        newAccidentCount = 25;
-        newAccidentRate = 25;
+        newIcingWeight = 2.5;
+        newSlopeWeight = 2.5;
+        newAccidentCount = 2.5;
+        newAccidentRate = 2.5;
       } else {
         const totalWeight = weights.reduce((sum, weight) => sum + weight, 0);
         if (totalWeight > 0) {
-          const scale = 100 / totalWeight;
+          const scale = 10 / totalWeight;
           newIcingWeight = icingWeight * scale;
           newSlopeWeight = slopeWeight * scale;
           newAccidentCount = accidentCount * scale;
@@ -256,11 +259,14 @@ const RoadsSearch = () => {
                 {/* 0~100 사이의 숫자를 바 형태로 늘리며 선택할 수 있는 필드 */}
                 <div className={styles.weightContainer}>
                   <div className={styles.weightItem}>
-                    <label className={styles.weightLabel}>결빙 가능성 지수</label>
+                    <a data-tooltip-id="a" data-tooltip-content="노면온도로 예측한 결빙확률" data-tooltip-place="top">
+                    <label className={styles.weightLabel}>결빙 가능성</label>
+                    </a>
+                    <Tooltip id="a" style={{ marginTop: "20px" }} />
                     <input
                       type="range"
                       min="0"
-                      max="100"
+                      max="10"
                       value={icingWeight || 0} // 0이면 가장 왼쪽에 위치하도록 설정
                       onChange={handleWeightChange(setIcingWeight)}
                       className={styles.weightRange}
@@ -268,11 +274,14 @@ const RoadsSearch = () => {
                     <span>{icingWeight || 0}</span> {/* 선택된 숫자 표시 */}
                   </div>
                   <div className={styles.weightItem}>
-                    <label className={styles.weightLabel}>도로별 경사도</label>
+                    <a data-tooltip-id="a" data-tooltip-content="도로구간 별 기점과 종점의 고도차이" data-tooltip-place="top">
+                    <label className={styles.weightLabel}>경사도</label>
+                    </a>
+                    <Tooltip id="a" style={{ marginTop: "20px" }} />
                     <input
                       type="range"
                       min="0"
-                      max="100"
+                      max="10"
                       value={slopeWeight || 0} // 0이면 가장 왼쪽에 위치하도록 설정
                       onChange={handleWeightChange(setSlopeWeight)}
                       className={styles.weightRange}
@@ -282,11 +291,14 @@ const RoadsSearch = () => {
 
                   {/* 사고발생건수와 사고율 입력 필드 */}
                   <div className={styles.weightItem}>
-                    <label className={styles.weightLabel}>사고발생건수</label>
+                     <a data-tooltip-id="a" data-tooltip-content="결빙 사고가 발생한 건수" data-tooltip-place="top">
+                    <label className={styles.weightLabel}>결빙사고건수</label>
+                    </a>
+                    <Tooltip id="a" style={{ marginTop: "20px" }} />
                     <input
                       type="range"
                       min="0"
-                      max="100"
+                      max="10"
                       value={accidentCount || 0} // 0이면 가장 왼쪽에 위치하도록 설정
                       onChange={handleWeightChange(setAccidentCount)}
                       className={styles.weightRange}
@@ -294,11 +306,29 @@ const RoadsSearch = () => {
                     <span>{accidentCount || 0}</span> {/* 선택된 숫자 표시 */}
                   </div>
                   <div className={styles.weightItem}>
-                    <label className={styles.weightLabel}>사고심각도</label>
+                     <a
+                       data-tooltip-id="b"
+                       data-tooltip-place="top"
+                     >
+                       <label className={styles.weightLabel}>사고심각도</label>
+                     </a>
+                     <Tooltip
+                       id="b"
+                       place="top"
+                       style={{ marginTop: "10px", textAlign: "center" }}
+                       content={
+                         <>
+                           사망자수 x 1.0 + 중상자수 x 0.7 + 경상자수 x 0.3
+                           <br />
+                           * 출처: 한국교통안전공단
+                         </>
+                       }
+                     />
+
                     <input
                       type="range"
                       min="0"
-                      max="100"
+                      max="10"
                       value={accidentRate || 0} // 0이면 가장 왼쪽에 위치하도록 설정
                       onChange={handleWeightChange(setAccidentRate)}
                       className={styles.weightRange}

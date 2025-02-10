@@ -60,9 +60,16 @@ const RoadsRecommend = () => {
   // ------------------------------
   // 지도 생성 useEffect
   // ------------------------------
- useEffect(() => {
-    if (roads.length === 0) return;
 
+  const getRankedColor = (rank) => {
+    // HSL 색상 모델을 사용하여 순위에 따른 색상 값 생성
+    const hue = 350; // 색상(파란색 계열로 설정)
+    const saturation = 100; // 채도 (100%로 설정하여 진한 색)
+    const lightness = (rank - 1) * 7 + 30; // 순위가 높을수록 진하고, 1순위는 가장 연한 색, 10순위는 가장 진한 색
+    return `hsl(${hue}, ${saturation}%, ${lightness}%)`;
+  };
+
+  useEffect(() => {
     const firstRoad = roads[0];
     const [lat, lng] = firstRoad.rep.split(", ").map(Number); // 첫 번째 도로 중심
 
@@ -78,9 +85,9 @@ const RoadsRecommend = () => {
           center: new window.kakao.maps.LatLng(lat, lng),
           level: 3,
         };
-
         const mapInstance = new window.kakao.maps.Map(mapContainer, mapOptions);
-        mapInstance.removeOverlayMapTypeId(window.kakao.maps.MapTypeId.TRAFFIC);
+        mapInstance.addOverlayMapTypeId(window.kakao.maps.MapTypeId.SKYVIEW); // 위성 지도
+        let activeInfoWindow = null;
 
         // 로드뷰 설정
         const rvContainer = document.getElementById("roadview");
@@ -91,60 +98,80 @@ const RoadsRecommend = () => {
         setRoadview(roadviewInstance);
         setRvClient(rvClientInstance);
 
-        // 랜덤한 파스텔 색상을 생성하는 함수
-        const getRandomPastelColor = () => {
-          const r = Math.floor(Math.random() * 128 + 127); // 127~255
-          const g = Math.floor(Math.random() * 128 + 127);
-          const b = Math.floor(Math.random() * 128 + 127);
-          return `rgb(${r}, ${g}, ${b})`;
-        };
-
         // 도로 마커 및 폴리라인 생성
-        roads.forEach((road) => {
+        roads.forEach((road, index) => {
           // 시점 및 종점 좌표 추출
           const [startLat, startLng] = road.rbp.split(", ").map(Number);
           const [endLat, endLng] = road.rep.split(", ").map(Number);
-
-          // 마커 생성 (대표 좌표)
-          const marker = new window.kakao.maps.Marker({
-            position: new window.kakao.maps.LatLng(endLat, endLng),
-            map: mapInstance,
-          });
-
-          // 마커 클릭 이벤트 추가
-          window.kakao.maps.event.addListener(marker, "click", () => {
-            alert(`도로명: ${road.road_name}\n기울기: ${road.rd_slope}`);
-          });
-
-          const roadColor = getRandomPastelColor();
+          const roadColor = getRankedColor(index + 1); // 순위에 맞는 색상
 
           // 테두리 (검은색) - 더 두꺼운 선
-          const borderPolyline = new window.kakao.maps.Polyline({
+          const polylineOuter = new window.kakao.maps.Polyline({
             path: [
               new window.kakao.maps.LatLng(startLat, startLng),
               new window.kakao.maps.LatLng(endLat, endLng),
             ],
-            strokeWeight: 7, // 테두리 두께
-            strokeColor: "#000000", // 검은색
+            strokeWeight: 10, // 테두리 두께
+            strokeColor: "white",
             strokeOpacity: 1, // 불투명
             strokeStyle: "solid",
           });
 
           // 실제 도로 (파스텔 색상) - 위에 덮어씌움
-          const roadPolyline = new window.kakao.maps.Polyline({
+          const polylineInner = new window.kakao.maps.Polyline({
             path: [
               new window.kakao.maps.LatLng(startLat, startLng),
               new window.kakao.maps.LatLng(endLat, endLng),
             ],
-            strokeWeight: 5, // 도로 두께
+            strokeWeight: 8, // 도로 두께
             strokeColor: roadColor, // 랜덤 파스텔 색
             strokeOpacity: 1, // 불투명
             strokeStyle: "solid",
           });
 
+          // 클릭 이벤트 추가
+          window.kakao.maps.event.addListener(polylineInner, "click", () => {
+            if (activeInfoWindow) {
+              activeInfoWindow.close(); // 기존 창 닫기
+            }
+            const infoWindowContent = `
+              <div style="padding:10px; font-size:14px; line-height:1.5; margin-top:10px;">
+                <h4 style="margin:0 0 5px 0; font-size:16px; font-weight:bold;">${index + 1}순위</h4>
+                <p><strong>도로명:</strong> ${road.road_name}</p>
+                <p><strong>경사도</strong> ${road.rd_slope}</p>
+              </div>
+            `;
+            const infoWindow = new window.kakao.maps.InfoWindow({
+              position: new window.kakao.maps.LatLng(startLat, startLng),
+              content: infoWindowContent,
+              map: mapInstance,
+              removable: true,
+            });
+            infoWindow.open(mapInstance); // 마커 기준으로 InfoWindow 열기
+            activeInfoWindow = infoWindow; // 현재 열린 창 저장
+          });
+
           // 지도에 추가
-          borderPolyline.setMap(mapInstance);
-          roadPolyline.setMap(mapInstance);
+          polylineOuter.setMap(mapInstance);
+          polylineInner.setMap(mapInstance);
+
+          // 마우스 올렸을 때 선 스타일 변경
+          window.kakao.maps.event.addListener(polylineInner, "mouseover", () => {
+            polylineOuter.setOptions({
+              strokeWeight: 13,
+              strokeColor: "white",
+              strokeOpacity: 1,
+            });
+          });
+
+          // 마우스 벗어났을 때 선 스타일 원래대로
+          window.kakao.maps.event.addListener(polylineInner, "mouseout", () => {
+            polylineOuter.setOptions({
+              strokeWeight: 10,
+              strokeColor: "white",
+              strokeOpacity: 0.7,
+            });
+          });
         });
       });
     };
@@ -153,23 +180,6 @@ const RoadsRecommend = () => {
       document.head.removeChild(script);
     };
   }, [roads]);
-
-  // ------------------------------
-  // polygon.json 데이터 로드 (import로 이미 로드됨)
-  // -> 버튼 클릭 시 상태에 반영
-  // ------------------------------
-  const handleFetchPolygonData = () => {
-    // polygonData가 {"2019":[...], "2020":[...]} 이런 식으로 되어있으므로
-    // 여러 연도의 배열을 하나로 합친 뒤 setMultiAccidentAreas
-    let combinedAreas = [];
-    for (const year in polygonData) {
-      combinedAreas = combinedAreas.concat(polygonData[year]);
-    }
-    setMultiAccidentAreas(combinedAreas);
-
-    // 자동으로 폴리곤 표시
-    setShowAccidentPolygons(true);
-  };
 
   // ------------------------------
   // "결빙사고 다발지역" 폴리곤 표시 useEffect
@@ -253,7 +263,7 @@ const RoadsRecommend = () => {
       return;
     }
 
-    const infowindow = new window.kakao.maps.InfoWindow({zIndex: 1});
+    const infowindow = new window.kakao.maps.InfoWindow({ zIndex: 1, removable: true, });
 
     // 기존 카테고리 마커 제거
     categoryMarkers.forEach((marker) => marker.setMap(null));
@@ -271,7 +281,7 @@ const RoadsRecommend = () => {
 
     // 활성화된 카테고리만 검색
     const selectedCategories = Object.keys(activeCategories).filter(
-        (cat) => activeCategories[cat]
+      (cat) => activeCategories[cat]
     );
 
     // 각각의 카테고리에 대해 검색
@@ -287,46 +297,57 @@ const RoadsRecommend = () => {
         };
 
         ps.keywordSearch(
-            keyword,
-            (data, status, pagination) => {
-              if (status === window.kakao.maps.services.Status.OK) {
-                const newMarkers = data.map((place) => {
-                  const marker = new window.kakao.maps.Marker({
-                    map: map,
-                    position: new window.kakao.maps.LatLng(place.y, place.x),
-                    title: place.place_name,
-                    image: getCategoryIcon(category),
-                  });
-
-                  // 마커 클릭 이벤트
-                  window.kakao.maps.event.addListener(marker, "click", () => {
-                    const content = `
-                    <div style="padding:5px;font-size:12px;">
-                      ${place.place_name}<br/>${place.address_name}
-                    </div>
-                  `;
-                    infowindow.setContent(content);
-                    infowindow.open(map, marker);
-                  });
-
-                  return marker;
+          keyword,
+          (data, status, pagination) => {
+            if (status === window.kakao.maps.services.Status.OK) {
+              const newMarkers = data.map((place) => {
+                const marker = new window.kakao.maps.Marker({
+                  map: map,
+                  position: new window.kakao.maps.LatLng(place.y, place.x),
+                  title: place.place_name,
+                  image: getCategoryIcon(category),
                 });
 
-                setCategoryMarkers((prev) => [...prev, ...newMarkers]);
+                // 마커 클릭 이벤트
+                window.kakao.maps.event.addListener(marker, "click", () => {
+                  // x 버튼을 포함한 HTML 콘텐츠
+                  const content = `
+                    <div style="position:relative; margin-right:20px; padding:10px; font-size:12px;">
+                      장소 : ${place.place_name}<br/> 위치 : ${place.address_name}
+                    </div>
+                  `;
 
-                // 페이지가 더 있으면 추가 요청
-                if (pagination.hasNextPage) {
-                  pagination.nextPage();
-                }
-              } else {
-                console.error(`키워드 검색 실패: ${status}`);
+                  infowindow.setContent(content);
+                  infowindow.open(map, marker);
+
+                  // x 버튼 클릭 시 정보창 닫기
+                  const closeButton = document.getElementById('close-btn');
+                  if (closeButton) {
+                    closeButton.addEventListener('click', () => {
+                      infowindow.close();
+                    });
+                  }
+                });
+
+                return marker;
+              });
+
+              setCategoryMarkers((prev) => [...prev, ...newMarkers]);
+
+              // 페이지가 더 있으면 추가 요청
+              if (pagination.hasNextPage) {
+                pagination.nextPage();
               }
-            },
-            options
+            } else {
+              console.error(`키워드 검색 실패: ${status}`);
+            }
+          },
+          options
         );
       }
     });
   }, [activeCategories, map, ps, searchRadius]);
+
 
 useEffect(() => {
   setRoads(roads);
@@ -336,7 +357,7 @@ useEffect(() => {
   // 카테고리별 아이콘 설정
   // ------------------------------
   const getCategoryIcon = (category) => {
-    const iconSize = new window.kakao.maps.Size(40, 40);
+    const iconSize = new window.kakao.maps.Size(30, 30);
     let imageSrc = "";
 
     switch (category) {
@@ -391,7 +412,20 @@ useEffect(() => {
     }
   };
 
-  const handlePolygonToggle = () => {
+  // ------------------------------
+  // polygon.json 데이터 로드 (import로 이미 로드됨)
+  // -> 버튼 클릭 시 상태에 반영
+  // ------------------------------
+  const handleTogglePolygonData = () => {
+    if (!showAccidentPolygons) {
+      // 폴리곤을 생성하고 표시할 때
+      let combinedAreas = [];
+      for (const year in polygonData) {
+        combinedAreas = combinedAreas.concat(polygonData[year]);
+      }
+      setMultiAccidentAreas(combinedAreas);  // 폴리곤 데이터 설정
+    }
+    // 폴리곤 표시 여부 토글
     setShowAccidentPolygons((prev) => !prev);
   };
 
@@ -443,13 +477,14 @@ useEffect(() => {
                       {index + 1}순위 : {road.road_name}
                     </p>
                   </div>
-                  <div>결빙예측지수 : {road.pred_idx}</div>
+                  <div>결빙가능성 지수 : {parseFloat(road.pred_idx).toFixed(5).replace(/(\.\d*?)0+$/, '$1') || road.pred_idx}</div>
                   <div>경사도 : {road.rd_slope}</div>
-                  <div>사고발생건수 : {road.acc_occ}</div>
-                  <div>사고심각도 : {road.acc_sc}</div>
+                  <div>결빙사고건수 : {road.acc_occ}</div>
+                  <div>사고 심각도 : {road.acc_sc}</div>
+                  <div>추천 점수 : {road.acc_sc}</div>
                 </div>
               ))}
-            </div>;
+            </div>
           </div>
 
           {/* 지도 컨테이너 */}
@@ -458,76 +493,72 @@ useEffect(() => {
             <div className={styles.controls}>
               {/* 카테고리 버튼 섹션 */}
               <div className={styles.categoryButtons}>
-                <button
-                    className={`${styles.categoryButton} ${
-                        activeCategories.hospital ? styles.active : ""
-                    }`}
-                    onClick={() => handleCategoryToggle("hospital")}
-                    aria-label="병원 카테고리 토글"
-                >
-                  <FontAwesomeIcon icon={faHospital}/> 병원
-                </button>
-                <button
-                    className={`${styles.categoryButton} ${
-                        activeCategories.seniorCenter ? styles.active : ""
-                    }`}
-                    onClick={() => handleCategoryToggle("seniorCenter")}
-                    aria-label="노인회관 카테고리 토글"
-                >
-                  <FontAwesomeIcon icon={faUserFriends}/> 노인회관
-                </button>
-                <button
-                    className={`${styles.categoryButton} ${
-                        activeCategories.publicInstitution ? styles.active : ""
-                    }`}
-                    onClick={() => handleCategoryToggle("publicInstitution")}
-                    aria-label="공공기관 카테고리 토글"
-                >
-                  <FontAwesomeIcon icon={faBuilding}/> 공공기관
-                </button>
-                <button
-                    className={`${styles.categoryButton} ${
-                        activeCategories.daycare ? styles.active : ""
-                    }`}
-                    onClick={() => handleCategoryToggle("daycare")}
-                    aria-label="어린이집 카테고리 토글"
-                >
-                  <FontAwesomeIcon icon={faBaby}/> 어린이집
-                </button>
-                <button
-                    className={`${styles.categoryButton} ${
-                        activeCategories.school ? styles.active : ""
-                    }`}
-                    onClick={() => handleCategoryToggle("school")}
-                    aria-label="학교 카테고리 토글"
-                >
-                  <FontAwesomeIcon icon={faSchool}/> 학교
-                </button>
-                <button
-                    className={`${styles.categoryButton} ${
-                        activeCategories.touristAttraction ? styles.active : ""
-                    }`}
-                    onClick={() => handleCategoryToggle("touristAttraction")}
-                    aria-label="관광명소 카테고리 토글"
-                >
-                  <FontAwesomeIcon icon={faLandmark}/> 관광명소
-                </button>
+                <div className={styles.category}>
+                    <button
+                        className={`${styles.categoryButton} ${
+                            activeCategories.hospital ? styles.active : ""
+                        }`}
+                        onClick={() => handleCategoryToggle("hospital")}
+                        aria-label="병원 카테고리 토글"
+                    >
+                      <FontAwesomeIcon icon={faHospital}/> 병원
+                    </button>
+                    <button
+                        className={`${styles.categoryButton} ${
+                            activeCategories.seniorCenter ? styles.active : ""
+                        }`}
+                        onClick={() => handleCategoryToggle("seniorCenter")}
+                        aria-label="노인회관 카테고리 토글"
+                    >
+                      <FontAwesomeIcon icon={faUserFriends}/> 노인회관
+                    </button>
+                    <button
+                        className={`${styles.categoryButton} ${
+                            activeCategories.publicInstitution ? styles.active : ""
+                        }`}
+                        onClick={() => handleCategoryToggle("publicInstitution")}
+                        aria-label="공공기관 카테고리 토글"
+                    >
+                      <FontAwesomeIcon icon={faBuilding}/> 공공기관
+                    </button>
+                </div>
+                <div className={styles.category}>
+                    <button
+                        className={`${styles.categoryButton} ${
+                            activeCategories.daycare ? styles.active : ""
+                        }`}
+                        onClick={() => handleCategoryToggle("daycare")}
+                        aria-label="어린이집 카테고리 토글"
+                    >
+                      <FontAwesomeIcon icon={faBaby}/> 어린이집
+                    </button>
+                    <button
+                        className={`${styles.categoryButton} ${
+                            activeCategories.school ? styles.active : ""
+                        }`}
+                        onClick={() => handleCategoryToggle("school")}
+                        aria-label="학교 카테고리 토글"
+                    >
+                      <FontAwesomeIcon icon={faSchool}/> 학교
+                    </button>
+                    <button
+                        className={`${styles.categoryButton} ${
+                            activeCategories.touristAttraction ? styles.active : ""
+                        }`}
+                        onClick={() => handleCategoryToggle("touristAttraction")}
+                        aria-label="관광명소 카테고리 토글"
+                    >
+                      <FontAwesomeIcon icon={faLandmark}/> 관광명소
+                    </button>
+                </div>
               </div>
-              {/* 다발지역 폴리곤 데이터 불러오기 버튼 */}
-              <button
-                  className={styles.categoryButton}
-                  onClick={handleFetchPolygonData}
-              >
-                결빙 사고 다발지역 폴리곤 생성
-              </button>
               {/* 다발지역 폴리곤 표시/숨기기 버튼 */}
               <button
-                  className={styles.categoryButton}
-                  onClick={handlePolygonToggle}
+                className={styles.categoryButton}
+                onClick={handleTogglePolygonData}
               >
-                {showAccidentPolygons ? "다발지역 숨기기" : "다발지역 보기"}
+                {showAccidentPolygons ? "다발지역 숨기기" : "결빙 사고 다발지역 폴리곤 생성"}
               </button>
-
               {/* Roadview Toggle Button */}
               <button
                   className={styles.roadviewButton}
@@ -539,7 +570,7 @@ useEffect(() => {
 
               {/* 검색 반경 슬라이더 */}
               <div className={styles.searchRadius}>
-                <label htmlFor="radius">검색 반경: </label>
+                <span style={{ color: 'white', textShadow: '1px 1px 0px black' }}>검색 반경: </span>
                 <input
                     type="range"
                     id="radius"
@@ -549,7 +580,7 @@ useEffect(() => {
                     value={searchRadius}
                     onChange={(e) => setSearchRadius(Number(e.target.value))}
                 />
-                <span>{searchRadius}m</span>
+                <span style={{ color: 'white', textShadow: '1px 1px 0px black' }}>{searchRadius}m</span>
               </div>
             </div>
 

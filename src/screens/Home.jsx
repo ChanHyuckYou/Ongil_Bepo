@@ -2,6 +2,7 @@ import styles from '../styles/Home.module.css';
 import React, { useState, useEffect } from 'react';
 import WeatherApi from '../components/ApiRoute/WeatherApi.jsx';
 import jsonData from "../data/상습결빙구간.json";
+import axios from 'axios';
 
 const Home = () => {
   const [text, setText] = useState('');
@@ -14,6 +15,7 @@ const Home = () => {
   const [forecast, setForecast] = useState(null);
   const [error, setError] = useState('');
   const [cityName, setCityName] = useState('');
+  const [cctvUrl, setCctvUrl] = useState(null); // CCTV 영상 URL 저장
 
   // 현재 날씨 정보 가져오기
   const fetchWeather = async (lat, lon) => {
@@ -63,7 +65,6 @@ const Home = () => {
         };
 
         const map = new window.kakao.maps.Map(container, options);
-
         let activeInfoWindow = null; // 현재 열려 있는 InfoWindow 저장 변수
 
         jsonData.forEach((item) => {
@@ -109,12 +110,20 @@ const Home = () => {
                 activeInfoWindow.close(); // 기존 창 닫기
               }
 
+              // 📌 CCTV 요청 함수 호출
+              fetchCCTV(midPoint.getLat(), midPoint.getLng());
+
               const infoWindowContent = `
                 <div style="padding:10px; font-size:14px; line-height:1.5; margin-top:10px;">
                   <h4 style="margin:0 0 5px 0; font-size:16px; font-weight:bold;">${item["도로(노선)명"]}</h4>
                   <p><strong>대표지역:</strong> ${item["대표지역"]}</p>
                   <p><strong>관리청</strong> ${item["관리청"]}</p>
                   <p><strong>도로길이:</strong> ${item["총길이(km)"]} km</p>
+                  <button id="cctv-btn" style="  padding: 10px 20px;
+                                                 border: 1px solid #ddd;
+                                                 border-radius: 5px;
+                                                 background-color: #f5f5f5;
+                                                 cursor: pointer;">CCTV 보기</button>
                 </div>
               `;
 
@@ -127,8 +136,14 @@ const Home = () => {
               infoWindow.open(map); // 마커 기준으로 InfoWindow 열기
               activeInfoWindow = infoWindow; // 현재 열린 창 저장
 
-            });
+              // 📌 CCTV 버튼 이벤트 추가
+              setTimeout(() => {
+                document.getElementById("cctv-btn").addEventListener("click", () => {
+                  fetchCCTV(midPoint.getLat(), midPoint.getLng());
+                });
+              }, 500);
 
+            });
 
             // 마우스 올렸을 때 선 스타일 변경
             window.kakao.maps.event.addListener(polylineInner, 'mouseover', () => {
@@ -147,6 +162,7 @@ const Home = () => {
                 strokeOpacity: 0.7,
               });
             });
+
           }
         });
       });
@@ -158,9 +174,31 @@ const Home = () => {
     };
   }, [jsonData, selectedLocation]);
 
+  // 📌 CCTV API 요청 함수
+  const fetchCCTV = async (lat, lng) => {
+    const key = 'd55898e517934fcbbaced8fe46f906de';  // API Key
+    const minX = (lng - 1).toFixed(6); // 경도 값 (1도 범위로 설정)
+    const maxX = (lng + 1).toFixed(6);
+    const minY = (lat - 1).toFixed(6); // 위도 값 (1도 범위로 설정)
+    const maxY = (lat + 1).toFixed(6);
 
+    const url = `https://openapi.its.go.kr:9443/cctvInfo?apiKey=${key}&type=its&cctvType=2&minX=${minX}&maxX=${maxX}&minY=${minY}&maxY=${maxY}&getType=json`;
 
+    try {
+      const response = await axios.get(url);
+      const cctvData = response.data.response.data;
 
+      if (cctvData && cctvData.length > 0) {
+        // 가장 가까운 CCTV URL을 선택
+        const closestCctv = cctvData[3];  // (여기서는 첫 번째 CCTV만 선택)
+        setCctvUrl(closestCctv.cctvurl);  // CCTV URL 상태 업데이트
+      } else {
+        alert("해당 위치의 CCTV 영상을 찾을 수 없습니다.");
+      }
+    } catch (error) {
+      console.error("CCTV 데이터를 가져오는 중 오류 발생:", error);
+    }
+  };
 
   const handleInputChange = (e) => {
     const query = e.target.value.trim();
@@ -257,6 +295,14 @@ const Home = () => {
       {/* 지도 표시 영역 */}
       <h2 className="text-xl font-bold">지역별 상습 결빙 도로</h2>
       <div id="kakao-map" style={{ width: '100%', height: '500px' }}></div>
+
+      {/* CCTV 영상 출력 영역 */}
+      {cctvUrl && (
+        <div style={{ marginTop: "20px" }}>
+          <h3>CCTV 영상</h3>
+          <video src={cctvUrl} controls autoPlay style={{ width: "600px" }} />
+        </div>
+      )}
     </div>
   );
 };
