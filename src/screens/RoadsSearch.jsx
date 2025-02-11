@@ -160,7 +160,7 @@ const RoadsSearch = () => {
       const userWeights = {
         sigungu: sigunguCode,
         region: `${eupmyeondong}`,
-        freezing_weight: newIcingWeight,
+        rd_fr_weight: newIcingWeight,
         rd_slope_weight: newSlopeWeight,
         acc_occ_weight: newAccidentCount,
         acc_sc_weight: newAccidentRate,
