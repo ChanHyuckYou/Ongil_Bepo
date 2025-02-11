@@ -8,6 +8,10 @@ import {
 } from "../components/ApiRoute/auth.jsx";
 import PrivacyPolicy from '../data/PrivacyPolicy.jsx';
 import PersonalDataPolicy from '../data/PersonalDataPolicy.jsx';
+import locations from "../data/locations_nested.json"; // JSON 파일 import
+const departments = [
+  "도로안전과", "도로관리과", "재난안전과", "교통행정과", "자동차민원과", "건설관리과", "총무과", "주택과", "재건축사업과", "도시계획과"
+];
 
 const Login = () => {
   const [isSignUpActive, setIsSignUpActive] = useState(false); // 상태 관리
@@ -15,6 +19,9 @@ const Login = () => {
           terms: false, // 약관 동의
           privacy: false, // 개인정보 처리방침 동의
         });
+  const [aA, setAa] = useState({
+    jurisdiction: locations?.map((item) => item.sido).join(", ") || "", // 안전한 데이터 처리
+  });
 
   const [formData, setFormData] = useState({
     name: "",
@@ -48,6 +55,8 @@ const Login = () => {
     } else {
       setLoginData((prev) => ({ ...prev, [name]: value }));
     }
+    console.log(e.target.name, e.target.value);
+    setAa({ ...aA, [e.target.name]: e.target.value });
   };
 
   // 페이지 이동 실행
@@ -231,24 +240,22 @@ const Login = () => {
                   onChange={handleChange}
                   required
                 />
-                <input
-                  type="text"
-                  name="jurisdiction"
-                  placeholder="Local government area"
-                  className={styles.input}
-                  value={formData.jurisdiction}
-                  onChange={handleChange}
-                  required
-                />
-                <input
-                  type="text"
-                  name="department"
-                  placeholder="Team"
-                  className={styles.input}
-                  value={formData.department}
-                  onChange={handleChange}
-                  required
-                />
+                <select name="jurisdiction" value={formData.jurisdiction} className={styles.select} onChange={handleChange} required>
+                  <option value="">Local government area</option>
+                  {locations?.map((item) => (
+                    <option key={item.sido} value={item.sido}>
+                      {item.sido}
+                    </option>
+                  ))}
+                </select>
+                <select name="department" value={formData.department} className={styles.select} onChange={handleChange} required>
+                    <option value="">department</option>
+                    {departments.map((dept) => (
+                      <option key={dept} value={dept}>
+                        {dept}
+                      </option>
+                    ))}
+                </select>
                 <button type="submit" className={styles.btn}>
                   회원가입
                 </button>
@@ -279,16 +286,16 @@ const Login = () => {
               onChange={handleChange}
               required
             />
+            <button type="submit" className={styles.btn}>
+              로그인
+            </button>
             <a
               href="#"
               className={styles.link}
               onClick={() => handleNavigation("Findpwd")}
             >
-              Forgot your password?
+              비밀번호 찾기
             </a>
-            <button type="submit" className={styles.btn}>
-              로그인
-            </button>
           </form>
         </div>
 

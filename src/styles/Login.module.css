@@ -32,10 +32,10 @@
 }
 
 .link {
-  color: var(--gray);
+  color: #a2b3b1;
   font-size: 0.9rem;
   margin: 1.5rem 0;
-  text-decoration: none;
+  text-decoration: underline;
 }
 
 .container {
@@ -195,6 +195,15 @@
   padding: 0.9rem 0.9rem;
   margin: 0.5rem 0;
   width: 60%;
+}
+
+.select {
+  background-color: #fff;
+  border: none;
+  padding: 0.9rem 0.9rem;
+  margin: 0.5rem 0;
+  width: 68%;
+  color: #757575;
 }
 
 .dup{
