@@ -139,6 +139,8 @@ const RoadsRecommend = () => {
               <div style="padding:10px; font-size:14px; line-height:1.5; margin-top:10px;">
                 <h4 style="margin:0 0 5px 0; font-size:16px; font-weight:bold;">${index + 1}순위</h4>
                 <p><strong>도로명:</strong> ${road.road_name}</p>
+                <p><strong>결빙 사고 건수:</strong> ${road.acc_occ}</p>
+                <p><strong>추천 점수:</strong> ${road.acc_sc}</p>
                 <p><strong>경사도</strong> ${road.rd_slope}</p>
               </div>
             `;
@@ -478,11 +480,13 @@ useEffect(() => {
                       {index + 1}순위 : {road.road_name}
                     </p>
                   </div>
-                  <div>결빙가능성 지수 : {parseFloat(road.pred_idx).toFixed(5).replace(/(\.\d*?)0+$/, '$1') || road.pred_idx}</div>
+                  <div>결빙가능성 지수 : {parseFloat(road.rd_fr).toFixed(5).replace(/(\.\d*?)0+$/, '$1') || road.rd_fr}</div>
                   <div>경사도 : {road.rd_slope}</div>
                   <div>결빙사고건수 : {road.acc_occ}</div>
                   <div>사고 심각도 : {road.acc_sc}</div>
-                  <div>추천 점수 : {road.acc_sc}</div>
+                  <div>추천 점수 : {parseFloat(road.pred_idx) % 1 === 0
+                                 ? parseFloat(road.pred_idx) // 정수이면 그대로 출력
+                                 : parseFloat(road.pred_idx).toFixed(5).replace(/(\.\d*?)0+$/, '$1')}</div>
                 </div>
               ))}
             </div>
