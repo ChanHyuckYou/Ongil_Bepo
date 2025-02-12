@@ -36,6 +36,7 @@ const RoadsRecommend = () => {
   // ------------------------------
   const [isRoadview, setIsRoadview] = useState(false);
   const [map, setMap] = useState(null);
+  const [isSkyView, setIsSkyView] = useState(false);
   const [roadview, setRoadview] = useState(null);
   const [rvClient, setRvClient] = useState(null);
 
@@ -86,8 +87,6 @@ const RoadsRecommend = () => {
           level: 3,
         };
         const mapInstance = new window.kakao.maps.Map(mapContainer, mapOptions);
-        mapInstance.setMapTypeId(window.kakao.maps.MapTypeId.SKYVIEW);
-        mapInstance.addOverlayMapTypeId(window.kakao.maps.MapTypeId.SKYVIEW); // 위성 지도
         let activeInfoWindow = null;
 
         // 로드뷰 설정
@@ -140,7 +139,7 @@ const RoadsRecommend = () => {
                 <h4 style="margin:0 0 5px 0; font-size:16px; font-weight:bold;">${index + 1}순위</h4>
                 <p><strong>도로명:</strong> ${road.road_name}</p>
                 <p><strong>결빙 사고 건수:</strong> ${road.acc_occ}</p>
-                <p><strong>추천 점수:</strong> ${road.acc_sc}</p>
+                <p><strong>사고 심각도:</strong> ${road.acc_sc}</p>
                 <p><strong>경사도</strong> ${road.rd_slope}</p>
               </div>
             `;
@@ -183,6 +182,18 @@ const RoadsRecommend = () => {
       document.head.removeChild(script);
     };
   }, [roads]);
+
+  // 기본뷰, 스카이뷰 출력
+  const toggleMapType = () => {
+    if (map) {
+      if (isSkyView) {
+        map.setMapTypeId(window.kakao.maps.MapTypeId.ROADMAP);
+      } else {
+        map.setMapTypeId(window.kakao.maps.MapTypeId.SKYVIEW);
+      }
+      setIsSkyView(!isSkyView);
+    }
+  };
 
   // ------------------------------
   // "결빙사고 다발지역" 폴리곤 표시 useEffect
@@ -496,6 +507,9 @@ useEffect(() => {
           <div className={styles.mapContainer}>
             {/* Controls Section */}
             <div className={styles.controls}>
+              <button className={styles.categoryButton} onClick={() => toggleMapType()}>
+                {isSkyView ? "기본 지도 보기" : "위성 지도 보기"}
+              </button>
               {/* 카테고리 버튼 섹션 */}
               <div className={styles.categoryButtons}>
                 <div className={styles.category}>
