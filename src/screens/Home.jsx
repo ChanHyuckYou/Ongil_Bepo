@@ -16,6 +16,8 @@ const Home = () => {
   const [error, setError] = useState('');
   const [cityName, setCityName] = useState('');
   const [cctvUrl, setCctvUrl] = useState(null); // CCTV 영상 URL 저장
+  const [map, setMap] = useState(null);
+  const [isSatellite, setIsSatellite] = useState(false); // 지도 타입 상태 관리
 
   // 현재 날씨 정보 가져오기
   const fetchWeather = async (lat, lon) => {
@@ -63,8 +65,8 @@ const Home = () => {
           center: new window.kakao.maps.LatLng(selectedLocation.lat, selectedLocation.lon),
           level: 5,
         };
-
         const map = new window.kakao.maps.Map(container, options);
+        setMap(map);
         let activeInfoWindow = null; // 현재 열려 있는 InfoWindow 저장 변수
 
         jsonData.forEach((item) => {
@@ -173,6 +175,15 @@ const Home = () => {
       document.body.removeChild(script);
     };
   }, [jsonData, selectedLocation]);
+
+  // 지도 타입 토글 함수
+  const toggleMapType = () => {
+    if (map) {
+      const newType = isSatellite ? window.kakao.maps.MapTypeId.ROADMAP : window.kakao.maps.MapTypeId.SKYVIEW;
+      map.setMapTypeId(newType);
+      setIsSatellite(!isSatellite); // 상태 변경
+    }
+  };
 
   // 📌 CCTV API 요청 함수
   const fetchCCTV = async (lat, lng) => {
@@ -294,7 +305,25 @@ const Home = () => {
 
       {/* 지도 표시 영역 */}
       <h2 className="text-xl font-bold">지역별 상습 결빙 도로</h2>
-      <div id="kakao-map" style={{ width: '100%', height: '500px' }}></div>
+      <div id="kakao-map" style={{ width: '100%', height: '500px' }}>
+                {/* 지도 타입 토글 버튼 */}
+                <button
+                  onClick={toggleMapType}
+                  style={{
+                    position: "absolute",
+                    top: "10px",
+                    right: "10px",
+                    zIndex: 1000,
+                    padding: "10px 20px",
+                    border: "1px solid #ccc",
+                    borderRadius: "5px",
+                    cursor: "pointer",
+                    backgroundColor: "#C3E7FA"
+                  }}
+                >
+                  {isSatellite ? "기본 지도" : "위성 지도"} 보기
+                </button>
+      </div>
 
       {/* CCTV 영상 출력 영역 */}
       {cctvUrl && (
